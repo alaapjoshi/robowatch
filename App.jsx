@@ -182,7 +182,7 @@ function Graph({ route } ) {
         autoPoints.push(data[i].score_breakdown.blue.autoPoints);
         teleopPoints.push(data[i].score_breakdown.blue.teleopPoints);
         foulCount.push(data[i].score_breakdown.blue.foulCount);
-        const send = {MatchNumber: data[i].match_number ,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.blue.autoPoints,teleopPoints: data[i].score_breakdown.blue.teleopPoints, fouls: data[i].score_breakdown.blue.foulCount, Score: data[i].alliances.blue.score, win: win, id: i };
+        const send = {MatchNumber: data[i].match_number ,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.blue.autoPoints,teleopPoints: data[i].score_breakdown.blue.teleopPoints, fouls: data[i].score_breakdown.blue.foulCount,teleopbottom:data[i].score_breakdown.blue.autoCommunity.B,teleopmid:data[i].score_breakdown.blue.autoCommunity.M,teleoptop:data[i].score_breakdown.blue.autoCommunity.T,autobottom: data[i].score_breakdown.blue.autoCommunity.B,automid: data[i].score_breakdown.blue.autoCommunity.M, autotop:data[i].score_breakdown.blue.autoCommunity.T,Score: data[i].alliances.blue.score, win: win, id: i };
         bikinibottom.push(send);
         continue;
     }
@@ -248,7 +248,8 @@ const renderItem = ({ item }) => (
   <Text>Teleop Points: {item.teleopPoints}</Text>
   <Text>Fouls: {item.fouls}</Text>
   <Text>Results: {item.win}</Text>
-</View>
+  <Text> {teleopbottom} </Text>
+  </View>
 );
 const renderTop = ({ item }) => (
   <View style={styles.item}>
