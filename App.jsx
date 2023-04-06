@@ -1,7 +1,5 @@
 import {React, useState, useEffect} from 'react';
 import {
-  Alert,
-  Animated,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -9,47 +7,51 @@ import {
   Text,
   FlatList,
   SafeAreaView,
-  Image,
   ScrollView,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from 'react-native';
-import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
-
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { LineChart } from 'react-native-chart-kit';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import { useRoute } from '@react-navigation/native';
 import AnimatedSplash from "react-native-animated-splash-screen";
-
 import { Dimensions } from "react-native";
-const screenWidth = Dimensions.get("window").height;
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import {LogBox} from 'react-native';
-// Ignore log notification by message:
-LogBox.ignoreLogs(['Warning: ...']);
-
-// Ignore all log notifications:
-LogBox.ignoreAllLogs();
-
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-//Screens 
+//Screens
+
 var dict = new Object();
 
 function New ({ route, navigation })  {
+  const teamstuff = []
   const { team } = route.params;
   const teamKey = "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR";
   const endpoint = "https://www.thebluealliance.com/api/v3/team/" + team + "/events";
+  const endpoint2 = "https://www.thebluealliance.com/api/v3/team/" + team;
+
   const controller = new AbortController();
-  const signal = controller.signal;
-  const [products, setProducts] = useState([]);
   const matchList = [];
   const keyList = [];
   const [data, setData] = useState([]);
-  const [message, setMessage] = useState('');
+  
   useEffect(() => {
+  fetch(endpoint2, { headers: { 'X-TBA-Auth-Key': teamKey } })
+    .then(response => response.json())
+    .then(data => {
+      const parsedData = JSON.stringify(data);
+      console.log(data.nickname)
+      console.log(data.team_number)
+
+      console.log(data.school_name)
+      console.log(data.state_prov)
+      //console.log(data.city)
+      console.log(data.rookie_year)
+      console.log(data.name)
+      const send = {city: data.city, sponsers: data.name, Name: data.nickname, team_number: data.team_number, School_Name:data.school_name,State: data.state_prov, rookie_year: data.rookie_year };
+
+    }).catch(error => console.error(error));
   fetch(endpoint, { headers: { 'X-TBA-Auth-Key': teamKey } })
   .then(response => response.json())
   .then(data => {
@@ -67,7 +69,14 @@ function New ({ route, navigation })  {
   
   }).catch(error => console.error(error));
 }, []);
-
+const NoMatchesFound = () => {  
+  return (
+    <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',backgroundColor: '#EAEAEA'}}>
+      <Text style={{fontSize: 24,fontWeight: 'bold',color: '#222222'}}>No Matches found!</Text>
+    </View>
+  );
+}
+ 
 const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.itemContainer} onPress={() => navigation.navigate('Graph', {
       match: item,
@@ -88,26 +97,18 @@ return (
         title="Go to Notifications"
         onPress={() => navigation.navigate('Notifications')}
       />
-    
   </>
-
 );
 };
 
 function Graph({ route } ) {
+  const { match, team } = route.params;
   const [myObject, setMyObject] = useState([]);  
-  const [grid, setgrid] = useState([]);  
-  const [finalgrid, setfinalgrid] = useState([]);  
-  const auto = [];
-  const teleop = [];
-  const [myString, setMyString] = useState('null');
+  const [myObject2, setMyObject2] = useState([]);  
+
   const [Results, setResults] = useState('null');
-  const [jkcount, setjkcount] = useState(1);
-  const [matchNum, setMatchNum] = useState(0);
   const [chartLabels, setchartLabels] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   const [chartData, setchartData] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-  const [final, setfinal] = useState()
-  const { match, team } = route.params;
 
   const ihavenoidea = dict[match]
   const autoPoints = [];
@@ -115,37 +116,23 @@ function Graph({ route } ) {
   const matchNumber = [];
   const matchType = [];
   const foulCount = [];
-  const [averagescore, setaveragescore] = useState(0);
-  const [averagefouls, setaveragefouls] = useState(0);
-  const [averageteleop, setaverageteleop] = useState(0);
-  const [averageauto, setaverageauto] = useState();
-  const endpoint = "https://www.thebluealliance.com/api/v3/team/frc11/event/" + String(ihavenoidea) + "/matches"
-  const endpoint2 = "https://www.thebluealliance.com/api/v3/event/" + String(ihavenoidea);
-  const uhh = []
-  const teamKey = "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR";
+  const uhh = [];
   const nameList = [];
   const max = [];
   const bikinibottom = [];
   const bikinibottom2 = [];
-  const bikinibottom3 = [];
+  const [what, setwhat] = useState("Unknown...");
+  const [loading, setLoading] = useState(true);
 
-  const autobottom = [];
-  const automid = [];
-  const autotop = [];
-  const teleopbottom = [];
-  const teleopmid = [];
-  const teleoptop = [];
 
   useEffect(() => {
-  fetch(endpoint, { headers: { 'X-TBA-Auth-Key': teamKey } })
+  fetch("https://www.thebluealliance.com/api/v3/team/" + team + "/event/" + String(ihavenoidea) + "/matches", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
     .then(response => response.json())
     .then(data => {
-
-    const parsedData = JSON.stringify(data);
     const size = data.length;
     for (let i = 0; i < size; i++) {
       let win = "";
-      if (data[i].alliances.red.team_keys[0] == "frc75" || data[i].alliances.red.team_keys[1] == "frc75" || data[i].alliances.red.team_keys[2] == "frc75") {
+      if (data[i].alliances.red.team_keys[0] == team || data[i].alliances.red.team_keys[1] == team || data[i].alliances.red.team_keys[2] == team) {
         if (data[i].winning_alliance == "red") {
           win = "win";
         }
@@ -153,39 +140,20 @@ function Graph({ route } ) {
           win = "lose";
         }
         uhh.push(win);
-        autobottom.push(data[i].score_breakdown.red.autoCommunity.B);
-        automid.push(data[i].score_breakdown.red.autoCommunity.M);
-        autotop.push(data[i].score_breakdown.red.autoCommunity.T);
-        teleopbottom.push(data[i].score_breakdown.red.autoCommunity.B);
-        teleopmid.push(data[i].score_breakdown.red.autoCommunity.M);
-        teleoptop.push(data[i].score_breakdown.red.autoCommunity.T);
-
-
-          nameList.push(data[i].alliances.red.score);
-          matchNumber.push(data[i].match_number);
-          matchType.push(data[i].comp_level);
-          autoPoints.push(data[i].score_breakdown.red.autoPoints);
-          teleopPoints.push(data[i].score_breakdown.red.teleopPoints);
-          foulCount.push(data[i].score_breakdown.red.foulCount);
+        nameList.push(data[i].alliances.red.score);
+        matchNumber.push(data[i].match_number);
+        matchType.push(data[i].comp_level);
+        autoPoints.push(data[i].score_breakdown.red.autoPoints);
+        teleopPoints.push(data[i].score_breakdown.red.teleopPoints);
+        foulCount.push(data[i].score_breakdown.red.foulCount);
 
           const send3 = data[i].score_breakdown.red.autoCommunity.T + "," + data[i].score_breakdown.red.autoCommunity.M + "," + data[i].score_breakdown.red.autoCommunity.B
-          const arr = send3.split(',');
-          const size = 9; // number of columns
-          const groups = arr.map((_, i) => i % size === 0 ? arr.slice(i, i + size) : null)
-                   .filter(e => e);
-          auto.push(groups);
           const send4 = data[i].score_breakdown.red.teleopCommunity.T + "," + data[i].score_breakdown.red.teleopCommunity.M + "," + data[i].score_breakdown.red.teleopCommunity.B
-          const arr2 = send4.split(',');
-          const groups2 = arr2.map((_, i) => i % size === 0 ? arr.slice(i, i + size) : null)
-                   .filter(e => e);
-        
-          teleop.push(groups2);
           const send = {Auto: send3, Teleop: send4, MatchNumber:data[i].match_number,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.red.autoPoints,teleopPoints: data[i].score_breakdown.red.teleopPoints, fouls: data[i].score_breakdown.red.foulCount, Score: data[i].alliances.red.score, win: win, id: i };
-          
           bikinibottom.push(send);
           continue;
       }
-      else if (data[i].alliances.blue.team_keys[0] == "frc75" || data[i].alliances.blue.team_keys[1] == "frc75" || data[i].alliances.blue.team_keys[2] == "frc75") {
+      else if (data[i].alliances.blue.team_keys[0] == team || data[i].alliances.blue.team_keys[1] == team || data[i].alliances.blue.team_keys[2] == team) {
         if (data[i].winning_alliance == "blue") {
           win = "win";
         }
@@ -193,37 +161,21 @@ function Graph({ route } ) {
           win = "lose";
         }
         uhh.push(win);
-        autobottom.push(data[i].score_breakdown.blue.autoCommunity.B);
-        automid.push(data[i].score_breakdown.blue.autoCommunity.M);
-        autotop.push(data[i].score_breakdown.blue.autoCommunity.T);
-        teleopbottom.push(data[i].score_breakdown.blue.autoCommunity.B);
-        teleopmid.push(data[i].score_breakdown.blue.autoCommunity.M);
-        teleoptop.push(data[i].score_breakdown.blue.autoCommunity.T);
         nameList.push(data[i].alliances.blue.score);
         matchNumber.push(data[i].match_number);
         matchType.push(data[i].comp_level);
         autoPoints.push(data[i].score_breakdown.blue.autoPoints);
         teleopPoints.push(data[i].score_breakdown.blue.teleopPoints);
         foulCount.push(data[i].score_breakdown.blue.foulCount);
-
         const send3 = data[i].score_breakdown.blue.autoCommunity.T + "," + data[i].score_breakdown.blue.autoCommunity.M + "," + data[i].score_breakdown.blue.autoCommunity.B
-        const arr = send3.split(',');
-        const size = 9; // number of columns
-        const groups = arr.map((_, i) => i % size === 0 ? arr.slice(i, i + size) : null)
-                 .filter(e => e);
-        auto.push(groups);
         const send4 = data[i].score_breakdown.blue.teleopCommunity.T + "," + data[i].score_breakdown.blue.teleopCommunity.M + "," + data[i].score_breakdown.blue.teleopCommunity.B
-        const arr2 = send4.split(',');
-        const groups2 = arr2.map((_, i) => i % size === 0 ? arr.slice(i, i + size) : null)
-                 .filter(e => e);
-      
-        teleop.push(groups2);
         const send = {Auto: send3, Teleop: send4, MatchNumber: data[i].match_number ,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.blue.autoPoints,teleopPoints: data[i].score_breakdown.blue.teleopPoints, fouls: data[i].score_breakdown.blue.foulCount,Score: data[i].alliances.blue.score, win: win, id: i };
         bikinibottom.push(send);
         continue;
       }
         continue;
     }
+    setMyObject(bikinibottom)
 
     for (let i = 0; i < nameList.length; i++) {
       max.push(String(i));
@@ -233,60 +185,36 @@ function Graph({ route } ) {
       setchartData(nameList);
     }
     const sum = autoPoints.reduce((acc, curr) => acc + curr, 0);
-    setaverageauto((Math.round(sum / autoPoints.length)));
     const temp = sum / autoPoints.length;
-    setaverageauto((Math.round(temp)));
-
     const sumteleop = teleopPoints.reduce((acc, curr) => acc + curr, 0);
-    setaverageteleop((Math.round(sumteleop / teleopPoints.length)));
-
     const sumscore = nameList.reduce((acc, curr) => acc + curr, 0);
-    setaveragescore((Math.round(sumscore / nameList.length)));
-
     const sumfouls = autoPoints.reduce((acc, curr) => acc + curr, 0);
-    setaveragefouls((Math.round(sumfouls / foulCount.length)));
 
-    setMyObject(bikinibottom)
     const searchString = "win";
     const searchString2 = "lose";
     const count = uhh.filter((item) => item === searchString).length;
     const count2 = uhh.filter((item) => item === searchString2).length;
-    if (count > count2) {
-      setResults("Win")
-    }
-    if (count2 > count) {
-      setResults("Lose")
-    }
-    if (count2 == count) {
-      setResults("Tie")
-    }
-    const send2 = {Average: Results, Score: averagescore, averageAuto: averageauto, averageteleop: averageteleop, averagefouls: averagefouls}
+      if (count > count2) {
+        setwhat("Win");
+      }
+      else if (count2 > count) {
+        setwhat("Lose")
+      }
+      else if (count2 == count) {
+        setwhat("Tie")
+      }
+    const send2 = {Average: what, Score: (Math.round(sumscore / nameList.length)), averageAuto: (Math.round(temp)), averageteleop: (Math.round(sumteleop / teleopPoints.length)), averagefouls: (Math.round(sumfouls / foulCount.length))}
     bikinibottom2.push(send2)
-
-    setgrid(bikinibottom3)
-
-
-    
-
-
-
+    setMyObject2(bikinibottom2)
 
   }).catch(error => console.error(error));
 }, []);
 
-/*
-const roundedscore = Number(averagescore.toFixed(2));
-const roundedauto = Number(averageauto.toFixed(2));
-const roundedTeleop= Number(averageteleop.toFixed(2));
-const roundedFouls = Number(averagefouls.toFixed(2));
-
-
-*/
-const test123 = [
-  ['None', 'None', 'None', 'None', 'None', 'None', 'None', 'Cube', 'None'],
-  ['None', 'None', 'None', 'None', 'None', 'Cone', 'None', 'None', 'None'],
-  ['Cube', 'None', 'None', 'None', 'None', 'None', 'None', 'None', 'None'],
-];
+useEffect(() => {
+  setTimeout(() => {
+    setLoading(false);
+  }, 500);
+}, []);
 
 const renderItem = ({ item }) => {
   return (
@@ -294,13 +222,13 @@ const renderItem = ({ item }) => {
   <View style={[styles.item, item.win === "win" ? styles.win : styles.lose]}>
   <Text style={styles.title}>Match Number: {item.MatchNumber}</Text>
   <Text>Match Level: {item.MatchLevel}</Text>
-  <Text>Score: {item.Score}</Text>
   <Text>Auto Points: {item.autoPoints}</Text>
   <Text>Teleop Points: {item.teleopPoints}</Text>
   <Text>Fouls: {item.fouls}</Text>
-  <Text>Results: {item.win}</Text>
+  <Text style={{fontSize: 20, fontWeight: 'bold'}}>Score: {item.Score}</Text>
+  <Text style={{fontSize: 20, fontWeight: 'bold'}}>Results: {item.win}</Text>
 </View>
-<Text style={{textAlign: 'center', fontSize: 30}}> Auto Grid: </Text>
+<Text style={{textAlign: 'center', fontSize: 30}}> Auto Grid: {"\n"}</Text>
 {item.Auto && (
   <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", paddingHorizontal: 20 }}>
     {[...Array(3)].map((_, i) => (
@@ -323,7 +251,7 @@ const renderItem = ({ item }) => {
 
 <Text style={{textAlign: 'center', fontSize: 30}}> Teleop Grid: </Text>
 {item.Teleop && (
-  <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", paddingHorizontal: 20}}>
+  <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", padding: 40}}>
     {[...Array(3)].map((_, i) => (
       <View key={i} style={{ flexDirection: "row" }}>
         {item.Teleop.split(",").slice(i * 9, (i + 1) * 9).map((item, index) => (
@@ -343,16 +271,30 @@ const renderItem = ({ item }) => {
 )}
   </>
 )
+
 };
-const renderTop = ({ item }) => (
+const renderTop = ({ item }) => {
+return (
   <View style={styles.item}>
-  <Text style={styles.title}>Average: {item.Average}</Text>
-  <Text>Average Score: {item.Score} </Text>
-  <Text>Auto Points: {item.averageAuto}</Text>
-  <Text>Teleop Points: {item.averageteleop}</Text>
-  <Text>Number of Fouls: {item.averagefouls}</Text>
+  <Text style={styles.title}>Average</Text>
+
+<Text>Auto Points: {item.averageAuto}</Text>
+<Text>Teleop Points: {item.averageteleop}</Text>
+<Text>Number of Fouls: {item.averagefouls}</Text>
+<Text style={{fontSize: 20, fontWeight: 'bold'}}>Average Score: {item.Score} </Text>
 </View>
-);
+)
+}
+if (loading) {
+  // Render loading widget
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#ff0303" />
+      <Text style={{fontSize: 30}}>Loading...</Text>
+    </View>
+  );
+}
+
   return (
   <SafeAreaView>
     <ScrollView>
@@ -383,18 +325,17 @@ const renderTop = ({ item }) => (
   }}
 />
 <FlatList
-      data={bikinibottom2}
+      data={myObject2}
       renderItem={renderTop}
       keyExtractor={(item) => 1}
     />
+
 <FlatList
       data={myObject}
       renderItem={renderItem}
       keyExtractor={(item) => item.id.toString()}
     />
 </View>
-
-
 </ScrollView>
   </SafeAreaView>
   )
@@ -408,10 +349,51 @@ function HomeScreen({ navigation }) {
       navigation.navigate('New', { team });
     }
   };
+
+const NoInternetPage = () => {
+  const [isConnected, setIsConnected] = useState(true);
+
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const response = await fetch('https://www.thebluealliance.com/api/v3/status', {
+          headers: { 'X-TBA-Auth-Key': 'YOUR_API_KEY' }
+        });
+        const json = await response.json();
+        setIsConnected(true);
+      } catch (error) {
+        setIsConnected(false);
+      }
+    };
+    checkConnection();
+  }, []);
+
+  const handleRetryPress = () => {
+    setIsConnected(true);
+  };
+
+  return (
+    <View style={styles.container9}>
+      {!isConnected && (
+        <View style={styles.noInternetContainer}>
+          <Text style={styles.noInternetText}>No Internet Connection</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRetryPress}>
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </View>
+  );
+};
     return (
+      
     <View style={styles.container7}>
+      
     <View style={styles.logoContainer}>
-      <Text style={styles.logoText}>Team75</Text>
+    <Ionicons name={'glasses-outline'} color="red" size={120} style={{textAlign:'center', marginTop:40}} />
+
+    <Text style={styles.logoText}>RoboWatch</Text>
+    <Text style={styles.subLogoText}>Presented by Team75</Text>
     </View>
     <View style={styles.inputContainer}>
       <Text style={styles.label}>Enter a team number:</Text>
@@ -491,18 +473,18 @@ function MyStack() {
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   setTimeout(() => {
-    setLoading(true);
-  }, 5000);
+    setLoading2(true);
+  }, 1000);
 
   return (
     <AnimatedSplash
       translucent={true}
-      isLoaded={loading}
-      logoImage={require("./assets/charge.gif")}
-      backgroundColor={"#262626"}
+      isLoaded={loading2}
+      logoImage={require("./assets/splash.png")}
+      backgroundColor={"#FFFFFF"}
       logoHeight={windowHeight}
       logoWidth={windowWidth}
       AnimatedSplash>
@@ -565,6 +547,7 @@ container7: {
   backgroundColor: '#ffffff',
   alignItems: 'center',
   justifyContent: 'center',
+  justifyContent: 'top',
 },
 logoContainer: {
   marginBottom: 60,
@@ -572,6 +555,15 @@ logoContainer: {
 logoText: {
   fontSize: 50,
   fontWeight: 'bold',
+  textAlignVertical: 'top',
+  textAlign: 'center',
+  paddingBottom: 20,
+  color: '#ff0303',
+},
+subLogoText: {
+  fontSize: 30,
+  fontWeight: 'bold',
+  textAlign: 'center',
   color: '#ff0303',
 },
 inputContainer: {
@@ -591,6 +583,32 @@ input: {
   borderWidth: 1,
   borderColor: '#020101',
   color: '#020101',
+},
+container9: {
+  flex: 1,
+  backgroundColor: '#ffffff',
+  alignItems: 'center',
+  justifyContent: 'center'
+},
+noInternetContainer: {
+  alignItems: 'center'
+},
+noInternetText: {
+  color: '#ff0303',
+  fontSize: 20,
+  fontWeight: 'bold',
+  marginBottom: 20
+},
+retryButton: {
+  backgroundColor: '#020101',
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 10
+},
+retryButtonText: {
+  color: '#ffffff',
+  fontWeight: 'bold',
+  fontSize: 16
 },
 button: {
   backgroundColor: '#ff0303',
@@ -627,7 +645,7 @@ itemText: {
   fontWeight: 'bold',
 },
 item: {
-  backgroundColor: '#FFD700',
+  backgroundColor: '#FFEB3B',
   padding: 20,
   fontSize: 20,
   marginVertical: 8,
@@ -643,10 +661,10 @@ subtitle: {
   color: "#666"
 },
 win: {
-  backgroundColor: '#03ff03',
+  backgroundColor: '#2196F3',
 },
 lose: {
-  backgroundColor: '#ff0303',
+  backgroundColor: '#FF9800',
 },
 container2: {
   flex:1
