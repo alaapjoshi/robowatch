@@ -89,7 +89,7 @@ onPress={() => navigation.navigate('Notifications')}
 />
 */
 return (
-  <ScrollView style={{flex: 1}}>
+  <ScrollView style={{flex: 1, backgroundColor: "#FFFFFF"}}>
 <FlatList
   data={data}
   renderItem={renderItem}
@@ -708,6 +708,7 @@ itemText2: {
 itemText: {
   fontSize: 30,
   fontWeight: 'bold',
+  color: '#ff0303',
 },
 item: {
   backgroundColor: '#FFEB3B',
