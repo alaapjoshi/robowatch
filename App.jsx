@@ -15,6 +15,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { LineChart } from 'react-native-chart-kit';
 import AnimatedSplash from "react-native-animated-splash-screen";
 import { Dimensions } from "react-native";
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -25,32 +28,25 @@ import { createStackNavigator } from '@react-navigation/stack';
 var dict = new Object();
 
 function New ({ route, navigation })  {
-  const teamstuff = []
   const { team } = route.params;
   const teamKey = "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR";
   const endpoint = "https://www.thebluealliance.com/api/v3/team/" + team + "/events";
   const endpoint2 = "https://www.thebluealliance.com/api/v3/team/" + team;
+  const [myObject3, setMyObject3] = useState([]);  
 
   const controller = new AbortController();
   const matchList = [];
   const keyList = [];
   const [data, setData] = useState([]);
-  
+  let data2 = [];
+
   useEffect(() => {
   fetch(endpoint2, { headers: { 'X-TBA-Auth-Key': teamKey } })
     .then(response => response.json())
     .then(data => {
-      const parsedData = JSON.stringify(data);
-      console.log(data.nickname)
-      console.log(data.team_number)
-
-      console.log(data.school_name)
-      console.log(data.state_prov)
-      //console.log(data.city)
-      console.log(data.rookie_year)
-      console.log(data.name)
       const send = {city: data.city, sponsers: data.name, Name: data.nickname, team_number: data.team_number, School_Name:data.school_name,State: data.state_prov, rookie_year: data.rookie_year };
-
+      data2.push(send);
+      setMyObject3(send);
     }).catch(error => console.error(error));
   fetch(endpoint, { headers: { 'X-TBA-Auth-Key': teamKey } })
   .then(response => response.json())
@@ -66,7 +62,7 @@ function New ({ route, navigation })  {
       }
     }
     setData(matchList);
-  
+
   }).catch(error => console.error(error));
 }, []);
 const NoMatchesFound = () => {  
@@ -85,19 +81,50 @@ const renderItem = ({ item }) => (
       <Text style={styles.itemText}>{item}</Text>
   </TouchableOpacity>
 );
+
+/*
+<Button
+title="Go to Notifications"
+onPress={() => navigation.navigate('Notifications')}
+/>
+*/
 return (
-  <>
-  <FlatList
-    data={data}
-    renderItem={renderItem}
-    keyExtractor={(item, index) => index.toString()}
-    style={styles.container}
-  />
-        <Button
-        title="Go to Notifications"
-        onPress={() => navigation.navigate('Notifications')}
-      />
-  </>
+  <ScrollView style={{flex: 1}}>
+<FlatList
+  data={data}
+  renderItem={renderItem}
+  keyExtractor={(item, index) => index.toString()}
+  style={{ backgroundColor: '#F5F5F5' }}/>
+
+<View style={{ backgroundColor: '#333', padding: 20}}>
+  <Text style={{ color: '#FFA500', fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>{myObject3.Name}</Text>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Team Number:</Text>
+    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.team_number}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>School Name:</Text>
+    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.School_Name}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Location:</Text>
+    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.city}, {myObject3.State}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Rookie Year:</Text>
+    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.rookie_year}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Sponsors:</Text>
+    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.sponsers}</Text>
+  </View>
+
+</View>
+
+
+
+
+  </ScrollView>
 );
 };
 
@@ -529,6 +556,22 @@ itemContainer: {
   shadowRadius: 1,
   elevation: 2,
 },
+container23: {
+  paddingHorizontal: 20,
+  backgroundColor: '#FFFFFF',
+},
+name: {
+  fontSize: 20,
+  fontWeight: 'bold',
+  color: '#FFA500',
+  marginBottom: 10,
+},
+info: {
+  fontSize: 20,
+  color: '#ff0303',
+  marginBottom: 10,
+  paddingTop: 10
+},
 container3: {
   flex: 1,
   backgroundColor: '#ffffff',
@@ -540,6 +583,28 @@ title2: {
   fontWeight: 'bold',
   color: '#020101',
   marginBottom: 10,
+},
+infoList: {
+  paddingHorizontal: 20,
+  paddingTop: 10,
+  paddingBottom: 20,
+},
+infoItem: {
+  backgroundColor: '#2D2D2D',
+  borderRadius: 10,
+  marginBottom: 10,
+  paddingVertical: 20,
+  paddingHorizontal: 25,
+},
+infoLabel: {
+  color: '#BDBDBD',
+  fontSize: 16,
+  fontWeight: 'bold',
+  marginBottom: 10,
+},
+infoValue: {
+  color: '#FFFFFF',
+  fontSize: 18,
 },
 
 container7: {
@@ -571,7 +636,7 @@ inputContainer: {
   marginBottom: 30,
 },
 label: {
-  fontSize: 20,
+  fontSize: 30,
   marginBottom: 10,
   color: '#020101',
 },
@@ -617,7 +682,7 @@ button: {
   borderRadius: 10,
 },
 buttonText: {
-  fontSize: 20,
+  fontSize: 25,
   fontWeight: 'bold',
   color: '#ffffff',
 },
