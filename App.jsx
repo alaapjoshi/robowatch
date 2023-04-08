@@ -11,21 +11,37 @@ import {
   TextInput,
   ActivityIndicator
 } from 'react-native';
+import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import analysis from './analysis';
+const Tab = createBottomTabNavigator();
+import navigatescout from './scouting/navigatescout';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LineChart } from 'react-native-chart-kit';
 import AnimatedSplash from "react-native-animated-splash-screen";
 import { Dimensions } from "react-native";
 import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-LogBox.ignoreAllLogs();//Ignore all log notifications
+LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-//Screens
 
 var dict = new Object();
+
+
+/*
+function MyTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+    </Tab.Navigator>
+  );
+}
+*/
 
 function New ({ route, navigation })  {
   const { team } = route.params;
@@ -72,7 +88,6 @@ const NoMatchesFound = () => {
     </View>
   );
 }
- 
 const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.itemContainer} onPress={() => navigation.navigate('Graph', {
       match: item,
@@ -90,40 +105,42 @@ onPress={() => navigation.navigate('Notifications')}
 */
 return (
   <ScrollView style={{flex: 1, backgroundColor: "#FFFFFF"}}>
+
+<View style={{ backgroundColor: '#D3D3D3', padding: 20}}>
+  <Text style={{ color: '#ff0303', fontSize: 30, fontWeight: 'bold', marginBottom: 10 }}>{myObject3.Name}</Text>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#ff0303', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Team Number:</Text>
+    <Text style={{ color: '#ff0303', fontSize: 16 }}>{myObject3.team_number}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#ff0303', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>School Name:</Text>
+    <Text style={{ color: '#ff0303', fontSize: 16 }}>{myObject3.School_Name}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#ff0303', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Location:</Text>
+    <Text style={{ color: '#ff0303', fontSize: 16 }}>{myObject3.city}, {myObject3.State}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#ff0303', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Rookie Year:</Text>
+    <Text style={{ color: '#ff0303', fontSize: 16 }}>{myObject3.rookie_year}</Text>
+  </View>
+  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
+    <Text style={{ color: '#ff0303', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Sponsors:</Text>
+    <Text style={{ color: '#ff0303', fontSize: 16 }}>{myObject3.sponsers}</Text>
+  </View>
+
+</View>
 <FlatList
   data={data}
   renderItem={renderItem}
   keyExtractor={(item, index) => index.toString()}
   style={{ backgroundColor: '#F5F5F5' }}/>
 
-<View style={{ backgroundColor: '#333', padding: 20}}>
-  <Text style={{ color: '#FFA500', fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>{myObject3.Name}</Text>
-  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Team Number:</Text>
-    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.team_number}</Text>
-  </View>
-  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>School Name:</Text>
-    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.School_Name}</Text>
-  </View>
-  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Location:</Text>
-    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.city}, {myObject3.State}</Text>
-  </View>
-  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Rookie Year:</Text>
-    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.rookie_year}</Text>
-  </View>
-  <View style={{ flexDirection: 'row', marginBottom: 5 }}>
-    <Text style={{ color: '#FFF', fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Sponsors:</Text>
-    <Text style={{ color: '#FFF', fontSize: 16 }}>{myObject3.sponsers}</Text>
-  </View>
-
-</View>
-
-
-
-
+      <Button
+        title="Go to Analysis"
+        color="#FFA500"
+        onPress={() => navigation.navigate('analysis')}
+        />
   </ScrollView>
 );
 };
@@ -156,6 +173,7 @@ function Graph({ route } ) {
   fetch("https://www.thebluealliance.com/api/v3/team/" + team + "/event/" + String(ihavenoidea) + "/matches", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
     .then(response => response.json())
     .then(data => {
+      const re = JSON.stringify(data)
     const size = data.length;
     for (let i = 0; i < size; i++) {
       let win = "";
@@ -163,9 +181,18 @@ function Graph({ route } ) {
         if (data[i].winning_alliance == "red") {
           win = "win";
         }
-        else {
+        else if (data[i].winning_alliance == "blue"){
           win = "lose";
         }
+      else {
+        win = "No data"
+      }
+      if (data[i].score_breakdown === null) {
+        continue;
+
+      }
+      else {
+
         uhh.push(win);
         nameList.push(data[i].alliances.red.score);
         matchNumber.push(data[i].match_number);
@@ -173,20 +200,27 @@ function Graph({ route } ) {
         autoPoints.push(data[i].score_breakdown.red.autoPoints);
         teleopPoints.push(data[i].score_breakdown.red.teleopPoints);
         foulCount.push(data[i].score_breakdown.red.foulCount);
-
           const send3 = data[i].score_breakdown.red.autoCommunity.T + "," + data[i].score_breakdown.red.autoCommunity.M + "," + data[i].score_breakdown.red.autoCommunity.B
           const send4 = data[i].score_breakdown.red.teleopCommunity.T + "," + data[i].score_breakdown.red.teleopCommunity.M + "," + data[i].score_breakdown.red.teleopCommunity.B
           const send = {Auto: send3, Teleop: send4, MatchNumber:data[i].match_number,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.red.autoPoints,teleopPoints: data[i].score_breakdown.red.teleopPoints, fouls: data[i].score_breakdown.red.foulCount, Score: data[i].alliances.red.score, win: win, id: i };
           bikinibottom.push(send);
+        }
           continue;
       }
       else if (data[i].alliances.blue.team_keys[0] == team || data[i].alliances.blue.team_keys[1] == team || data[i].alliances.blue.team_keys[2] == team) {
         if (data[i].winning_alliance == "blue") {
           win = "win";
         }
-        else {
+      else if (data[i].winning_alliance == "red"){
           win = "lose";
         }
+      else {
+        win = "No data"
+      }
+      if (data[i].score_breakdown === null) {
+        continue;
+      }
+      else {
         uhh.push(win);
         nameList.push(data[i].alliances.blue.score);
         matchNumber.push(data[i].match_number);
@@ -198,6 +232,7 @@ function Graph({ route } ) {
         const send4 = data[i].score_breakdown.blue.teleopCommunity.T + "," + data[i].score_breakdown.blue.teleopCommunity.M + "," + data[i].score_breakdown.blue.teleopCommunity.B
         const send = {Auto: send3, Teleop: send4, MatchNumber: data[i].match_number ,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.blue.autoPoints,teleopPoints: data[i].score_breakdown.blue.teleopPoints, fouls: data[i].score_breakdown.blue.foulCount,Score: data[i].alliances.blue.score, win: win, id: i };
         bikinibottom.push(send);
+      }
         continue;
       }
         continue;
@@ -246,16 +281,20 @@ useEffect(() => {
 const renderItem = ({ item }) => {
   return (
     <>
-  <View style={[styles.item, item.win === "win" ? styles.win : styles.lose]}>
-  <Text style={styles.title}>Match Number: {item.MatchNumber}</Text>
-  <Text>Match Level: {item.MatchLevel}</Text>
-  <Text>Auto Points: {item.autoPoints}</Text>
-  <Text>Teleop Points: {item.teleopPoints}</Text>
-  <Text>Fouls: {item.fouls}</Text>
-  <Text style={{fontSize: 20, fontWeight: 'bold'}}>Score: {item.Score}</Text>
-  <Text style={{fontSize: 20, fontWeight: 'bold'}}>Results: {item.win}</Text>
-</View>
-<Text style={{textAlign: 'center', fontSize: 30}}> Auto Grid: {"\n"}</Text>
+<Collapse>
+    <CollapseHeader>
+      <View style={[styles.item, item.win === "win" ? styles.win : styles.lose]}>
+      <Text style={styles.title}>Match Number: {item.MatchNumber}</Text>
+        <Text>Match Level: {item.MatchLevel}</Text>
+        <Text>Auto Points: {item.autoPoints}</Text>
+        <Text>Teleop Points: {item.teleopPoints}</Text>
+        <Text>Fouls: {item.fouls}</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Score: {item.Score}</Text>
+        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Results: {item.win}</Text>
+      </View>
+    </CollapseHeader>
+    <CollapseBody>
+<Text style={{textAlign: 'center', fontSize: 30}}> Auto Grid: </Text>
 {item.Auto && (
   <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", paddingHorizontal: 20 }}>
     {[...Array(3)].map((_, i) => (
@@ -275,10 +314,9 @@ const renderItem = ({ item }) => {
     ))}
   </View>
 )}
-
-<Text style={{textAlign: 'center', fontSize: 30}}> Teleop Grid: </Text>
+<Text style={{textAlign: 'center', fontSize: 30}}> {"\n"} Teleop Grid: </Text>
 {item.Teleop && (
-  <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", padding: 40}}>
+  <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", paddingHorizontal: 20}}>
     {[...Array(3)].map((_, i) => (
       <View key={i} style={{ flexDirection: "row" }}>
         {item.Teleop.split(",").slice(i * 9, (i + 1) * 9).map((item, index) => (
@@ -296,6 +334,8 @@ const renderItem = ({ item }) => {
     ))}
   </View>
 )}
+    </CollapseBody>
+</Collapse>
   </>
 )
 
@@ -326,7 +366,10 @@ if (loading) {
   <SafeAreaView>
     <ScrollView>
     <View >
-    <Text style={{textAlign: 'center', fontSize: 30, paddingHorizontal: 20}}> { match } </Text>
+    <Text style={{textAlign: 'center', fontSize: 30, paddingHorizontal: 20}}> { match }  {'\n'}</Text>
+    
+    <Text style={styles.subLogoText}> Chart of Scores</Text>
+
     <LineChart
   data={{
     labels: chartLabels,
@@ -338,19 +381,17 @@ if (loading) {
   }}
   width={windowWidth}
   height={windowHeight / 2}
-  //yAxisLabel="$"
-  //yAxisSuffix="k"
   chartConfig={{
   backgroundGradientFrom: '#1E2923',
   backgroundGradientTo: '#08130D',
   color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
   }}
-  bezier
   style={{
     marginVertical: 8,
     borderRadius: 16,
   }}
 />
+<Text> {'\n'}</Text>
 <FlatList
       data={myObject2}
       renderItem={renderTop}
@@ -379,6 +420,7 @@ function HomeScreen({ navigation }) {
 
 const NoInternetPage = () => {
   const [isConnected, setIsConnected] = useState(true);
+
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -413,14 +455,13 @@ const NoInternetPage = () => {
   );
 };
     return (
-      
+      <>
+       
     <View style={styles.container7}>
-      
     <View style={styles.logoContainer}>
     <Ionicons name={'glasses-outline'} color="red" size={120} style={{textAlign:'center', marginTop:40}} />
 
-    <Text style={styles.logoText}>RoboWatch</Text>
-    <Text style={styles.subLogoText}>Presented by Team75</Text>
+    <Text style={styles.logoText}>The Red Alliance</Text>
     </View>
     <View style={styles.inputContainer}>
       <Text style={styles.label}>Enter a team number:</Text>
@@ -439,18 +480,25 @@ const NoInternetPage = () => {
  })}>
       <Text style={styles.buttonText}>Go to Matches</Text>
     </TouchableOpacity>
+    <Text style={styles.subLogoText}>{"\n"} Presented by Team75</Text>
+
   </View>
 
-      /*
-    <View style={styles.container3}>
-      <Text style={styles.title2}>Welcome to Team75</Text>
-      <Text style={styles.subtitle2}>Connect, Compete, Win</Text>
-      <TouchableOpacity style={styles.button2} onPress={() => navigation.navigate('New')}>
-        <Text style={styles.buttonText2}>Go to Matches</Text>
-      </TouchableOpacity>
-    </View>
-    */
+  </>
+
   );
+}
+function nav() {
+  const Tab = createBottomTabNavigator();
+return (
+    <Tab.Navigator>
+      <Tab.Screen name="Scouting" component={navigatescout} />
+      <Tab.Screen name="TBA" component={HomeScreen} />
+      <Tab.Screen name="Screen3" component={analysis} />
+      <Tab.Screen name="Settings" component={ProfileScreen} />
+    </Tab.Navigator>
+    )
+
 }
 
 function ProfileScreen({ navigation }) {
@@ -490,18 +538,17 @@ const Stack = createStackNavigator();
 function MyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} />
+      <Stack.Screen name="The Red Alliance" component={nav} options={{ headerShown: false }} />
+      <Stack.Screen name="Analysis" component={analysis} />
       <Stack.Screen name="New" component={New} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Graph" component={Graph} />
     </Stack.Navigator>
   );
-}
+  }
 
 export default function App() {
   const [loading2, setLoading2] = useState(false);
-
   setTimeout(() => {
     setLoading2(true);
   }, 1000);
@@ -515,8 +562,8 @@ export default function App() {
       logoHeight={windowHeight}
       logoWidth={windowWidth}
       AnimatedSplash>
-
-    <NavigationContainer>
+        
+        <NavigationContainer>
       <MyStack />
     </NavigationContainer>
     </AnimatedSplash>
@@ -622,7 +669,7 @@ logoText: {
   fontWeight: 'bold',
   textAlignVertical: 'top',
   textAlign: 'center',
-  paddingBottom: 20,
+  paddingBottom: 0,
   color: '#ff0303',
 },
 subLogoText: {
@@ -633,7 +680,7 @@ subLogoText: {
 },
 inputContainer: {
   marginHorizontal: 30,
-  marginBottom: 30,
+  marginBottom: 40,
 },
 label: {
   fontSize: 30,
@@ -727,10 +774,10 @@ subtitle: {
   color: "#666"
 },
 win: {
-  backgroundColor: '#2196F3',
+  backgroundColor: '#5DBB63',
 },
 lose: {
-  backgroundColor: '#FF9800',
+  backgroundColor: '#D0312D',
 },
 container2: {
   flex:1
