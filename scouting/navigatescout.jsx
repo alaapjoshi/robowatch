@@ -31,16 +31,16 @@ export default function navigatescout( {navigation } ) {
 }
 function move( {navigation} ) {
   return(
-  <View style={styles.container}>
-  <View style={styles.center}> 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Scout')}>
-<Text style={styles.buttonText}>Match</Text>
-</TouchableOpacity>
-<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Pit')}>
-<Text style={styles.buttonText}>Pit</Text>
-</TouchableOpacity>
-  </View>
-  </View>
+  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+  <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#ff0303', marginBottom: 40 }}>Select Scouting Type:</Text>
+  <TouchableOpacity style={{ backgroundColor: '#ff0303', padding: 20, borderRadius: 10, marginBottom: 40 }} onPress={() => navigation.navigate('Pit')}>
+    <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Pit Scouting</Text>
+  </TouchableOpacity>
+  <TouchableOpacity style={{ backgroundColor: '#ff0303', padding: 20, borderRadius: 10 }} onPress={() => navigation.navigate('Scout')}>
+    <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Match Scouting</Text>
+  </TouchableOpacity>
+</View>
+
   )
 
 }

@@ -15,7 +15,7 @@ import {
 export default function scouting() {
     return (
         <Text>
-            Hello 
+            TEST 
         </Text>
     )
 

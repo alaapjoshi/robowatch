@@ -15,33 +15,61 @@ import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-co
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import analysis from './analysis';
 const Tab = createBottomTabNavigator();
+import SettingsScreen from './settings/settings';
 import navigatescout from './scouting/navigatescout';
-import Ionicons from '@expo/vector-icons/Ionicons';
+//import Ionicons from '@expo/vector-icons/Ionicons';
 import { LineChart } from 'react-native-chart-kit';
 import AnimatedSplash from "react-native-animated-splash-screen";
 import { Dimensions } from "react-native";
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
-
+import { Ionicons } from '@expo/vector-icons';
+import navtba from './TBA/navtba'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+const Stack = createStackNavigator();
+
+function MyStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="The Red Alliance" component={nav} options={{ headerShown: false }} />
+      <Stack.Screen name="Analysis" component={analysis} />
+      <Stack.Screen name="New" component={New} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="Graph" component={Graph} />
+    </Stack.Navigator>
+  );
+  }
+
+export default function App() {
+  const [loading2, setLoading2] = useState(false);
+  setTimeout(() => {
+    setLoading2(true);
+  }, 1000);
+  return (
+    <AnimatedSplash
+      translucent={true}
+      isLoaded={loading2}
+      logoImage={require("./assets/splash.png")}
+      backgroundColor={"#FFFFFF"}
+      logoHeight={windowHeight}
+      logoWidth={windowWidth}
+      AnimatedSplash>
+        
+        <NavigationContainer>
+      <MyStack />
+    </NavigationContainer>
+    </AnimatedSplash>
+
+  );
+}
 var dict = new Object();
 
 
-/*
-function MyTabs() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
-  );
-}
-*/
 
 function New ({ route, navigation })  {
   const { team } = route.params;
@@ -149,7 +177,6 @@ function Graph({ route } ) {
   const { match, team } = route.params;
   const [myObject, setMyObject] = useState([]);  
   const [myObject2, setMyObject2] = useState([]);  
-
   const [Results, setResults] = useState('null');
   const [chartLabels, setchartLabels] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
   const [chartData, setchartData] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -492,10 +519,26 @@ function nav() {
   const Tab = createBottomTabNavigator();
 return (
     <Tab.Navigator>
-      <Tab.Screen name="Scouting" component={navigatescout} />
-      <Tab.Screen name="TBA" component={HomeScreen} />
-      <Tab.Screen name="Screen3" component={analysis} />
-      <Tab.Screen name="Settings" component={ProfileScreen} />
+      <Tab.Screen name="Scouting" component={navigatescout} options={{
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="md-eye" size={size} color={color} />
+      ),
+    }}/>
+      <Tab.Screen name="TBA" component={HomeScreen} options={{
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="globe-outline" size={size} color={color} />
+      ),
+    }}/>
+      <Tab.Screen name="Analysis" component={analysis} options={{
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="game-controller-outline" size={size} color={color} />
+      ),
+    }}/>
+      <Tab.Screen name="Settings" component={SettingsScreen} options={{
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="settings-outline" size={size} color={color} />
+      ),
+    }}/>
     </Tab.Navigator>
     )
 
@@ -525,51 +568,8 @@ function NotificationsScreen({ navigation }) {
   );
 }
 
-function SettingsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-    </View>
-  );
-}
 
-const Stack = createStackNavigator();
 
-function MyStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="The Red Alliance" component={nav} options={{ headerShown: false }} />
-      <Stack.Screen name="Analysis" component={analysis} />
-      <Stack.Screen name="New" component={New} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="Graph" component={Graph} />
-    </Stack.Navigator>
-  );
-  }
-
-export default function App() {
-  const [loading2, setLoading2] = useState(false);
-  setTimeout(() => {
-    setLoading2(true);
-  }, 1000);
-
-  return (
-    <AnimatedSplash
-      translucent={true}
-      isLoaded={loading2}
-      logoImage={require("./assets/splash.png")}
-      backgroundColor={"#FFFFFF"}
-      logoHeight={windowHeight}
-      logoWidth={windowWidth}
-      AnimatedSplash>
-        
-        <NavigationContainer>
-      <MyStack />
-    </NavigationContainer>
-    </AnimatedSplash>
-
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
