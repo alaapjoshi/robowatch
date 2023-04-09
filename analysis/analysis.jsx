@@ -28,7 +28,7 @@ const windowHeight = Dimensions.get('window').height;
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-export default function analysis() {
+export default function Analysis() {
     matches = [];
     const [myObject3, setMyObject3] = useState([]);  
 

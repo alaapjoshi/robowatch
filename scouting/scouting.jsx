@@ -12,7 +12,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-export default function scouting() {
+export default function Scouting() {
     return (
         <Text>
             TEST 

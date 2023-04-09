@@ -13,10 +13,10 @@ import {
 } from 'react-native';
 import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import analysis from './analysis/analysis';
 const Tab = createBottomTabNavigator();
+import Analysis from './analysis/analysis'
 import SettingsScreen from './settings/settings';
-import navigatescout from './scouting/navigatescout';
+import Navigatescout from './scouting/navigatescout';
 //import Ionicons from '@expo/vector-icons/Ionicons';
 import { LineChart } from 'react-native-chart-kit';
 import AnimatedSplash from "react-native-animated-splash-screen";
@@ -41,7 +41,7 @@ function MyStack() {
       
       <Stack.Screen name="Matchover" component={matchover} />
 
-      <Stack.Screen name="Analysis" component={analysis} />
+      <Stack.Screen name="Analysis" component={Analysis} />
       <Stack.Screen name="New" component={New} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Graph" component={Graph} />
@@ -523,7 +523,7 @@ function Nav() {
   const Tab = createBottomTabNavigator();
 return (
     <Tab.Navigator>
-      <Tab.Screen name="Scouting" component={navigatescout} options={{
+      <Tab.Screen name="Scouting" component={Navigatescout} options={{
         
       tabBarIcon: ({ color, size }) => (
         <Ionicons name="clipboard-outline" size={size} color={color} />
@@ -535,7 +535,7 @@ return (
         <Ionicons name="globe-outline" size={size} color={color} />
       ),
     }}/>
-      <Tab.Screen name="Analysis" component={analysis} options={{
+      <Tab.Screen name="Analysis" component={Analysis} options={{
       tabBarIcon: ({ color, size }) => (
         <Ionicons name="game-controller-outline" size={size} color={color} />
       ),

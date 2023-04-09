@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 const Stack = createStackNavigator();
 
 
-const matchover = () => {
+const Matchover = () => {
     return (
       <NavigationContainer independent={true}>
         <Stack.Navigator >
@@ -18,26 +18,36 @@ const matchover = () => {
       </NavigationContainer>
     );
   };
-  export default matchover;
+  export default Matchover;
 
 function rank({ route })  {
 const { eventKey } = route.params;
 const [rankings, setRankings] = useState();
+const [test, settest] = useState();
+
 const ran = [];
-const ran2 = [];
 
 useEffect(() => {
     fetch('https://www.thebluealliance.com/api/v3/event/' + eventKey + "/rankings",{ headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
     .then(response => response.json())
       .then(data => {
         for (let i = 1; i < Object.keys(data.rankings).length +1; i++) {
-            ran.push(data.rankings[i - 1].team_key)
+            fetch("https://www.thebluealliance.com/api/v3/team/" + data.rankings[i - 1].team_key,{ headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
+            .then(response => response.json())
+            .then(data => {
+                ran.push(data.nickname)
+            })
+            .catch(error => console.error(error));
 
         }
-
+        
       })
+      
       .catch(error => console.error(error));
-  }, []);
+  }, 
+  
+  []);
+
   const renderItem = ({ item, index }) => (
     <View style={styles.item}>
       <Text style={[styles.itemText, { color: '#FF4136' }]}>

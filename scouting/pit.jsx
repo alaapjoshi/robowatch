@@ -13,7 +13,7 @@ ActivityIndicator
 } from 'react-native';
 import Checkbox from 'expo-checkbox';
 
-export default function pit() {
+export default function Pit() {
     const [text, onChangeText] = useState('Useless Text');
     const [number, onChangeNumber] = useState('');
     const [cubeslow, setcubeslow] = useState(false);

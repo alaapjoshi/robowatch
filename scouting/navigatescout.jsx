@@ -13,22 +13,22 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import pit from './pit';
+import Pit from './pit';
 import scouting from './scouting';
 
-export default function navigatescout( {navigation } ) {
+export default function Navigatescout( {navigation } ) {
   const Stack = createNativeStackNavigator();
     return (
   <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="move">
-      <Stack.Screen name="move" component={move} options={{ headerShown: false }}/>
-        <Stack.Screen name="Pit" component={pit} />
+      <Stack.Navigator initialRouteName="Move">
+      <Stack.Screen name="Move" component={Move} options={{ headerShown: false }}/>
+        <Stack.Screen name="Pit" component={Pit} />
         <Stack.Screen name="Scout" component={scouting} />
       </Stack.Navigator>
       </NavigationContainer>
     )
 }
-function move( {navigation} ) {
+function Move( {navigation} ) {
   return(
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
   <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#ff0303', marginBottom: 40 }}>Select Scouting Type:</Text>
