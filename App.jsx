@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import analysis from './analysis';
+import analysis from './analysis/analysis';
 const Tab = createBottomTabNavigator();
 import SettingsScreen from './settings/settings';
 import navigatescout from './scouting/navigatescout';
@@ -30,13 +30,17 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import matchover from './matchover/matchoverview';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="The Red Alliance" component={nav} options={{ headerShown: false }} />
+      <Stack.Screen name="The Red Alliance" component={Nav} options={{ headerShown: false }} />
+      
+      <Stack.Screen name="Matchover" component={matchover} />
+
       <Stack.Screen name="Analysis" component={analysis} />
       <Stack.Screen name="New" component={New} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
@@ -515,16 +519,18 @@ const NoInternetPage = () => {
 
   );
 }
-function nav() {
+function Nav() {
   const Tab = createBottomTabNavigator();
 return (
     <Tab.Navigator>
       <Tab.Screen name="Scouting" component={navigatescout} options={{
+        
       tabBarIcon: ({ color, size }) => (
-        <Ionicons name="md-eye" size={size} color={color} />
+        <Ionicons name="clipboard-outline" size={size} color={color} />
       ),
     }}/>
       <Tab.Screen name="TBA" component={HomeScreen} options={{
+
       tabBarIcon: ({ color, size }) => (
         <Ionicons name="globe-outline" size={size} color={color} />
       ),
@@ -534,6 +540,12 @@ return (
         <Ionicons name="game-controller-outline" size={size} color={color} />
       ),
     }}/>
+    <Tab.Screen name="Matches" component={matchover} options={{
+      tabBarIcon: ({ color, size }) => (
+        <Ionicons name="md-eye" size={size} color={color} />
+      ),
+    }}/>
+
       <Tab.Screen name="Settings" component={SettingsScreen} options={{
       tabBarIcon: ({ color, size }) => (
         <Ionicons name="settings-outline" size={size} color={color} />

@@ -128,10 +128,10 @@ export default function pit() {
 
     <View style={{ flexDirection: 'row' }}>
         <Text style={styles.checkbox}>
-            Ground
+            G
         </Text>
         <Text style={styles.checkbox}>
-            Station
+            S
         </Text>
     </View>
 
@@ -154,10 +154,10 @@ export default function pit() {
 
     <View style={{ flexDirection: 'row' }}>
         <Text style={styles.checkbox}>
-            Ground
+            G
         </Text>
         <Text style={styles.checkbox}>
-            Station
+            S
         </Text>
     </View>
 

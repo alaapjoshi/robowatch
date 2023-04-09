@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Switch, TextInput } from 'react-native';
+import { React, useState, createContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Switch, TextInput, Button } from 'react-native';
+const AppContext = createContext();
 
 export default function SettingsScreen() {
-  const [colorAccent, setColorAccent] = useState('#FFA500');
+  const [colorAccent, setColorAccent] = useState('#ff0303');
   const [teamNumber, setTeamNumber] = useState('75');
+  const [DistrictNumber, setDistrictNumber] = useState('fma');
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   const handleColorChange = (color) => {
@@ -13,33 +16,39 @@ export default function SettingsScreen() {
   const handleTeamNumberChange = (number) => {
     setTeamNumber(number);
   };
-
+  const handleDistrictNumberChange = (number) => {
+    setDistrictNumber(number);
+  };
   const handleNotificationsToggle = () => {
     setNotificationsEnabled((prevState) => !prevState);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Settings</Text>
+      <Text style={{fontSize: 32,fontWeight: 'bold',color: colorAccent,marginBottom: 20, textAlign: 'center'}}>Settings</Text>
       <View style={styles.setting}>
       <View style={styles.setting}>
         <Text style={styles.settingLabel}>Team Number</Text>
         <TextInput style={styles.input} value={teamNumber} onChangeText={handleTeamNumberChange} />
       </View>
+      <View style={styles.setting}>
+        <Text style={styles.settingLabel}>District</Text>
+        <TextInput style={styles.input} value={DistrictNumber} onChangeText={handleDistrictNumberChange} />
+      </View>
         <Text style={styles.settingLabel}>Color / Accent</Text>
-        <View style={styles.colorPicker}>
+        <View style={styles.colorPicker}  color={colorAccent}>
+          <TouchableOpacity style={[styles.colorOption, { backgroundColor: '#ff0303' }]} onPress={() => handleColorChange('#ff0303')} />
           <TouchableOpacity style={[styles.colorOption, { backgroundColor: '#FFA500' }]} onPress={() => handleColorChange('#FFA500')} />
           <TouchableOpacity style={[styles.colorOption, { backgroundColor: '#00BFFF' }]} onPress={() => handleColorChange('#00BFFF')} />
-          <TouchableOpacity style={[styles.colorOption, { backgroundColor: '#228B22' }]} onPress={() => handleColorChange('#228B22')} />
           <TouchableOpacity style={[styles.colorOption, { backgroundColor: '#FF69B4' }]} onPress={() => handleColorChange('#FF69B4')} />
         </View>
       </View>
 
-      <View style={styles.setting}>
+      <View style={{flexDirection: 'column', alignItems: 'center',marginBottom: 20 }}>
         <Text style={styles.settingLabel}>Notifications</Text>
         <Switch value={notificationsEnabled} onValueChange={handleNotificationsToggle} />
       </View>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={{backgroundColor: colorAccent,padding: 10,borderRadius: 5,marginTop: 20,alignSelf: 'center'}}>
         <Text style={styles.buttonText}>Save Changes</Text>
       </TouchableOpacity>
     </View>
@@ -52,20 +61,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     padding: 20,
   },
-  heading: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFA500',
-    marginBottom: 20,
-  },
   setting: {
     marginBottom: 20,
   },
   settingLabel: {
     fontSize: 18,
+    textAlign: 'center',
     fontWeight: 'bold',
     color: '#808080',
-    marginBottom: 5,
+    marginBottom: 10,
+    
   },
   colorPicker: {
     flexDirection: 'row',
@@ -85,13 +90,6 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     color: '#000000',
-  },
-  button: {
-    backgroundColor: '#FFA500',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-    alignSelf: 'center',
   },
   buttonText: {
     color: '#FFFFFF',

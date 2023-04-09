@@ -33,19 +33,9 @@ export default function analysis() {
     const [myObject3, setMyObject3] = useState([]);  
 
   useEffect(() => {
-    fetch("https://www.thebluealliance.com/api/v3/team/frc75/events/2023", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
+    fetch("https://www.thebluealliance.com/api/v3/events/2023", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
       .then(response => response.json())
       .then(data => {
-        for (let i = 0; i < data.length; i++) {
-            matches.push(data[i].key)
-        }
-        for (let i = 0; i < data.length; i++) {
-            fetch("https://www.thebluealliance.com/api/v3/team/frc75/events/2023", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
-                .then(response => response.json())
-                .then(data => {
-                  console.log(data)
-                })
-              }
       }).catch(error => console.error(error));
     }, []);
 

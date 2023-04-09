@@ -21,8 +21,7 @@ export default function navigatescout( {navigation } ) {
     return (
   <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="move">
-      <Stack.Screen name="move" component={move} />
-
+      <Stack.Screen name="move" component={move} options={{ headerShown: false }}/>
         <Stack.Screen name="Pit" component={pit} />
         <Stack.Screen name="Scout" component={scouting} />
       </Stack.Navigator>
