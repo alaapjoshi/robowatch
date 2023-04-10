@@ -1,23 +1,19 @@
-import {React, useState, useEffect} from 'react';
+import {React, useEffect, useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Button,
-  Text,
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  ActivityIndicator
+  Text
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Pit from './pit';
 import scouting from './scouting';
-
+import { useFocusEffect } from '@react-navigation/native';
 export default function Navigatescout( {navigation } ) {
   const Stack = createNativeStackNavigator();
+
     return (
   <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="Move">
@@ -28,16 +24,38 @@ export default function Navigatescout( {navigation } ) {
       </NavigationContainer>
     )
 }
-function Move( {navigation} ) {
+function Move( { navigation} ) {
+  const [refresh, setRefresh] = useState(false);
+  const [color, setcolor] = useState("#ff0303");
+  const [colorAccent, setColorAccent] = useState("#ff0303");
+  this.forceUpdate
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('color');
+        if (value !== null) {
+          setColorAccent(value.replace(/['"]+/g, ''));
+        }
+      } catch (e) {
+        console.log("umm...")
+      }
+    }
+  
+    getData();
+  }, [colorAccent]);
+
+
+
   return(
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-  <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#ff0303', marginBottom: 40 }}>Select Scouting Type:</Text>
-  <TouchableOpacity style={{ backgroundColor: '#ff0303', padding: 20, borderRadius: 10, marginBottom: 40 }} onPress={() => navigation.navigate('Pit')}>
+  <Text style={{ fontSize: 40, fontWeight: 'bold', color: colorAccent, marginBottom: 40 }}>Select Scouting Type:</Text>
+  <TouchableOpacity style={{ backgroundColor: colorAccent, padding: 20, borderRadius: 10, marginBottom: 40 }} onPress={() => navigation.navigate('Pit')}>
     <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Pit Scouting</Text>
   </TouchableOpacity>
-  <TouchableOpacity style={{ backgroundColor: '#ff0303', padding: 20, borderRadius: 10 }} onPress={() => navigation.navigate('Scout')}>
+  <TouchableOpacity style={{ backgroundColor: colorAccent, padding: 20, borderRadius: 10 }} onPress={() => navigation.navigate('Scout')}>
     <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Match Scouting</Text>
   </TouchableOpacity>
+
 </View>
 
   )

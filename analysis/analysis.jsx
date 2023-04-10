@@ -1,46 +1,50 @@
 import {React, useState, useEffect} from 'react';
 import {
   StyleSheet,
-  TouchableOpacity,
   View,
-  Button,
   Text,
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  ActivityIndicator
+  TouchableOpacity
 } from 'react-native';
-import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-const Tab = createBottomTabNavigator();
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { LineChart } from 'react-native-chart-kit';
-import AnimatedSplash from "react-native-animated-splash-screen";
-import { Dimensions } from "react-native";
+
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
 export default function Analysis() {
     matches = [];
     const [myObject3, setMyObject3] = useState([]);  
 
+    AsyncStorage.getItem('color', (err, item) => console.log(item));
+
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("color")
+        console.log(string(value))
+
+        if(value !== null) {
+          // value previously stored
+        }
+      } catch(e) {
+        // error reading value
+      }
+    }
+
   useEffect(() => {
-    fetch("https://www.thebluealliance.com/api/v3/events/2023", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
+    fetch("https://www.thebluealliance.com/api/v3/event/2023njski/predictions", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
       .then(response => response.json())
       .then(data => {
+        //console.log(JSON.stringify(data))
       }).catch(error => console.error(error));
     }, []);
 
     return (
         <View>
+          <TouchableOpacity style={{alignItems: 'center',backgroundColor: '#DDDDDD',padding: 10,}}onPress={getData()} >
+
+          </TouchableOpacity>
             <Text>
                 asd
                 

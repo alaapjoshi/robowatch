@@ -1,20 +1,14 @@
-import {React, useState, useEffect} from 'react';
+import {React, useState} from 'react';
 import {
   StyleSheet,
-  TouchableOpacity,
   View,
-  Button,
   Text,
-  FlatList,
-  SafeAreaView,
   ScrollView,
   TextInput,
-ActivityIndicator
 } from 'react-native';
 import Checkbox from 'expo-checkbox';
 
 export default function Pit() {
-    const [text, onChangeText] = useState('Useless Text');
     const [number, onChangeNumber] = useState('');
     const [cubeslow, setcubeslow] = useState(false);
     const [cubesmid, setcubesmid] = useState(false);

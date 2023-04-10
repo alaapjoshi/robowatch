@@ -4,26 +4,42 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ScrollView } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
-
 
 const Matchover = () => {
     return (
       <NavigationContainer independent={true}>
         <Stack.Navigator >
-          <Stack.Screen name="matches" component={matches}options={{ headerShown: false }}/>
-          <Stack.Screen name="Rankings" component={rank} />
+          <Stack.Screen name="matches" component={Matches}options={{ headerShown: false }}/>
+          <Stack.Screen name="Rankings" component={Rank} />
         </Stack.Navigator>
       </NavigationContainer>
     );
   };
   export default Matchover;
 
-function rank({ route })  {
+function Rank({ route })  {
 const { eventKey } = route.params;
-const [rankings, setRankings] = useState();
-const [test, settest] = useState();
+const [color, setcolor] = useState();
+
+this.forceUpdate
+useEffect(() => {
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('color');
+      if (value !== null) {
+        //setcolor(value.replace(/['"]+/g, ''));
+        setcolor(value)
+      }
+    } catch (e) {
+      console.log("umm...")
+    }
+  }
+
+  getData();
+}, [color]);
 
 const ran = [];
 
@@ -47,17 +63,18 @@ useEffect(() => {
   }, 
   
   []);
-
-  const renderItem = ({ item, index }) => (
+  const renderItem = ({ item, index }) => {
+    console.log(color)
+    return (
     <View style={styles.item}>
-      <Text style={[styles.itemText, { color: '#FF4136' }]}>
+      <Text style={[styles.itemText, { color: "#00000" }]}>
         {index + 1}.
       </Text>
       <Text style={styles.itemText}>
         {item}
       </Text>
     </View>
-  );
+  )};
     return (
       <FlatList
       data={ran}
@@ -67,10 +84,9 @@ useEffect(() => {
 
     )
 }
-function matches() {
+function Matches() {
   const navigation = useNavigation();
   const [events, setEvents] = useState([]);
-
   useEffect(() => {
     fetch('https://www.thebluealliance.com/api/v3/district/2023fma/events',{ headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
     .then(response => response.json())
@@ -94,15 +110,12 @@ function matches() {
     </TouchableOpacity>
   );
   return (
-    <ScrollView style={{backgroundColor: '#333'}}>
       <FlatList
         data={events}
         renderItem={renderItem}
         keyExtractor={(item) => item.key}
         style={{ backgroundColor: '#333' }}
       />
-
-    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
