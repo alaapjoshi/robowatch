@@ -10,10 +10,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Pit from './pit';
 import scouting from './scouting';
-import { useFocusEffect } from '@react-navigation/native';
 export default function Navigatescout( {navigation } ) {
   const Stack = createNativeStackNavigator();
-
     return (
   <NavigationContainer independent={true}>
       <Stack.Navigator initialRouteName="Move">
@@ -25,8 +23,6 @@ export default function Navigatescout( {navigation } ) {
     )
 }
 function Move( { navigation} ) {
-  const [refresh, setRefresh] = useState(false);
-  const [color, setcolor] = useState("#ff0303");
   const [colorAccent, setColorAccent] = useState("#ff0303");
   this.forceUpdate
   useEffect(() => {
@@ -43,8 +39,6 @@ function Move( { navigation} ) {
   
     getData();
   }, [colorAccent]);
-
-
 
   return(
   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

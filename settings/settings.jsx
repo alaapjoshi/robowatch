@@ -1,47 +1,65 @@
-import { React, useState, createContext, useContext } from 'react';
+import { React, useState, createContext, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, TextInput, Button, Appearance, useColorScheme } from 'react-native';
-const AppContext = createContext();
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Provider } from "react-native-redux"
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
-  //console.log(colorScheme)
+
 
   const [colorAccent, setColorAccent] = useState("#ff0303");
   const [teamNumber, setTeamNumber] = useState('75');
+  const [test, settest] = useState(0);
+
   const [DistrictNumber, setDistrictNumber] = useState('fma');
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('color');
+        if (value !== null) {
+          setColorAccent(value.replace(/['"]+/g, ''));
+
+        }
+      } catch (e) {
+        console.log("umm...")
+      }
+    }
+    getData()
+
+  }, []);
 
   const storeColor = async (value) => {
     setColorAccent(value)
     try {
       await AsyncStorage.setItem('color', JSON.stringify(value))
-      console.log(value)
     } catch (e) {
       console.log("umm...")
     }
 
   }
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
 
   const handleTeamNumberChange = (number) => {
     setTeamNumber(number);
   };
-  const saveTextInputValue = async (number) => {
+  const saveTextInputValue = async (value) => {
+    setDistrictNumber(value.toLowerCase());
     try {
-      await AsyncStorage.setItem('district', number);
-      setDistrictNumber(number);
-
+      await AsyncStorage.setItem('district', JSON.stringify(value).toLowerCase())
+      console.log(DistrictNumber)
     } catch (e) {
-      console.log('Error saving text input value: ', e);
+      console.log("umm...")
     }
-  };
+
+  }
   const handleNotificationsToggle = () => {
     setNotificationsEnabled((prevState) => !prevState);
   };
         return (
-          <View style={styles.container}>
+          <ScrollView style={styles.container}>
             <Text style={{fontSize: 32,fontWeight: 'bold',color: colorAccent,marginBottom: 20, textAlign: 'center'}}>Settings</Text>
             <View style={styles.setting}>
             <View style={styles.setting}>
@@ -71,10 +89,13 @@ export default function SettingsScreen() {
               </TouchableOpacity>
               <Text style={styles.settingLabel}>Some settings require a refresh of the app</Text>
               <Text style={styles.settingLabel}>(Swipe out the app and open it again)</Text>
-
+              <View style={{flex: 1,backgroundColor: '#F5F5F5',padding: 20,}}>
+              <View style={{position:'absolute',bottom: 0,left: 0,right: 0,backgroundColor: '#333',padding: 10,alignItems: 'center'}}>
+                <Text style={{color: '#FFF',fontSize: 12,fontWeight: 'bold',}}>Made by AJ</Text>
+              </View>
+              </View>
       
-      
-          </View>
+          </ScrollView>
         )
       };
 const styles = StyleSheet.create({

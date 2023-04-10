@@ -11,7 +11,6 @@ import {
   TextInput,
   ActivityIndicator
 } from 'react-native';
-import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 import Analysis from './analysis/analysis'
@@ -25,26 +24,21 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
 import { Ionicons } from '@expo/vector-icons';
-import navtba from './TBA/navtba'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import matchover from './matchover/matchoverview';
-
+import matchover from './TBA/matches/matchoverview';
+import tra from './TBA/team/tra';
+import Navigate from './TBA/navigate';
 const Stack = createStackNavigator();
-
 function MyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="The Red Alliance" component={Nav} options={{ headerShown: false }} />
-      
-      <Stack.Screen name="Matchover" component={matchover} />
-
+      <Stack.Screen name="Nav" component={Nav} options={{ headerShown: false }} />
       <Stack.Screen name="Analysis" component={Analysis} />
+      <Stack.Screen name="The Red Alliance" component={Navigate} options={{ headerShown: false }} />
       <Stack.Screen name="New" component={New} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-      <Stack.Screen name="Graph" component={Graph} />
     </Stack.Navigator>
   );
   }
@@ -128,13 +122,6 @@ const renderItem = ({ item }) => (
       <Text style={styles.itemText}>{item}</Text>
   </TouchableOpacity>
 );
-
-/*
-<Button
-title="Go to Notifications"
-onPress={() => navigation.navigate('Notifications')}
-/>
-*/
 return (
   <ScrollView style={{flex: 1, backgroundColor: "#FFFFFF"}}>
 
@@ -177,269 +164,6 @@ return (
 );
 };
 
-function Graph({ route } ) {
-  const { match, team } = route.params;
-  const [myObject, setMyObject] = useState([]);  
-  const [myObject2, setMyObject2] = useState([]);  
-  const [Results, setResults] = useState('null');
-  const [chartLabels, setchartLabels] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-  const [chartData, setchartData] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-
-  const ihavenoidea = dict[match]
-  const autoPoints = [];
-  const teleopPoints = [];
-  const matchNumber = [];
-  const matchType = [];
-  const foulCount = [];
-  const uhh = [];
-  const nameList = [];
-  const max = [];
-  const bikinibottom = [];
-  const bikinibottom2 = [];
-  const [what, setwhat] = useState("Unknown...");
-  const [loading, setLoading] = useState(true);
-
-
-  useEffect(() => {
-  fetch("https://www.thebluealliance.com/api/v3/team/" + team + "/event/" + String(ihavenoidea) + "/matches", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
-    .then(response => response.json())
-    .then(data => {
-      const re = JSON.stringify(data)
-    const size = data.length;
-    for (let i = 0; i < size; i++) {
-      let win = "";
-      if (data[i].alliances.red.team_keys[0] == team || data[i].alliances.red.team_keys[1] == team || data[i].alliances.red.team_keys[2] == team) {
-        if (data[i].winning_alliance == "red") {
-          win = "win";
-        }
-        else if (data[i].winning_alliance == "blue"){
-          win = "lose";
-        }
-      else {
-        win = "No data"
-      }
-      if (data[i].score_breakdown === null) {
-        continue;
-
-      }
-      else {
-
-        uhh.push(win);
-        nameList.push(data[i].alliances.red.score);
-        matchNumber.push(data[i].match_number);
-        matchType.push(data[i].comp_level);
-        autoPoints.push(data[i].score_breakdown.red.autoPoints);
-        teleopPoints.push(data[i].score_breakdown.red.teleopPoints);
-        foulCount.push(data[i].score_breakdown.red.foulCount);
-          const send3 = data[i].score_breakdown.red.autoCommunity.T + "," + data[i].score_breakdown.red.autoCommunity.M + "," + data[i].score_breakdown.red.autoCommunity.B
-          const send4 = data[i].score_breakdown.red.teleopCommunity.T + "," + data[i].score_breakdown.red.teleopCommunity.M + "," + data[i].score_breakdown.red.teleopCommunity.B
-          const send = {Auto: send3, Teleop: send4, MatchNumber:data[i].match_number,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.red.autoPoints,teleopPoints: data[i].score_breakdown.red.teleopPoints, fouls: data[i].score_breakdown.red.foulCount, Score: data[i].alliances.red.score, win: win, id: i };
-          bikinibottom.push(send);
-        }
-          continue;
-      }
-      else if (data[i].alliances.blue.team_keys[0] == team || data[i].alliances.blue.team_keys[1] == team || data[i].alliances.blue.team_keys[2] == team) {
-        if (data[i].winning_alliance == "blue") {
-          win = "win";
-        }
-      else if (data[i].winning_alliance == "red"){
-          win = "lose";
-        }
-      else {
-        win = "No data"
-      }
-      if (data[i].score_breakdown === null) {
-        continue;
-      }
-      else {
-        uhh.push(win);
-        nameList.push(data[i].alliances.blue.score);
-        matchNumber.push(data[i].match_number);
-        matchType.push(data[i].comp_level);
-        autoPoints.push(data[i].score_breakdown.blue.autoPoints);
-        teleopPoints.push(data[i].score_breakdown.blue.teleopPoints);
-        foulCount.push(data[i].score_breakdown.blue.foulCount);
-        const send3 = data[i].score_breakdown.blue.autoCommunity.T + "," + data[i].score_breakdown.blue.autoCommunity.M + "," + data[i].score_breakdown.blue.autoCommunity.B
-        const send4 = data[i].score_breakdown.blue.teleopCommunity.T + "," + data[i].score_breakdown.blue.teleopCommunity.M + "," + data[i].score_breakdown.blue.teleopCommunity.B
-        const send = {Auto: send3, Teleop: send4, MatchNumber: data[i].match_number ,MatchLevel:data[i].comp_level, autoPoints: data[i].score_breakdown.blue.autoPoints,teleopPoints: data[i].score_breakdown.blue.teleopPoints, fouls: data[i].score_breakdown.blue.foulCount,Score: data[i].alliances.blue.score, win: win, id: i };
-        bikinibottom.push(send);
-      }
-        continue;
-      }
-        continue;
-    }
-    setMyObject(bikinibottom)
-
-    for (let i = 0; i < nameList.length; i++) {
-      max.push(String(i));
-    };
-    if (nameList.length != 0 || max.length != 0) {
-      setchartLabels(max);
-      setchartData(nameList);
-    }
-    const sum = autoPoints.reduce((acc, curr) => acc + curr, 0);
-    const temp = sum / autoPoints.length;
-    const sumteleop = teleopPoints.reduce((acc, curr) => acc + curr, 0);
-    const sumscore = nameList.reduce((acc, curr) => acc + curr, 0);
-    const sumfouls = autoPoints.reduce((acc, curr) => acc + curr, 0);
-
-    const searchString = "win";
-    const searchString2 = "lose";
-    const count = uhh.filter((item) => item === searchString).length;
-    const count2 = uhh.filter((item) => item === searchString2).length;
-      if (count > count2) {
-        setwhat("Win");
-      }
-      else if (count2 > count) {
-        setwhat("Lose")
-      }
-      else if (count2 == count) {
-        setwhat("Tie")
-      }
-    const send2 = {Average: what, Score: (Math.round(sumscore / nameList.length)), averageAuto: (Math.round(temp)), averageteleop: (Math.round(sumteleop / teleopPoints.length)), averagefouls: (Math.round(sumfouls / foulCount.length))}
-    bikinibottom2.push(send2)
-    setMyObject2(bikinibottom2)
-
-  }).catch(error => console.error(error));
-}, []);
-
-useEffect(() => {
-  setTimeout(() => {
-    setLoading(false);
-  }, 500);
-}, []);
-
-const renderItem = ({ item }) => {
-  return (
-    <>
-<Collapse>
-    <CollapseHeader>
-      <View style={[styles.item, item.win === "win" ? styles.win : styles.lose]}>
-      <Text style={styles.title}>Match Number: {item.MatchNumber}</Text>
-        <Text>Match Level: {item.MatchLevel}</Text>
-        <Text>Auto Points: {item.autoPoints}</Text>
-        <Text>Teleop Points: {item.teleopPoints}</Text>
-        <Text>Fouls: {item.fouls}</Text>
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Score: {item.Score}</Text>
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Results: {item.win}</Text>
-      </View>
-    </CollapseHeader>
-    <CollapseBody>
-<Text style={{textAlign: 'center', fontSize: 30}}> Auto Grid: </Text>
-{item.Auto && (
-  <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", paddingHorizontal: 20 }}>
-    {[...Array(3)].map((_, i) => (
-      <View key={i} style={{ flexDirection: "row" }}>
-        {item.Auto.split(",").slice(i * 9, (i + 1) * 9).map((item, index) => (
-          <View
-            key={index}
-            style={[
-              styles.gridItem,
-              item === "Cube" ? { backgroundColor: "purple" } : item === "Cone" ? { backgroundColor: "yellow" } : { backgroundColor: "gray" }
-            ]}
-          >
-            <Text style={styles.gridText}>{item}</Text>
-          </View>
-        ))}
-      </View>
-    ))}
-  </View>
-)}
-<Text style={{textAlign: 'center', fontSize: 30}}> {"\n"} Teleop Grid: </Text>
-{item.Teleop && (
-  <View style={{ flexDirection: "column",justifyContent: "center", alignItems: "center", paddingHorizontal: 20}}>
-    {[...Array(3)].map((_, i) => (
-      <View key={i} style={{ flexDirection: "row" }}>
-        {item.Teleop.split(",").slice(i * 9, (i + 1) * 9).map((item, index) => (
-          <View
-            key={index}
-            style={[
-              styles.gridItem,
-              item === "Cube" ? { backgroundColor: "purple" } : item === "Cone" ? { backgroundColor: "yellow" } : { backgroundColor: "gray" }
-            ]}
-          >
-            <Text style={styles.gridText}>{item}</Text>
-          </View>
-        ))}
-      </View>
-    ))}
-  </View>
-)}
-    </CollapseBody>
-</Collapse>
-  </>
-)
-
-};
-const renderTop = ({ item }) => {
-return (
-  <View style={styles.item}>
-  <Text style={styles.title}>Average</Text>
-
-<Text>Auto Points: {item.averageAuto}</Text>
-<Text>Teleop Points: {item.averageteleop}</Text>
-<Text>Number of Fouls: {item.averagefouls}</Text>
-<Text style={{fontSize: 20, fontWeight: 'bold'}}>Average Score: {item.Score} </Text>
-</View>
-)
-}
-if (loading) {
-  // Render loading widget
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#ff0303" />
-      <Text style={{fontSize: 30}}>Loading...</Text>
-    </View>
-  );
-}
-
-  return (
-  <SafeAreaView>
-    <ScrollView>
-    <View >
-    <Text style={{textAlign: 'center', fontSize: 30, paddingHorizontal: 20}}> { match }  {'\n'}</Text>
-    
-    <Text style={styles.subLogoText}> Chart of Scores</Text>
-
-    <LineChart
-  data={{
-    labels: chartLabels,
-    datasets: [
-      {
-        data: chartData
-      }
-    ]
-  }}
-  width={windowWidth}
-  height={windowHeight / 2}
-  chartConfig={{
-  backgroundGradientFrom: '#1E2923',
-  backgroundGradientTo: '#08130D',
-  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-  }}
-  style={{
-    marginVertical: 8,
-    borderRadius: 16,
-  }}
-/>
-<Text> {'\n'}</Text>
-<FlatList
-      data={myObject2}
-      renderItem={renderTop}
-      keyExtractor={(item) => 1}
-    />
-
-<FlatList
-      data={myObject}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id.toString()}
-    />
-</View>
-</ScrollView>
-  </SafeAreaView>
-  )
-};
-//
 function HomeScreen({ navigation }) {
   const [text, onChangeText] = useState();
   const [team, setTeam] = useState('');
@@ -529,7 +253,7 @@ return (
         <Ionicons name="clipboard-outline" size={size} color={color} />
       ),
     }}/>
-      <Tab.Screen name="TBA" component={HomeScreen} options={{
+      <Tab.Screen name="TBA" component={Navigate} options={{
 
       tabBarIcon: ({ color, size }) => (
         <Ionicons name="globe-outline" size={size} color={color} />
@@ -540,11 +264,7 @@ return (
         <Ionicons name="game-controller-outline" size={size} color={color} />
       ),
     }}/>
-    <Tab.Screen name="Matches" component={matchover} options={{
-      tabBarIcon: ({ color, size }) => (
-        <Ionicons name="md-eye" size={size} color={color} />
-      ),
-    }}/>
+
 
       <Tab.Screen name="Settings" component={SettingsScreen} options={{
       tabBarIcon: ({ color, size }) => (

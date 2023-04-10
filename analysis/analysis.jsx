@@ -17,20 +17,22 @@ export default function Analysis() {
     matches = [];
     const [myObject3, setMyObject3] = useState([]);  
 
-    AsyncStorage.getItem('color', (err, item) => console.log(item));
-
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem("color")
-        console.log(string(value))
-
-        if(value !== null) {
-          // value previously stored
+    const [colorAccent, setColorAccent] = useState("#ff0303");
+    this.forceUpdate
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('color');
+          if (value !== null) {
+            setColorAccent(value.replace(/['"]+/g, ''));
+          }
+        } catch (e) {
+          console.log("umm...")
         }
-      } catch(e) {
-        // error reading value
       }
-    }
+    
+      getData();
+    }, [colorAccent]);
 
   useEffect(() => {
     fetch("https://www.thebluealliance.com/api/v3/event/2023njski/predictions", { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
@@ -42,11 +44,11 @@ export default function Analysis() {
 
     return (
         <View>
-          <TouchableOpacity style={{alignItems: 'center',backgroundColor: '#DDDDDD',padding: 10,}}onPress={getData()} >
+          <TouchableOpacity style={{alignItems: 'center',backgroundColor: '#DDDDDD',padding: 10,}}onPress={null} >
 
           </TouchableOpacity>
             <Text>
-                asd
+                umm.... this page isn't built yet
                 
             </Text>
         </View>
