@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import {Restart} from 'fiction-expo-restart';
 
 const Stack = createStackNavigator();
 
@@ -25,17 +24,13 @@ function Matches() {
   const [events, setEvents] = useState([]);
   const [colorAccent, setColorAccent] = useState("#ff0303");
 
-  const [district, setdistrict] = useState("");
+  const [district, setdistrict] = useState("fma");
   useEffect(() => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem('district');
         if (value !== null) {
           setdistrict(value.replace(/['"]+/g, ''))
-          console.log(district)
-        }
-        else {
-          setdistrict("fma")
         }
       } catch (e) {
         console.log("umm...")

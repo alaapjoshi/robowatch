@@ -34,7 +34,7 @@ return (
 <NavigationContainer independent={true}>
   <Stack.Navigator initialRouteName="Move">
     <Stack.Screen name="data" component={Data} options={{ headerShown: false }} />
-    <Stack.Screen name="qr" component={qr} options={{ headerShown: false }} />
+    <Stack.Screen name="qr" component={Qr} options={{ headerShown: false }} />
   </Stack.Navigator>
   </NavigationContainer>
 )
@@ -343,8 +343,11 @@ function Data({ navigation }) {
     )
 
 }
-function qr({ route, navigation }) {
+function Qr({ route }) {
   useEffect(() => {
+    if (TeamNumber != "") {
+
+
   async function addData() {
     try {
         const docRef = await addDoc(collection(db, "pit"), {
@@ -370,6 +373,7 @@ function qr({ route, navigation }) {
       }
     }
     addData()
+  }
   }, []);
 
 

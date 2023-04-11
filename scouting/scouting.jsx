@@ -14,9 +14,10 @@ import {
 
 export default function Scouting() {
     return (
-        <Text>
-            TEST 
-        </Text>
+      <Text style={{textAlign: 'center', paddingTop: '50%', fontSize: 40}}>
+      Not Built yet... 
+          
+      </Text>
     )
 
 }

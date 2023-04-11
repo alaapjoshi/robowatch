@@ -43,15 +43,10 @@ export default function Analysis() {
     }, []);
 
     return (
-        <View>
-          <TouchableOpacity style={{alignItems: 'center',backgroundColor: '#DDDDDD',padding: 10,}}onPress={null} >
-
-          </TouchableOpacity>
-            <Text>
-                umm.... this page isn't built yet
-                
-            </Text>
-        </View>
+      <Text style={{textAlign: 'center', paddingTop: '50%', fontSize: 40}}>
+      Not Built yet... 
+          
+      </Text>
     )
 }
 

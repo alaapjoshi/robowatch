@@ -78,21 +78,21 @@ export default function Navigatescout( { navigation } ) {
     <View style={{ marginVertical: 8,flex: 1, backgroundColor: '#fff', padding: 20,
   }}>
             <Text style={{fontSize: 30, color: colorAccent}}>Team Number: {item.TeamNumber}</Text>
-            <Text style={styles.text}>Auto Align Game Piece: {item.autoaligngamepiece ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Auto Align April: {item.autoalignapril ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Cube Place Low: {item.cubeplacelow ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Cube Place Mid: {item.cubeplacemid ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Cube Place High: {item.cubeplacehigh ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Pickup Cubes Ground: {item.pickupcubesG ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Pickup Cubes Station: {item.pickupcubesS ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Cone Place Low: {item.coneplacelow ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Cone Place Mid: {item.coneplacemid ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Cone Place High: {item.coneplacehigh ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Pickup Cones Ground: {item.pickupconesG ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Pickup Cones Station: {item.pickupconesS ? 'Yes' : 'No'}</Text>
             <Text style={styles.text}>Auto Balance: {item.autobalance ? 'Yes' : 'No'}</Text>
             <Text style={styles.text}>Auto Sub: {item.autosub ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Cube Place High: {item.cubeplacehigh ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Cube Place Mid: {item.cubeplacemid ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Cube Place Low: {item.cubeplacelow ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Cone Place High: {item.coneplacehigh ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Cone Place Mid: {item.coneplacemid ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Cone Place Low: {item.coneplacelow ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Pickup Cubes Ground: {item.pickupcubesG ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Pickup Cubes Stationary: {item.pickupcubesS ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Pickup Cones Ground: {item.pickupconesG ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Pickup Cones Stationary: {item.pickupconesS ? 'Yes' : 'No'}</Text>
-            <Text style={styles.text}>Pieces: {item.pieces}</Text>
+            <Text style={styles.text}>Auto Align Game Piece: {item.autoaligngamepiece ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Auto Align April: {item.autoalignapril ? 'Yes' : 'No'}</Text>
+            <Text style={styles.text}>Auto Pieces: {item.pieces}</Text>
           </View>
   );
 

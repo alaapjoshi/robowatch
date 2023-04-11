@@ -37,7 +37,7 @@ function Overview() {
   }, [colorAccent]);
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-    <Text style={{ fontSize: 40, fontWeight: 'bold', color: colorAccent, marginBottom: 40 }}>What kind of info?:</Text>
+    <Text style={{ fontSize: 40, fontWeight: 'bold', color: colorAccent, marginBottom: 40 }}>What kind of info?</Text>
     <TouchableOpacity style={{ backgroundColor: colorAccent, padding: 20, borderRadius: 10, marginBottom: 40 }} onPress={() => navigation.navigate('tra')}>
       <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Team data</Text>
     </TouchableOpacity>

@@ -88,8 +88,8 @@ export default function SettingsScreen() {
     }
   }
   const bruh = () => {
-    this.forceUpdate();
-  };
+    null
+    };
   function handleNotificationsToggle() {
     if (notificationsEnabled == true) {
       setNotificationsEnabled(false)
@@ -103,7 +103,7 @@ export default function SettingsScreen() {
 
 
         return (
-          <ScrollView style={styles.container}>
+          <View style={styles.container}>
             <Text style={{fontSize: 32,fontWeight: 'bold',color: colorAccent,marginBottom: 20, textAlign: 'center'}}>Settings</Text>
             <View style={styles.setting}>
             <View style={styles.setting}>
@@ -131,15 +131,16 @@ export default function SettingsScreen() {
             <TouchableOpacity style={{padding: 10,borderRadius: 10,backgroundColor: colorAccent, justifyContent: 'center', alignItems: 'center',}} onPress={() => bruh()}>
               <Text style={styles.text}> Save Changes</Text>
               </TouchableOpacity>
-              <Text style={styles.settingLabel}>Some settings require a refresh of the app</Text>
+              <Text style={styles.settingLabel}>Some settings require a manual refresh of the app</Text>
               <Text style={styles.settingLabel}>(Swipe out the app and open it again)</Text>
               <View style={{flex: 1,backgroundColor: '#F5F5F5',padding: 20,}}>
               <View style={{position:'absolute',bottom: 0,left: 0,right: 0,backgroundColor: '#333',padding: 10,alignItems: 'center'}}>
                 <Text style={{color: '#FFF',fontSize: 12,fontWeight: 'bold',}}>Made by AJ</Text>
               </View>
               </View>
+              </View>
+
       
-          </ScrollView>
         )
       };
 const styles = StyleSheet.create({

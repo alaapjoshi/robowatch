@@ -453,8 +453,8 @@ function Graph({ route } ) {
     width={windowWidth}
     height={windowHeight / 2}
     chartConfig={{
-    backgroundGradientFrom: colorAccent,
-    backgroundGradientTo: '#000000',
+    backgroundGradientFrom: "#0000000",
+    backgroundGradientTo: "#000000",
     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     }}
     style={{
