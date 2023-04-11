@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+//import {Restart} from 'fiction-expo-restart';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +24,26 @@ function Matches() {
   const navigation = useNavigation();
   const [events, setEvents] = useState([]);
   const [colorAccent, setColorAccent] = useState("#ff0303");
-  const [district, setdistrict] = useState("fma");
+
+  const [district, setdistrict] = useState("");
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('district');
+        if (value !== null) {
+          setdistrict(value.replace(/['"]+/g, ''))
+          console.log(district)
+        }
+        else {
+          setdistrict("fma")
+        }
+      } catch (e) {
+        console.log("umm...")
+      }
+    }
+    getData()
+  
+  }, []);
 
 useEffect(() => {
   const getData = async () => {
@@ -39,20 +59,7 @@ useEffect(() => {
 
   getData();
 }, [colorAccent]);
-useEffect(() => {
-  const getData = async () => {
-    try {
-      const value2 = await AsyncStorage.getItem('district');
-      if (value !== null) {
-        setdistrict(value2.replace(/['"]+/g, ''))
-      }
-    } catch (e) {
-      console.log("umm...")
-    }
-  }
-  getData()
 
-}, []);
   useEffect(() => {
     fetch('https://www.thebluealliance.com/api/v3/district/2023' + district + '/events',{ headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
     .then(response => response.json())
@@ -63,7 +70,6 @@ useEffect(() => {
       })
       .catch(error => console.error(error));
   }, []);
-
   const handleEventPress = (eventKey) => {
     navigation.navigate('Rankings', { eventKey });
   };
@@ -136,11 +142,14 @@ function Rank({ route })  {
       </View>
     )};
       return (
+        <>
         <FlatList
         data={final}
         renderItem={renderItem}
         keyExtractor={(item) => item}
-      />
+      />     
+      </>
+
   
       )
   }
@@ -156,5 +165,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginLeft: 5,
+      },
+      text: {
+        color: 'white',
+        fontWeight: 'bold',
       },
   });

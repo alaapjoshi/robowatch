@@ -28,8 +28,8 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import matchover from './TBA/matches/matchoverview';
-import tra from './TBA/team/tra';
+
+
 import Navigate from './TBA/navigate';
 const Stack = createStackNavigator();
 function MyStack() {
@@ -44,6 +44,7 @@ function MyStack() {
   }
 
 export default function App() {
+
   const [loading2, setLoading2] = useState(false);
   setTimeout(() => {
     setLoading2(true);

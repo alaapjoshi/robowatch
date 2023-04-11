@@ -1,10 +1,8 @@
 dark and light mode
-Fix the color for the rest of the screen
-In settings screen make it so that it will pull the color from the storage and not what the user selects
 Add more stuff to settings
-Merge TBA and matches
 Add analysis with predictions from tba
 Pull something from first api
 Pull something from somewhere else
-Clear network cache
 robowatch vs roborecon
+npx expo install react-native-web@~0.18.10 react-dom@18.2.0 @expo/webpack-config@^18.0.1
+Take out stuff from package.json

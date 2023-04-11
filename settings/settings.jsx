@@ -2,16 +2,38 @@ import { React, useState, createContext, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, TextInput, Button, Appearance, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
+import RNRestart from 'react-native-restart'; // Import package from node modules
 
 export default function SettingsScreen() {
-  const colorScheme = useColorScheme();
-
 
   const [colorAccent, setColorAccent] = useState("#ff0303");
   const [teamNumber, setTeamNumber] = useState('75');
   const [test, settest] = useState(0);
 
-  const [DistrictNumber, setDistrictNumber] = useState('fma');
+  const [DistrictNumber, setDistrictNumber] = useState('');
+  useEffect(() => {
+    if (DistrictNumber == '') {
+      null
+    }
+    else {
+      useEffect(() => {
+        const getData = async () => {
+          try {
+            const value = await AsyncStorage.getItem('district');
+              setDistrictNumber(JSON.stringify(value));
+              console.log(JSON.stringify(value))
+          } catch (e) {
+            console.log("umm...")
+          }
+        }
+        getData()
+    
+      }, []);
+
+
+    }
+
+  }, []);
 
   useEffect(() => {
     const getData = async () => {
@@ -21,6 +43,18 @@ export default function SettingsScreen() {
           setColorAccent(value.replace(/['"]+/g, ''));
 
         }
+      } catch (e) {
+        console.log("umm...")
+      }
+    }
+    getData()
+
+  }, []);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('district');
+        setDistrictNumber(value.replace(/['"]+/g, ''));
       } catch (e) {
         console.log("umm...")
       }
@@ -46,18 +80,28 @@ export default function SettingsScreen() {
     setTeamNumber(number);
   };
   const saveTextInputValue = async (value) => {
-    setDistrictNumber(value.toLowerCase());
+    setDistrictNumber(value);
     try {
       await AsyncStorage.setItem('district', JSON.stringify(value).toLowerCase())
-      console.log(DistrictNumber)
     } catch (e) {
       console.log("umm...")
     }
+  }
+  const bruh = () => {
+    this.forceUpdate();
+  };
+  function handleNotificationsToggle() {
+    if (notificationsEnabled == true) {
+      setNotificationsEnabled(false)
+    }
+    else {
+      setNotificationsEnabled(true)
+
+    }
 
   }
-  const handleNotificationsToggle = () => {
-    setNotificationsEnabled((prevState) => !prevState);
-  };
+
+
         return (
           <ScrollView style={styles.container}>
             <Text style={{fontSize: 32,fontWeight: 'bold',color: colorAccent,marginBottom: 20, textAlign: 'center'}}>Settings</Text>
@@ -84,7 +128,7 @@ export default function SettingsScreen() {
               <Switch value={notificationsEnabled} onValueChange={handleNotificationsToggle} />
             </View>
 
-            <TouchableOpacity style={{padding: 10,borderRadius: 10,backgroundColor: colorAccent, justifyContent: 'center', alignItems: 'center',}} onPress={() => this.forceUpdate}>
+            <TouchableOpacity style={{padding: 10,borderRadius: 10,backgroundColor: colorAccent, justifyContent: 'center', alignItems: 'center',}} onPress={() => bruh()}>
               <Text style={styles.text}> Save Changes</Text>
               </TouchableOpacity>
               <Text style={styles.settingLabel}>Some settings require a refresh of the app</Text>

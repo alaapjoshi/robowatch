@@ -12,8 +12,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import QRCode from 'react-native-qrcode-svg';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-export default function Pit() {
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+const firebaseConfig = {
+  apiKey: "AIzaSyCfmW98iWLhhNtFrjy-3niS_OWPhrQTb5U",
+  authDomain: "robowatch-4c113.firebaseapp.com",
+  projectId: "robowatch-4c113",
+  storageBucket: "robowatch-4c113.appspot.com",
+  messagingSenderId: "416751963314",
+  appId: "1:416751963314:web:eaae18d08b2da367298dab",
+  measurementId: "G-HNHKV87TTL"
+};
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+export default function Pit() {
 const Stack = createNativeStackNavigator();
 return (
 <NavigationContainer independent={true}>
@@ -26,7 +41,6 @@ return (
 }
 function Data({ navigation }) {
   const [colorAccent, setColorAccent] = useState("#ff0303");
-  this.forceUpdate
   useEffect(() => {
     const getData = async () => {
       try {
@@ -66,27 +80,6 @@ function Data({ navigation }) {
     const [autoaligngame, setautoaligngame] = useState(false);
 
     const [autosub, setautosub] = useState(false);
-    const qr = [
-      {
-        "Team Number": number,
-        "cubeplacelow": cubeslow,
-        "cubeplacemid": cubesmid,
-        "cubeplacehigh": cubeshigh,
-        "coneplacelow": coneslow,
-        "coneplacemid": conesmid,
-        "coneplacehigh":coneshigh,
-        "pickupcubesG": pickuplowcubes,
-        "pickupcubesS": pickupstationcubes,
-        "pickupconesG": pickuplowcones,
-        "pickupconesS": pickupstationcones,
-        "autobalance": autobalanceyes,
-        "pieces": pieces,
-        "autoaligngamepiece": autoalign,
-        "autoalignapril": autoaligngame,
-        "autosub": autosub
-      }
-    ]
-
     return (
         <ScrollView>
 
@@ -322,7 +315,7 @@ function Data({ navigation }) {
           onValueChange={setautosub}
         />
     </View>
-    <TouchableOpacity style={{ backgroundColor: colorAccent, padding: 20, borderRadius: 10, marginBottom: 40 }} onPress={() => navigation.navigate('qr', {
+    <TouchableOpacity style={{ backgroundColor: colorAccent, padding: 20, borderRadius: 10, marginTop: 40 }} onPress={() => navigation.navigate('qr', {
    "TeamNumber": number,
    "cubeplacelow": cubeslow,
    "cubeplacemid": cubesmid,
@@ -341,7 +334,7 @@ function Data({ navigation }) {
    "autosub": autosub   
     })
 }>
-    <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Pit Scouting</Text>
+    <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Send to server + QR</Text>
   </TouchableOpacity>
 
 </View>
@@ -351,6 +344,35 @@ function Data({ navigation }) {
 
 }
 function qr({ route, navigation }) {
+  useEffect(() => {
+  async function addData() {
+    try {
+        const docRef = await addDoc(collection(db, "pit"), {
+      "TeamNumber": TeamNumber,
+      "cubeplacelow": cubeplacelow,
+      "cubeplacemid": cubeplacemid,
+      "cubeplacehigh": cubeplacehigh,
+      "coneplacelow": coneplacelow,
+      "coneplacemid": coneplacemid,
+      "coneplacehigh":coneplacehigh,
+      "pickupcubesG": pickupcubesG,
+      "pickupcubesS": pickupcubesS,
+      "pickupconesG": pickupconesG,
+      "pickupconesS": pickupconesS,
+      "autobalance": autobalance,
+      "pieces": pieces,
+      "autoaligngamepiece": autoaligngamepiece,
+      "autoalignapril": autoalignapril,
+      "autosub": autosub
+        });
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    }
+    addData()
+  }, []);
+
+
   const { TeamNumber, cubeplacelow,cubeplacemid,cubeplacehigh,coneplacelow,coneplacemid,coneplacehigh,pickupcubesG,pickupcubesS,pickupconesG,pickupconesS,autobalance,pieces,autoaligngamepiece,autoalignapril,autosub,  } = route.params;
   const qr = [
     {
@@ -373,7 +395,6 @@ function qr({ route, navigation }) {
     }
   ]
   const real = JSON.stringify(qr)
-  console.log(real)
   const [colorAccent, setColorAccent] = useState("#ff0303");
   this.forceUpdate
   useEffect(() => {
@@ -396,8 +417,7 @@ function qr({ route, navigation }) {
   <QRCode
     size={300}
     color={colorAccent}
-    logo={"assets/icon.png"}
-  value=  { real }
+    value=  { real }
 />
 </View>
   )
