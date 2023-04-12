@@ -18,6 +18,32 @@ export default function Navigate() {
     }
     
 function Overview() {
+  const [dark, setdark] = useState([]);  
+  const [wifi, setwifi] = useState(true);  
+
+  const endpoint = "https://www.thebluealliance.com/api/v3/status"
+  fetch(endpoint, { headers: { 'X-TBA-Auth-Key': "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR" } })
+    .then(response => {
+      if (response.status != 200) {
+        setwifi(false)
+      }
+    })
+    .then(data => {}).catch(error => console.error(error));
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('light');
+        if (value !== null) {
+          setdark(value)
+        }
+      } catch (e) {
+        console.log("umm...")
+      }
+    }
+    getData()
+
+  }, []);
   const navigation = useNavigation();
   const [colorAccent, setColorAccent] = useState("#ff0303");
   this.forceUpdate
@@ -35,6 +61,14 @@ function Overview() {
   
     getData();
   }, [colorAccent]);
+  if (wifi == false) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{fontSize: 30}}> No internet...</Text>
+</View>
+    )
+  }
+  if (dark == "false") {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
     <Text style={{ fontSize: 40, fontWeight: 'bold', color: colorAccent, marginBottom: 40 }}>What kind of info?</Text>
@@ -47,6 +81,22 @@ function Overview() {
   
   </View>
   );
+}
+else {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: "#080808" }}>
+    <Text style={{ fontSize: 40, fontWeight: 'bold', color: colorAccent, marginBottom: 40 }}>What kind of info?</Text>
+    <TouchableOpacity style={{ backgroundColor: colorAccent, padding: 20, borderRadius: 10, marginBottom: 40 }} onPress={() => navigation.navigate('tra')}>
+      <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Team data</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={{ backgroundColor: colorAccent, padding: 20, borderRadius: 10 }} onPress={() => navigation.navigate('Matchover')}>
+      <Text style={{ fontSize: 18, color: '#FFFFFF' }}>Match data</Text>
+    </TouchableOpacity>
+  
+  </View>
+
+  )
+}
 };
 
 const styles = StyleSheet.create({

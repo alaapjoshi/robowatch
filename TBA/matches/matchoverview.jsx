@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { FlatList, Text, TouchableOpacity, View, StyleSheet, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();

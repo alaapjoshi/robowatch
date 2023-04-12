@@ -52,6 +52,7 @@ function MyStack({ navigation }) {
   
     getData();
   }, [colorAccent]);
+  
 
     return (
       <>

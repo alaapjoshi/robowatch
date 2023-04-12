@@ -1,0 +1,121 @@
+import {React, useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { collection } from "firebase/firestore";
+
+export default function Read() {
+    const [colorAccent, setColorAccent] = useState("#ff0303");
+    this.forceUpdate
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('color');
+          if (value !== null) {
+            setColorAccent(value.replace(/['"]+/g, ''));
+          }
+        } catch (e) {
+          console.log("umm...")
+        }
+      }
+    
+      getData();
+    }, [colorAccent]);
+    const [pits, setPits] = useState([]);
+  
+    useEffect(() => {
+      const fetchPits = async () => {
+        const querySnapshot = await getDocs(collection(db, "pit"));
+        const pitsData = [];
+        querySnapshot.forEach((doc) => {
+          pitsData.push({ id: doc.id, ...doc.data() });
+        });
+        setPits(pitsData);
+      };
+      fetchPits();
+    }, []);
+  
+    const renderItem = ({ item }) => (
+      <View style={{ marginVertical: 8,flex: 1, backgroundColor: '#fff', padding: 20,
+    }}>
+              <Text style={{fontSize: 30, color: colorAccent}}>Team Number: {item.TeamNumber}</Text>
+              <Text style={styles.text}>Cube Place Low: {item.cubeplacelow ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Cube Place Mid: {item.cubeplacemid ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Cube Place High: {item.cubeplacehigh ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Pickup Cubes Ground: {item.pickupcubesG ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Pickup Cubes Station: {item.pickupcubesS ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Cone Place Low: {item.coneplacelow ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Cone Place Mid: {item.coneplacemid ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Cone Place High: {item.coneplacehigh ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Pickup Cones Ground: {item.pickupconesG ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Pickup Cones Station: {item.pickupconesS ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Auto Balance: {item.autobalance ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Auto Sub: {item.autosub ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Auto Align Game Piece: {item.autoaligngamepiece ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Auto Align April: {item.autoalignapril ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Auto Pieces: {item.pieces}</Text>
+            </View>
+    );
+  
+    return (
+      <View style={styles.container}>
+        <FlatList
+          style={styles.list}
+          data={pits}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+        />
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 4,
+      marginTop: '50%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#FFFFFF',
+      fontSize: 30,
+      height: 150,
+    },
+  button: {
+    backgroundColor: '#ff0303',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    width: '50%',
+    paddingBottom: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#ffffff',
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  list: {
+    width: '100%',
+    paddingHorizontal: 16,
+  },
+  item: {
+    marginVertical: 8,
+    flex: 1, backgroundColor: '#fff', padding: 20,
+
+  },
+  itemText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  });
+  
+  

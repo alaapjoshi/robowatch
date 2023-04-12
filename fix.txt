@@ -1,8 +1,7 @@
-dark and light mode
+Finish Adding dark mode support + fix bugs
 Add more stuff to settings
 Add analysis with predictions from tba
 Pull something from first api
 Pull something from somewhere else
 robowatch vs roborecon
-npx expo install react-native-web@~0.18.10 react-dom@18.2.0 @expo/webpack-config@^18.0.1
-Take out stuff from package.json
+Start using https://reactnative.dev/docs/hermes Hermes cause JS bundle is too big
