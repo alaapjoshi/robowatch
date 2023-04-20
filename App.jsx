@@ -2,6 +2,9 @@ import React, { useState,useEffect } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Alert } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {Dimensions} from 'react-native';
+const windowWidth = Dimensions.get('window').width;
+
 
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -80,7 +83,7 @@ export default function App() {
       <View style={styles.logoContainer}>
         {/* Include your logo here */}
         <Image
-        style={{height: 300, width: 500, marginBottom: 20}}
+        style={{height: 300, width: windowWidth - 50, marginBottom: 20}}
         source={require("./assets/RoboRaiderVector.png")}
       />
       </View>

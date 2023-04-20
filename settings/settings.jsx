@@ -251,8 +251,8 @@ function Set({ navigation }) {
     );
   } else {
     return (
+      <ScrollView>
       <View style={{ flex: 1, backgroundColor: "#080808", padding: 20 }}>
-        <ScrollView>
           <Text
             style={{
               fontSize: 32,
@@ -421,15 +421,15 @@ function Set({ navigation }) {
               borderRadius: 10,
               backgroundColor: "#F8F8F8",
             }}
-            onPress={() => navigation.navigate("Dev")}
-          >
+            onPress={() => navigation.navigate("Dev")}>
             <Text style={{ color: "black", fontWeight: "bold" }}>
               {" "}
               Dev Settings
             </Text>
           </TouchableOpacity>
-        </ScrollView>
       </View>
+              </ScrollView>
+
     );
   }
 }

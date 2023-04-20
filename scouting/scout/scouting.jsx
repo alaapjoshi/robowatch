@@ -21,16 +21,15 @@ export default function Scouting() {
           name="Setup"
           component={Setup}
           options={{ headerShown: false }}
+
         />
         <Stack.Screen
           name="Auto"
           component={Auto}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Teleop"
           component={Teleop}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Endgame"
@@ -40,7 +39,6 @@ export default function Scouting() {
         <Stack.Screen
           name="Final"
           component={Final}
-          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

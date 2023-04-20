@@ -19,7 +19,6 @@ import AnimatedSplash from "react-native-animated-splash-screen";
 import Analysis from "./analysis/analysis";
 import Navigatescout from "./scouting/navigatescout";
 import SettingsScreen from "./settings/settings";
-import LoginPage from "./singin/LoginPage";
 const Tab = createBottomTabNavigator();
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
@@ -37,8 +36,6 @@ function MyStack() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Analysis" component={Analysis} />
-      <Stack.Screen name="LoginPage" component={LoginPage} />
-
       <Stack.Screen
         name="The Red Alliance"
         component={Navigate}
@@ -367,19 +364,6 @@ function Nav() {
       <Tab.Screen
         name="Analysis"
         component={Analysis}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons
-              name="game-controller-outline"
-              size={size}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="LoginPage"
-        component={LoginPage}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons
