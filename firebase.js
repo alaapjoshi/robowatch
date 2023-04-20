@@ -1,5 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfmW98iWLhhNtFrjy-3niS_OWPhrQTb5U",
@@ -10,6 +11,9 @@ const firebaseConfig = {
   appId: "1:416751963314:web:eaae18d08b2da367298dab",
   measurementId: "G-HNHKV87TTL"
 };
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();

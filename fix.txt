@@ -1,4 +1,5 @@
 Finish Adding dark mode support + fix bugs
+Fix analysis dark mode
 Add more stuff to settings
 Add analysis with predictions from tba
 Pull something from first api
