@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, Alert } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -44,48 +44,63 @@ export default function App() {
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
-    console.log('asd')
     setsingined(true)
-            /*
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        setsingined(user.uid)
-        const storeColor = async (value) => {
-          try {
-            await AsyncStorage.setItem("login", user.uid);
-          } catch (e) {
-            console.log("umm...");
-          }
-        };
-        storeColor()
-        
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        setError(errorMessage);
-      });
-      */
+    const storeColor = async () => {
+      try {
+        await AsyncStorage.setItem("login", "true");
+      } catch (e) {
+        console.log("umm...");
+      }
+    };
+    storeColor()
   };
 
-  if (singined) {
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("login");
+        if (value !== null) {
+          setsingined(true)
+          }
+      } catch (e) {
+        console.log("umm...");
+      }
+    };
+    getData();
+  }, []);
+
+  if (singined) {
     return (
-    <App2/>
+      <App2/>
     )
+
   }
-  else {
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        {/* Include your logo here */}
+        <Image
+        style={{height: 300, width: 500, marginBottom: 20}}
+        source={require("./assets/RoboRaiderVector.png")}
+      />
+      </View>
+      <Text style={styles.title}>Log in to RoboWatch</Text>
+
       
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder='Email'
+        keyboardType='email-address'
+        autoCapitalize='none'
+        autoCompleteType='email'
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder='Password'
+        autoCapitalize='none'
+        autoCompleteType='password'
         secureTextEntry
         value={password}
         onChangeText={(text) => setPassword(text)}
@@ -94,9 +109,12 @@ export default function App() {
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       {error ? <Text style={styles.error}>{error}</Text> : null}
-    </View>
+    <TouchableOpacity onPress={() =>Alert.alert("Talk to AJ")}>
+        <Text style={styles.forgotPassword}>Forgot password?</Text>
+    </TouchableOpacity>
+      </View>    
+
   );
-}
 }
 
 const styles = StyleSheet.create({
@@ -116,10 +134,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 20,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: "#ff0303",
+    textAlign: 'center',
+    marginVertical: 32,
+  },
+  forgotPassword: {
+    color: '#1DA1F2',
+    textAlign: 'center',
+    fontSize: 16,
+    marginTop: 10, 
+  },
   button: {
     height: 50,
     width: '100%',
-    backgroundColor: '#0077FF',
+    backgroundColor: '#ff0303',
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
