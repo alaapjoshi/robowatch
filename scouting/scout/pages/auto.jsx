@@ -8,8 +8,54 @@ import {
   TextInput,
   Alert,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { RadioButton } from 'react-native-paper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Auto() {
+export default function Auto({ navigation }) {
+  const [value, setValue] = useState('Nothing');
+
+  const send = async () => {
+    navigation.navigate("Teleop")  
+    try {
+      await AsyncStorage.setItem("autodock", value);
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("autobottomCone", String(bottomCone));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("automidcone", String(midCone));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("autohighcone", String(highCone));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("autobottomcube", String(bottomCube));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("automidcube", String(midCube));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("autohighcube", String(highCube));
+    } catch (e) {
+      console.log("umm...");
+    }
+
+  }
+
+
   const [bottomCone, setbottomCone] = useState(0);
   const onPressbottomCone = () => setbottomCone(bottomCone => bottomCone + 1);
   const onPressbottomConedelete = () =>  {
@@ -18,63 +64,105 @@ export default function Auto() {
     setbottomCone(bottomCone => bottomCone - 1);
   }
   }
+  const [midCone, setMidCone] = useState(0);
+  const onPressmidCone = () => setMidCone(midCone => midCone + 1);
+  const onPressmidConedelete = () =>  {
+    if (midCone <= 0) {}
+    else {
+      setMidCone(midCone => midCone - 1);
+  }
+  }
+  const [highCone, sethighCone] = useState(0);
+  const onPresshighCone = () => sethighCone(highCone => highCone + 1);
+  const onPresshighConedelete = () =>  {
+    if (highCone <= 0) {}
+    else {
+      sethighCone(highCone => highCone - 1);
+  }
+  }
+
+
+  const [bottomCube, setbottomCube] = useState(0);
+  const onPressbottomCube = () => setbottomCube(bottomCube => bottomCube + 1);
+  const onPressbottomCubedelete = () =>  {
+    if (bottomCube <= 0) {}
+    else {
+    setbottomCube(bottomCube => bottomCube - 1);
+  }
+  }
+  const [midCube, setMidCube] = useState(0);
+  const onPressmidCube = () => setMidCube(midCube => midCube + 1);
+  const onPressmidCubedelete = () =>  {
+    if (midCube <= 0) {}
+    else {
+      setMidCube(midCube => midCube - 1);
+  }
+  }
+  const [highCube, sethighCube] = useState(0);
+  const onPresshighCube = () => sethighCube(highCube => highCube + 1);
+  const onPresshighCubedelete = () =>  {
+    if (highCube <= 0) {}
+    else {
+      sethighCube(highCube => highCube - 1);
+  }
+  }
 
   return (
-    <>
+    <ScrollView>
     <View style={{flexDirection: 'row', paddingBottom: 40, justifyContent: "space-between",alignItems: "center", paddingHorizontal: 20}}> 
 
     <Text style={{fontSize: 30, marginLeft: 20,}}> 
-      Cones 
+      Cubes 
     </Text>
     <Text style={{fontSize: 30,  marginRight: 20,}}> 
       Cones 
     </Text>
     </View>
     <View style={{flexDirection: 'row', paddingBottom: 40}}> 
-    <TouchableOpacity style={styles.button} onPress={onPressbottomConedelete}>
+    <TouchableOpacity style={styles.button} onPress={onPresshighConedelete}>
   <Text style={styles.buttonText}>-</Text>
   </TouchableOpacity>
   <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {bottomCone}
+    {highCone}
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomCone}>
+  <TouchableOpacity style={styles.button} onPress={onPresshighCone}>
   <Text style={styles.buttonText}>+</Text>
   </TouchableOpacity>
   <Text style={{fontSize: 23, paddingHorizontal: 10}}>
     High
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomConedelete}>
+  <TouchableOpacity style={styles.button} onPress={onPresshighCubedelete}>
   <Text style={styles.buttonText}>-</Text>
   </TouchableOpacity>
   <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {bottomCone}
+    {highCube}
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomCone}>
+  <TouchableOpacity style={styles.button} onPress={onPresshighCube}>
   <Text style={styles.buttonText}>+</Text>
   </TouchableOpacity>
     </View>
 
 
     <View style={{flexDirection: 'row', paddingBottom: 40}}> 
-    <TouchableOpacity style={styles.button} onPress={onPressbottomConedelete}>
+    <TouchableOpacity style={styles.button} onPress={onPressmidConedelete}>
   <Text style={styles.buttonText}>-</Text>
   </TouchableOpacity>
   <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {bottomCone}
+    {midCone}
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomCone}>
+  <TouchableOpacity style={styles.button} onPress={onPressmidCone}>
   <Text style={styles.buttonText}>+</Text>
   </TouchableOpacity>
   <Text style={{fontSize: 30, paddingHorizontal: 10}}>
     Mid   
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomConedelete}>
+  <TouchableOpacity style={styles.button} onPress={onPressmidCubedelete}>
   <Text style={styles.buttonText}>-</Text>
   </TouchableOpacity>
   <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {bottomCone}
+    {midCube}
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomCone}>
+  <TouchableOpacity style={styles.button} onPress={onPressmidCube}>
   <Text style={styles.buttonText}>+</Text>
   </TouchableOpacity>
 
@@ -94,17 +182,35 @@ export default function Auto() {
   <Text style={{fontSize: 30, paddingHorizontal: 10}}>
     Low
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomConedelete}>
+  <TouchableOpacity style={styles.button} onPress={onPressbottomCubedelete}>
   <Text style={styles.buttonText}>-</Text>
   </TouchableOpacity>
   <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {bottomCone}
+    {bottomCube}
   </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressbottomCone}>
+  <TouchableOpacity style={styles.button} onPress={onPressbottomCube}>
   <Text style={styles.buttonText}>+</Text>
   </TouchableOpacity>
     </View>
-    </>
+    <RadioButton.Group onValueChange={newValue => setValue(newValue)} value={value}>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+        <Text>Nothing</Text>
+        <RadioButton value="Nothing" />
+      </View>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+        <Text>Docked</Text>
+        <RadioButton value="Docked" />
+      </View>
+    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={{alignItems: 'center'}}>Engaged</Text>
+        <RadioButton value="Engaged" />
+      </View>
+      </RadioButton.Group>
+ 
+      <TouchableOpacity style={{backgroundColor: '#4CAF50',paddingVertical: 12,paddingHorizontal: 16,borderRadius: 4,marginBottom: 90}} onPress={() => send()}>
+      <Text style={{color: '#FFFFFF',fontSize: 16,fontWeight: 'bold',textAlign: 'center',}}>Navigate to Teleop</Text>
+    </TouchableOpacity>
+    </ScrollView>
   )
 }
 

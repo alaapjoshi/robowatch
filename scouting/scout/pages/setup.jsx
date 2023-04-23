@@ -7,6 +7,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { SegmentedButtons } from 'react-native-paper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Setup( {navigation} ) {
@@ -14,6 +15,29 @@ export default function Setup( {navigation} ) {
   const [team, setTeam] = useState('');
   const [alliance, setAlliance] = useState('');
   const [pos, setPos] = useState('');
+  const send = async () => {
+    navigation.navigate("Auto")    
+    try {
+      await AsyncStorage.setItem("Match_Number", match);
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("Team_Number", team);
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("Alliance", alliance);
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("Position", pos);
+    } catch (e) {
+      console.log("umm...");
+    }
+  };
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
@@ -81,7 +105,7 @@ export default function Setup( {navigation} ) {
         ]}
       />
     </View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Auto")}>
+      <TouchableOpacity style={styles.button} onPress={() => send()}>
       <Text style={styles.text}>Navigate to Auto</Text>
     </TouchableOpacity>
 
