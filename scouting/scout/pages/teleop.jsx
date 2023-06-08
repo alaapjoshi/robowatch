@@ -9,7 +9,6 @@ import {
   Alert,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { RadioButton } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Teleop({ navigation }) {
@@ -153,6 +152,45 @@ export default function Teleop({ navigation }) {
       Setfloorcube(floorcube => floorcube - 1);
   }
   }
+  useEffect(() => {
+    const checkStorage = async () => {
+      try {
+        const value = await AsyncStorage.getItem('teleopbottomCone');
+        const value2 = await AsyncStorage.getItem('teleopmidcone');
+        const value3 = await AsyncStorage.getItem('teleophighcone');
+
+
+        const value4 = await AsyncStorage.getItem('teleopbottomcube');
+        const value5 = await AsyncStorage.getItem('teleopmidcube');
+        const value6 = await AsyncStorage.getItem('teleophighcube');
+
+
+        const value7 = await AsyncStorage.getItem('floorcone');
+        const value8 = await AsyncStorage.getItem('floorcube');
+        const value9 = await AsyncStorage.getItem('stationcone');
+        const value10 = await AsyncStorage.getItem('stationcube');
+
+        if (value !== null || value2 !== null || value3 !== null || value4 !== null || value5 !== null || value6 !== null || value7 !== null || value8 !== null || value9 !== null || value10 !== null) {
+          Setfloorcone(Number(value7))
+          Setfloorcube(Number(value8))
+          Setstationcone(Number(value9))
+          Setstationcube(Number(value10))
+
+
+          setbottomCone(Number(value))
+          setMidCone(Number(value2))
+          sethighCone(Number(value3))
+
+          setbottomCube(Number(value4))
+          setMidCube(Number(value5))
+          sethighCube(Number(value6))
+        }
+      } catch (e) {
+        // handle error
+      }
+    };
+    checkStorage();
+  }, []);
 
 
   return (

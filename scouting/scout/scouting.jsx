@@ -21,7 +21,6 @@ export default function Scouting() {
           name="Setup"
           component={Setup}
           options={{ headerShown: false }}
-
         />
         <Stack.Screen
           name="Auto"
@@ -34,7 +33,6 @@ export default function Scouting() {
         <Stack.Screen
           name="Endgame"
           component={Endgame}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Final"

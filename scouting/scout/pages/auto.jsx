@@ -107,6 +107,35 @@ export default function Auto({ navigation }) {
   }
   }
 
+  useEffect(() => {
+    const checkStorage = async () => {
+      try {
+        const value = await AsyncStorage.getItem('autodock');
+        const value2 = await AsyncStorage.getItem('autobottomCone');
+        const value3 = await AsyncStorage.getItem('automidcone');
+        const value4 = await AsyncStorage.getItem('autohighcone');
+        const value5 = await AsyncStorage.getItem('autobottomcube');
+        const value6 = await AsyncStorage.getItem('automidcube');
+        const value7 = await AsyncStorage.getItem('autohighcube');
+
+        if (value !== null || value2 !== null || value3 !== null || value4 !== null || value5 !== null || value6 !== null || value7 !== null || value8 !== null || value9 !== null || value10 !== null) {
+          setbottomCone(Number(value2))
+          setbottomCube(Number(value5))
+          setMidCone(Number(value3))
+          setMidCube(Number(value6))
+          sethighCone(Number(value4))
+          sethighCube(Number(value7))
+          setValue(value)
+
+
+        }
+      } catch (e) {
+        // handle error
+      }
+    };
+    checkStorage();
+  }, []);
+
   return (
     <ScrollView>
     <View style={{flexDirection: 'row', paddingBottom: 40, justifyContent: "space-between",alignItems: "center", paddingHorizontal: 20}}> 
