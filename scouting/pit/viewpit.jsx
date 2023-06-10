@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { StyleSheet, View, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { collection } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function Read() {
   const [colorAccent, setColorAccent] = useState("#ff0303");

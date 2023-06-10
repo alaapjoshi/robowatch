@@ -6,6 +6,8 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -99,13 +101,18 @@ function Data({ navigation }) {
         >
           Team Number
         </Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeNumber}
-          value={number}
-          placeholder="           eg 75           "
-          keyboardType="numeric"
-        />
+
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={{ flex: 1 }}>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeNumber}
+              value={number}
+              placeholder="           eg 75           "
+              keyboardType="numeric"
+            />
+          </View>
+        </TouchableWithoutFeedback>
         <Text
           style={{
             fontSize: 30,

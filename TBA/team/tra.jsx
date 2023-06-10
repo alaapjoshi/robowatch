@@ -37,14 +37,8 @@ export default function Tra() {
         component={MyStack}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="New"
-        component={New}
-      />
-      <Stack.Screen
-        name="Graph"
-        component={Graph}
-      />
+      <Stack.Screen name="New" component={New} />
+      <Stack.Screen name="Graph" component={Graph} />
     </Stack.Navigator>
   );
 }
@@ -171,14 +165,8 @@ function New({ route, navigation }) {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-
       })
       .catch((error) => console.error(error));
-
-
-
-
-
   }, []);
 
   useEffect(() => {
@@ -864,7 +852,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#020101",
+    bordexolor: "#020101",
     color: "#020101",
   },
   container9: {
