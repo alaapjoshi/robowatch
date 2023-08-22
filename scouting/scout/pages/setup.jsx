@@ -13,7 +13,6 @@ import { SegmentedButtons } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 
-//asdasdasdasdasdsa
 export default function Setup({ navigation }) {
   const [match, setMatch] = useState("");
   const [team, setTeam] = useState("");
