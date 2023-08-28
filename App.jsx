@@ -341,7 +341,7 @@ function HomeScreen({ navigation }) {
 function Nav() {
   const Tab = createBottomTabNavigator();
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="Scouting"
         component={Navigatescout}

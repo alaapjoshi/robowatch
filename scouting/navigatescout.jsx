@@ -28,6 +28,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default function Navigatescout({ navigation }) {
+  const [dark, setdark] = useState([]);
+  
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer independent={true}>
@@ -48,6 +50,8 @@ export default function Navigatescout({ navigation }) {
 
 function Move({ navigation }) {
   const [colorAccent, setColorAccent] = useState("#ff0303");
+  const [dark, setdark] = useState([]);
+
   this.forceUpdate;
   useEffect(() => {
     const getData = async () => {
@@ -56,14 +60,82 @@ function Move({ navigation }) {
         if (value !== null) {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
+        const value2 = await AsyncStorage.getItem("light");
+          if (value2 !== null) {
+            setdark(value2);
+          }
       } catch (e) {
         console.log("umm...");
       }
     };
-
     getData();
   }, [colorAccent]);
 
+  if (dark == "true") {
+    console.log("asd")
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor : "#222222"}}>
+      <Text
+        style={{
+          fontSize: 40,
+          fontWeight: "bold",
+          color: colorAccent,
+          marginBottom: 40,
+        }}
+      >
+        Select Scouting Type:
+      </Text>
+      <TouchableOpacity
+        style={{
+          backgroundColor: colorAccent,
+          padding: 20,
+          borderRadius: 10,
+          marginBottom: 40,
+        }}
+        onPress={() => navigation.navigate("Scout")}
+      >
+        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>Match Scouting</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          backgroundColor: colorAccent,
+          padding: 20,
+          borderRadius: 10,
+          marginBottom: 40,
+        }}
+        onPress={() => navigation.navigate("Viewscout")}
+      >
+        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>View Scout Data</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: colorAccent,
+          padding: 20,
+          borderRadius: 10,
+          marginBottom: 40,
+        }}
+        onPress={() => navigation.navigate("Pit")}
+      >
+        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>Pit Scouting</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: colorAccent,
+          padding: 20,
+          borderRadius: 10,
+          marginBottom: 40,
+        }}
+        onPress={() => navigation.navigate("read")}
+      >
+        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>View Pit Data</Text>
+      </TouchableOpacity>
+    </View>
+
+    )
+  }
+  else {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text
@@ -123,7 +195,9 @@ function Move({ navigation }) {
         <Text style={{ fontSize: 18, color: "#FFFFFF" }}>View Pit Data</Text>
       </TouchableOpacity>
     </View>
+
   );
+    }
 }
 const styles = StyleSheet.create({
   container: {

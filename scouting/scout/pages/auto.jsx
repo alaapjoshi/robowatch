@@ -19,6 +19,7 @@ export default function Auto({ navigation }) {
     navigation.navigate("Teleop")  
     try {
       await AsyncStorage.setItem("autodock", value);
+      console.log("asdasd")
     } catch (e) {
       console.log("umm...");
     }
@@ -126,6 +127,7 @@ export default function Auto({ navigation }) {
           sethighCone(Number(value4))
           sethighCube(Number(value7))
           setValue(value)
+          console.log("data sent")
 
 
         }

@@ -12,7 +12,7 @@ import Auto from "./pages/auto";
 import Teleop from "./pages/teleop";
 import Endgame from "./pages/endgame";
 import Final from "./pages/final";
-
+import Notes from "./pages/notes";
 export default function Scouting() {
   return (
     <NavigationContainer independent={true} initialRouteName="Setup">
@@ -27,6 +27,10 @@ export default function Scouting() {
           component={Auto}
         />
         <Stack.Screen
+          name="Notes"
+          component={Notes}
+        />
+                <Stack.Screen
           name="Teleop"
           component={Teleop}
         />
