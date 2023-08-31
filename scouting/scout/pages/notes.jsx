@@ -18,6 +18,24 @@ export default function Notes( { navigation } ) {
   const [Slider1, setSlider] = useState(0);
   const [notes, setNotes] = useState('');
 
+
+  useEffect(async () => {
+    const fullcycler = await AsyncStorage.getItem('fullcycler');
+    setfullcycler(fullcycler);
+    const halfcycler = await AsyncStorage.getItem('halfcycler');
+    sethalfcycler(halfcycler);
+    const feeder = await AsyncStorage.getItem('feeder');
+    setfeeder(feeder);
+    const defense = await AsyncStorage.getItem('defense');
+    setdefense(defense);
+    const topheavy = await AsyncStorage.getItem('topheavy');
+    settopheavy(topheavy);
+    const notes = await AsyncStorage.getItem('notes');
+    setNotes(notes);
+    const Aggression = await AsyncStorage.getItem('Aggression');
+    setSlider(Aggression);
+  }, []);
+
   const leave = async async => {
     navigation.navigate("Final")
     try {

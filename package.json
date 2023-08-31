@@ -21,6 +21,7 @@
     "accordion-collapse-react-native": "^1.1.1",
     "expo": "~48.0.10",
     "expo-auth-session": "~4.0.3",
+    "expo-barcode-scanner": "^12.5.3",
     "expo-checkbox": "~2.3.1",
     "expo-crypto": "~12.2.1",
     "expo-firebase": "^0.0.0-alpha.0",

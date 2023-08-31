@@ -20,6 +20,25 @@ export default function Endgame( { navigation } ) {
 
   const [Slider1, setSlider] = useState(0);
 
+  useEffect(async () => {
+    const attempted = await AsyncStorage.getItem('attempted');
+    setattempted(attempted);
+    const docked = await AsyncStorage.getItem('docked');
+    setdocked(docked);
+    const engaged = await AsyncStorage.getItem('engaged');
+    setengaged(engaged);
+    const soloclimb = await AsyncStorage.getItem('soloclimb');
+    setsoloclimb(soloclimb);
+    const gaveassistance = await AsyncStorage.getItem('gaveassistance');
+    setgaveassistance(gaveassistance);
+    const recievedassistance = await AsyncStorage.getItem('recievedassistance');
+    setrecievedassistance(recievedassistance);
+    const parked = await AsyncStorage.getItem('parked');
+    setparked(parked);
+    const Slider1 = await AsyncStorage.getItem('Slider1');
+    setSlider(Slider1);
+  }, []);
+
   const leave = async async => {
     navigation.navigate("Notes")
     try {

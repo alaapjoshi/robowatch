@@ -30,9 +30,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default function Final() {
-  const [qe, setQe] = useState("");
+  const [qe, setQe] = useState("DATA DID NOT LOAD PROPERLY");
 
   useEffect(() => {
+    console.log("test")
     const checkStorage = async () => {
       try {
         const Match_Number = await AsyncStorage.getItem('Match_Number');
@@ -47,11 +48,12 @@ export default function Final() {
         const autobottomcube = await AsyncStorage.getItem('autobottomcube');
         const automidcube = await AsyncStorage.getItem('automidcube');
         const autohighcube = await AsyncStorage.getItem('autohighcube');
+
+
+
         const teleopbottomCone = await AsyncStorage.getItem('teleopbottomCone');
         const teleopmidcone = await AsyncStorage.getItem('teleopmidcone');
         const teleophighcone = await AsyncStorage.getItem('teleophighcone');
-
-
         const teleopbottomcube = await AsyncStorage.getItem('teleopbottomcube');
         const teleopmidcube = await AsyncStorage.getItem('teleopmidcube');
         const teleophighcube = await AsyncStorage.getItem('teleophighcube');
@@ -126,9 +128,67 @@ export default function Final() {
     };
     checkStorage();
   }, []);
-  console.log(qe)
 
-  
+  const cleardata = async () => {
+    console.log("asd")
+    /*
+    try {
+
+    await AsyncStorage.setItem('Match_Number', "");
+    await AsyncStorage.setItem('Team_Number', "");
+    await AsyncStorage.setItem('Alliance', "");
+    await AsyncStorage.setItem('Position', "");
+
+    await AsyncStorage.setItem('autodock');
+    await AsyncStorage.setItem('autobottomCone', 0);
+    await AsyncStorage.setItem('automidcone', 0);
+   await AsyncStorage.setItem('autohighcone', 0);
+    await AsyncStorage.setItem('autobottomcube', 0);
+    await AsyncStorage.setItem('automidcube', 0);
+    await AsyncStorage.setItem('autohighcube', 0);
+    await AsyncStorage.setItem('teleopbottomCone', 0);
+    await AsyncStorage.setItem('teleopmidcone', 0);
+    await AsyncStorage.setItem('teleophighcone', 0);
+
+
+    await AsyncStorage.setItem('teleopbottomcube', 0);
+    await AsyncStorage.setItem('teleopmidcube', 0);
+    await AsyncStorage.setItem('teleophighcube', 0);
+
+
+
+    await AsyncStorage.setItem('floorcone', 0);
+    await AsyncStorage.setItem('floorcube', 0);
+    await AsyncStorage.setItem('stationcone', 0);
+    await AsyncStorage.setItem('stationcube', 0);
+
+    await AsyncStorage.setItem('attempted', false);
+    await AsyncStorage.setItem('docked', false);
+    await AsyncStorage.setItem('engaged', false);
+    await AsyncStorage.setItem('soloclimb', false);
+    await AsyncStorage.setItem('gaveassistance', false);
+    await AsyncStorage.setItem('recievedassistance', false);
+    await AsyncStorage.setItem('parked', false);
+    await AsyncStorage.setItem('Slider1', 0);
+
+
+    await AsyncStorage.setItem('fullcycler', false);
+    await AsyncStorage.setItem('halfcycler', false);
+    await AsyncStorage.setItem('feeder', false);
+    await AsyncStorage.setItem('defense', false);
+    await AsyncStorage.setItem('topheavy', false);
+    await AsyncStorage.setItem('notes', "");
+    await AsyncStorage.setItem('Aggression', 0);
+
+
+  }
+  catch (e) {
+  }
+  */
+  await AsyncStorage.clear();
+  Alert.alert('Data Cleared!');
+
+}
   const sendDataToFirestore = async () => {
     const Match_Number = await AsyncStorage.getItem('Match_Number');
     const Team_Number = await AsyncStorage.getItem('Team_Number');
@@ -232,6 +292,10 @@ export default function Final() {
     />
           <TouchableOpacity style={{padding: 15, borderColor: 'blue', }}onPress={sendDataToFirestore}>
         <Text style={{color: 'blue', fontSize: 30}}>Send Data to Firestore (Click)</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={{padding: 15, borderColor: 'blue', }}onPress={cleardata}>
+        <Text style={{color: 'blue', fontSize: 30}}>CLEAR ALL DATA</Text>
       </TouchableOpacity>
           
     </View>

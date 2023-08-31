@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 
 import {
   StyleSheet,
@@ -18,6 +18,17 @@ export default function Setup({ navigation }) {
   const [team, setTeam] = useState("");
   const [alliance, setAlliance] = useState("");
   const [pos, setPos] = useState("");
+  useEffect(async () => {
+    const Match_Number = await AsyncStorage.getItem('Match_Number');
+    setMatch(Match_Number);
+    const Team_Number = await AsyncStorage.getItem('Team_Number');
+    setTeam(Team_Number);
+    const Alliance = await AsyncStorage.getItem('Alliance');
+    setAlliance(Alliance);
+    const Position = await AsyncStorage.getItem('Position');
+    setPos(Position);
+  }, []);
+
   const send = async () => {
     navigation.navigate("Auto");
     try {
