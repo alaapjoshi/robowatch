@@ -172,10 +172,10 @@ export default function Endgame( { navigation } ) {
       {Slider1}
     </Text>
 
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginHorizontal: 20}}>
 
   <Slider
-  style={{width: 400, height: 40, }}
+  style={{width: 350, height: 40}}
   minimumValue={0}
   maximumValue={30}
   value={Slider1}

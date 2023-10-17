@@ -352,7 +352,7 @@ export default function Teleop({ navigation }) {
 
 const styles = StyleSheet.create({
   button: {
-    width: 60,
+    width: 40,
     height: 60,
     backgroundColor: "red",
     borderRadius: 4,

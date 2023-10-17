@@ -90,7 +90,7 @@ export default function Notes( { navigation } ) {
       {Slider1}
     </Text>
           <Slider
-  style={{width: 400, height: 40, }}
+  style={{width: 350, height: 40, }}
   minimumValue={0}
   maximumValue={5}
   value={Slider1}
