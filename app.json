@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.aj2426.RoboWatch"
     },
     "web": {
       "favicon": "./assets/favicon.png"
