@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useMemo } from "react";
 import {
   StyleSheet,
   View,
@@ -15,6 +15,7 @@ import QRCode from "react-native-qrcode-svg";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { initializeApp } from "firebase/app";
+import RadioGroup from 'react-native-radio-buttons-group';
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyCfmW98iWLhhNtFrjy-3niS_OWPhrQTb5U",
@@ -64,530 +65,225 @@ function Data({ navigation }) {
 
     getData();
   }, [colorAccent]);
-  const [number, onChangeNumber] = useState("");
-  const [cubeslow, setcubeslow] = useState(false);
-  const [cubesmid, setcubesmid] = useState(false);
-  const [cubeshigh, setcubeshigh] = useState(false);
+  const [source, setSource] = useState(false);
+  const [ground, setGround] = useState(false);
+  const [amp, setAmp] = useState(false);
+  const [speaker, setSpeaker] = useState(false);
 
-  const [coneslow, setconeslow] = useState(false);
-  const [conesmid, setconesmid] = useState(false);
-  const [coneshigh, setconeshigh] = useState(false);
+  const radioButtons = useMemo(() => ([
+    {
+        id: '1', // acts as primary key, should be unique and non-empty string
+        label: 'Swerve',
+        value: 'Swerve'
+    },
+    {
+        id: '2',
+        label: 'Tank',
+        value: 'Tank'
+    },
+    {
+      id: '3',
+      label: 'Mechnum',
+      value: 'Mechnum'
+  },
+  {
+    id: '4',
+    label: 'Other',
+    value: 'Other'
+}
+]), []);
 
-  const [pickuplowcubes, setpickuplowcubes] = useState(false);
-  const [pickupstationcubes, setpickupstationcubes] = useState(false);
+const [DriveTrain, setDriveTrain] = useState();
 
-  const [pickuplowcones, setpickuplowcones] = useState(false);
-  const [pickupstationcones, setpickupstationcones] = useState(false);
+const radioButtons2 = useMemo(() => ([
+  {
+      id: '1', // acts as primary key, should be unique and non-empty string
+      label: 'Human Payer',
+      value: 'humanPlayer'
+  },
+  {
+      id: '2',
+      label: 'Anyone Can Feed',
+      value: 'Anyone'
+  }
+]), []);
 
-  const [autobalanceyes, setautobalanceyes] = useState(false);
+const [Feeding, setFeeding] = useState();
 
-  const [pieces, setpieces] = useState("");
 
-  const [autoalign, setautoalign] = useState(false);
-
-  const [autoaligngame, setautoaligngame] = useState(false);
-
-  const [autosub, setautosub] = useState(false);
   return (
     <ScrollView>
-      <View style={styles.center}>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          Team Number
+      <Text style={{fontSize: 30, textAlign: 'center', paddingTop: 20}}>
+        Pit Scouting
+      </Text>
+      <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+      <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+          }}> 
+        
+        <Text>
+          Height (in)
         </Text>
 
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={{ flex: 1 }}>
-            <TextInput
-              style={styles.input}
-              onChangeText={onChangeNumber}
-              value={number}
-              placeholder="           eg 75           "
-              keyboardType="numeric"
-            />
-          </View>
-        </TouchableWithoutFeedback>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          Where can this team place cubes?
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Low
-          </Text>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Mid
-          </Text>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            High
-          </Text>
-        </View>
-
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={cubeslow}
-            onValueChange={setcubeslow}
-          />
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={cubesmid}
-            onValueChange={setcubesmid}
-          />
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={cubeshigh}
-            onValueChange={setcubeshigh}
-          />
-        </View>
-
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          Where can this team place cones?
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Low
-          </Text>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Mid
-          </Text>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            High
-          </Text>
-        </View>
-
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={coneslow}
-            onValueChange={setconeslow}
-          />
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={conesmid}
-            onValueChange={setconesmid}
-          />
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={coneshigh}
-            onValueChange={setconeshigh}
-          />
-        </View>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          where can this team pick up cubes
-        </Text>
-
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            G
-          </Text>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            S
-          </Text>
-        </View>
-
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={pickuplowcubes}
-            onValueChange={setpickuplowcubes}
-          />
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={pickupstationcubes}
-            onValueChange={setpickupstationcubes}
-          />
-        </View>
-
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          where can this team pick up cones?
-        </Text>
-
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            G
-          </Text>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            S
-          </Text>
-        </View>
-
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={pickuplowcones}
-            onValueChange={setpickuplowcones}
-          />
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={pickupstationcones}
-            onValueChange={setpickupstationcones}
-          />
-        </View>
-
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          Can this team autobalance?
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Yes
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={autobalanceyes}
-            onValueChange={setautobalanceyes}
-          />
-        </View>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          How many pieces does their auto do?
-        </Text>
         <TextInput
-          style={styles.input}
-          onChangeText={setpieces}
-          value={pieces}
-          placeholder="           eg 1           "
+          style={{
+            height: 40,
+            borderColor: 'black',
+            marginTop: 5,
+            paddingLeft: 5,
+            borderBottomWidth: 1, 
+          }}
           keyboardType="numeric"
         />
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          Can this team auto align to gamepieces?
+
+      </View>
+      <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+          }}> 
+        
+        <Text>
+        Dimensions with border (in)
         </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Yes
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={autoalign}
-            onValueChange={setautoalign}
-          />
-        </View>
-        <Text
+
+        <TextInput
           style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
+            height: 40,
+            borderColor: 'black',
+            marginTop: 5,
+            paddingLeft: 5,
+            borderBottomWidth: 1, 
           }}
-        >
-          Can this team auto align to april tags or reflective tape?
+          keyboardType="numeric"
+        />
+
+      </View>
+      </View>
+      <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+      <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+          }}> 
+        
+        <Text>
+          Drivetrain
         </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Yes
-          </Text>
+        <RadioGroup 
+            radioButtons={radioButtons} 
+            onPress={setDriveTrain}
+            selectedId={DriveTrain}
+        />
+
+      </View>
+      <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+      }}> 
+        
+        <Text style={{fontSize: "30", marginBottom: 20}}>
+        Pickup
+        </Text>
+        <View style={{flexDirection: "row",alignItems: 'center',}}>
+        <Checkbox
+          style={{width: 30, height: 30}}
+          value={source}
+          onValueChange={setSource}
+          color={source ? '#4630EB' : undefined}
+        />
+        <Text style={{fontSize: "30"}}> Source </Text>
+
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={autoaligngame}
-            onValueChange={setautoaligngame}
-          />
-        </View>
-        <Text
+
+        <View style={{flexDirection: "row",alignItems: 'center', marginTop: 10}}>
+        <Checkbox
+          style={{width: 30, height: 30}}
+          value={ground}
+          onValueChange={setGround}
+          color={ground ? '#4630EB' : undefined}
+        />
+        <Text style={{fontSize: "30"}}> Ground </Text>
+
+                </View>
+
+        
+      </View>
+      </View>
+
+
+          <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+          }}> 
+            <Text style={{fontSize: 30,textAlign: 'center'}}> Shooting Location</Text>
+
+          </View>
+
+
+
+
+
+
+
+
+
+
+
+      <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+      <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+          }}> 
+        
+        <Text style={{fontSize: "20"}}>
+          Robot Feeding
+        </Text>
+        <RadioGroup 
+            radioButtons={radioButtons2} 
+            onPress={setDriveTrain}
+            selectedId={DriveTrain}
+        />
+
+      </View>
+      <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+          }}> 
+        
+        <Text style={{fontSize: "20", marginBottom: 20}}>
+        Additional Notes
+        </Text>
+        <TextInput
           style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
+            height: 40,
+            borderColor: 'black',
+            marginTop: 5,
+            paddingLeft: 5,
+            borderBottomWidth: 1, 
           }}
-        >
-          Does this team have an auto for when they enter the substation to pick
-          up pieces?
-        </Text>
-        <View style={{ flexDirection: "row" }}>
-          <Text
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-          >
-            Yes
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Checkbox
-            style={{
-              width: 50,
-              height: 50,
-              fontSize: 20,
-              color: colorAccent,
-              marginHorizontal: 50,
-              flexDirection: "row",
-            }}
-            value={autosub}
-            onValueChange={setautosub}
-          />
-        </View>
+        />
+
+
+        
+
+      </View>
+      </View>
+
+      
         <TouchableOpacity
           style={{
             backgroundColor: colorAccent,
@@ -620,7 +316,6 @@ function Data({ navigation }) {
             Send to server + QR
           </Text>
         </TouchableOpacity>
-      </View>
     </ScrollView>
   );
 }
