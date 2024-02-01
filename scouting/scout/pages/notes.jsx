@@ -1,11 +1,10 @@
-import { React, useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import Checkbox  from 'expo-checkbox';
 import Slider from '@react-native-community/slider';
-
 
 
 
@@ -19,22 +18,6 @@ export default function Notes( { navigation } ) {
   const [notes, setNotes] = useState('');
 
 
-  useEffect(async () => {
-    const fullcycler = await AsyncStorage.getItem('fullcycler');
-    setfullcycler(fullcycler);
-    const halfcycler = await AsyncStorage.getItem('halfcycler');
-    sethalfcycler(halfcycler);
-    const feeder = await AsyncStorage.getItem('feeder');
-    setfeeder(feeder);
-    const defense = await AsyncStorage.getItem('defense');
-    setdefense(defense);
-    const topheavy = await AsyncStorage.getItem('topheavy');
-    settopheavy(topheavy);
-    const notes = await AsyncStorage.getItem('notes');
-    setNotes(notes);
-    const Aggression = await AsyncStorage.getItem('Aggression');
-    setSlider(Aggression);
-  }, []);
 
   const leave = async async => {
     navigation.navigate("Final")
@@ -81,9 +64,25 @@ export default function Notes( { navigation } ) {
   }
 
   return (
+    <ScrollView>
     <View>
             <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
-                Aggression of Robot
+                Stability
+            </Text>
+
+    <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
+      {Slider1}
+    </Text>
+          <Slider
+  style={{width: 350, height: 40, }}
+  minimumValue={0}
+  maximumValue={5}
+  value={Slider1}
+  onValueChange={setSlider}
+  step={1}
+/>
+<Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
+                Aggression of Driver
             </Text>
 
     <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
@@ -184,6 +183,7 @@ export default function Notes( { navigation } ) {
   <Text style={{color: '#FFFFFF',fontSize: 16,fontWeight: 'bold',textAlign: 'center',}}>Navigate to QR</Text>
 </TouchableOpacity>
     </View>
+    </ScrollView>
   );
 }
 

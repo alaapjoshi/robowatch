@@ -1,4 +1,4 @@
-import { React, useState, useRef, useEffect } from "react";
+import { React, useState, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Dimensions,
   Alert,
 } from "react-native";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import QRCode from "react-native-qrcode-svg";

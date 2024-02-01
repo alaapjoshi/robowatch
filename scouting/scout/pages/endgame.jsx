@@ -122,27 +122,7 @@ export default function Endgame( { navigation } ) {
           color={docked ? '#4630EB' : undefined}
         />
         </View>     
-      
         </View>
-        
-        </View>
-        <View style={{flexDirection: "row",alignItems: 'center'}}>
-        <Text> left</Text>
-        <RadioButton
-        value="first"
-        status={ checked === 'first' ? 'checked' : 'unchecked' }
-        onPress={() => setChecked('first')}
-      />
-      
-      </View>
-      <View style={{flexDirection: "row",alignItems: 'center'}}>
-        <Text> left</Text>
-        <RadioButton
-        value="first"
-        status={ checked === 'first' ? 'checked' : 'unchecked' }
-        onPress={() => setChecked('first')}
-      />
-      
       </View>
 
 
