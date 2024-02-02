@@ -1,170 +1,222 @@
-import { React, useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Switch,
-  TextInput,
+  Image,
+  Dimensions,
   Alert,
+  ScrollView,
 } from "react-native";
+import { TapGestureHandler } from "react-native-gesture-handler";
 import Checkbox from "expo-checkbox";
-import { ScrollView } from "react-native-gesture-handler";
-import { RadioButton } from 'react-native-paper';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
 
 export default function Auto({ navigation }) {
+  const [overlayCoordinates, setOverlayCoordinates] = useState([]);
   const [left, setLeft] = useState(true);
-  const [relocated, setrelocated] = useState(true);
+  const [relocated, setRelocated] = useState(true);
+  const [tapEnabled, setTapEnabled] = useState(true);
 
-  const [ampSuccsess, setampSuccsess] = useState(0);
-  const onPressampSuccsess = () => setampSuccsess(ampSuccsess => ampSuccsess + 1);
-  const onPressampSuccsessDelete = () =>  {
-    if (ampSuccsess <= 0) {}
-    else {
-      setampSuccsess(ampSuccsess => ampSuccsess - 1);
-  }
-  }
-  const [ampfail, setampfail] = useState(0);
-  const onPressampfail = () => setampfail(ampfail => ampfail + 1);
-  const onPressampfailDelete = () =>  {
-    if (ampSuccsess <= 0) {}
-    else {
-      setampfail(ampfail => ampfail - 1);
-  }
-  }
+  const handleTap = (event) => {
+    if (!tapEnabled) {
+      return;
+    }
 
-  const [speakerSuccsess, setspeakerSuccsess] = useState(0);
-  const onPressspeakerSuccsess = () => setspeakerSuccsess(speakerSuccsess => speakerSuccsess + 1);
-  const onPressspeakerSuccsessDelete = () =>  {
-    if (speakerSuccsess <= 0) {}
-    else {
-      setspeakerSuccsess(speakerSuccsess => speakerSuccsess - 1);
-  }
-  }
-  const [speakerfail, setspeakerfail] = useState(0);
-  const onPressspeakerfail = () => setspeakerfail(speakerfail => speakerfail + 1);
-  const onPressspeakerfailDelete = () =>  {
-    if (speakerfail <= 0) {}
-    else {
-      setspeakerfail(speakerSuccsess => speakerSuccsess - 1);
-  }
-  }
+    const { x, y } = event.nativeEvent;
 
+    // Disable tapping for 0.5 seconds
+    setTapEnabled(false);
+    setTimeout(() => {
+      setTapEnabled(true);
+    }, 500);
 
+    // Show alert when tapping on the grid
+    showAlert({ x, y });
+  };
 
-  function leave() {
-    navigation.navigate("Teleop")
-  }
+  const showAlert = ({ x, y }) => {
+    Alert.alert(
+      "Choose an outcome",
+      "",
+      [
+        {
+          text: "Success",
+          onPress: () => handleOutcome("success", x, y),
+        },
+        {
+          text: "Failure",
+          onPress: () => handleOutcome("failure", x, y),
+        },
+        {
+          text: "Back",
+          style: "cancel",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const handleOutcome = (outcome, x, y) => {
+    const newCoordinates = [...overlayCoordinates, { x, y, outcome }];
+    setOverlayCoordinates(newCoordinates);
+  };
+
+  const handleBack = () => {
+    const updatedCoordinates = [...overlayCoordinates];
+    updatedCoordinates.pop(); // Remove the last coordinate
+    setOverlayCoordinates(updatedCoordinates);
+  };
+
+  const leave = () => {
+    navigation.navigate("Teleop");
+  };
+
   return (
     <ScrollView>
-      <View style={{flexDirection: 'row', justifyContent: "space-evenly"}}> 
-
-
-      <View style={{
+      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+        <View
+          style={{
             backgroundColor: "red",
             padding: 20,
             borderRadius: 20,
             marginTop: 40,
-            flexDirection: 'row'
-          }}> 
-           <Checkbox
-          style={{width: 20, height: 20, marginHorizontal: 10}}
-          value={left}
-          onValueChange={setLeft}
-          color={left ? '#4630EB' : undefined}
-        />
-        <Text style={{fontSize: 20}}> 
-          Left Alliance Zone
-        </Text>
-          </View>
-          <View style={{
-            backgroundColor: "red",
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-            flexDirection: 'row'
-          }}> 
+            flexDirection: "row",
+          }}
+        >
           <Checkbox
-          style={{width: 20, height: 20, marginHorizontal: 10}}
-          value={relocated}
-          onValueChange={setrelocated}
-          color={relocated ? '#4630EB' : undefined}
-        />
-        <Text style={{fontSize: 20}}> 
-          Relocated
-        </Text>
-          </View>
+            style={{ width: 20, height: 20, marginHorizontal: 10 }}
+            value={left}
+            onValueChange={setLeft}
+            color={left ? "#4630EB" : undefined}
+          />
+          <Text style={{ fontSize: 20 }}>Left Alliance Zone</Text>
+        </View>
+        <View
+          style={{
+            backgroundColor: "red",
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+            flexDirection: "row",
+          }}
+        >
+          <Checkbox
+            style={{ width: 20, height: 20, marginHorizontal: 10 }}
+            value={relocated}
+            onValueChange={setRelocated}
+            color={relocated ? "#4630EB" : undefined}
+          />
+          <Text style={{ fontSize: 20 }}>Relocated</Text>
+        </View>
       </View>
-      <View style={{flexDirection: 'row', paddingBottom: 40}}> 
-    <TouchableOpacity style={styles.button} onPress={onPressampSuccsessDelete}>
-  <Text style={styles.buttonText}>-</Text>
-  </TouchableOpacity>
-  <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {ampSuccsess}
-  </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressampSuccsess}>
-  <Text style={styles.buttonText}>+</Text>
-  </TouchableOpacity>
-  <Text style={{fontSize: 23, paddingHorizontal: 10}}>
-    High
-  </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressampfailDelete}>
-  <Text style={styles.buttonText}>-</Text>
-  </TouchableOpacity>
-  <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {ampfail}
-  </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressampfail}>
-  <Text style={styles.buttonText}>+</Text>
-  </TouchableOpacity>
-    </View>
 
-    <Text> Speaker Fail</Text>
-    <View style={{flexDirection: 'row', paddingBottom: 40}}> 
-    <TouchableOpacity style={styles.button} onPress={onPressspeakerfailDelete}>
-  <Text style={styles.buttonText}>-</Text>
-  </TouchableOpacity>
-  <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {speakerfail}
-  </Text>
-  
-  <TouchableOpacity style={styles.button} onPress={onPressspeakerfail}>
-  <Text style={styles.buttonText}>+</Text>
-  </TouchableOpacity>
-  <Text style={{fontSize: 23, paddingHorizontal: 10}}>
-    High
-  </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressspeakerSuccsessDelete}>
-  <Text style={styles.buttonText}>-</Text>
-  </TouchableOpacity>
-  <Text style={{fontSize: 50, paddingHorizontal: 10}}> 
-    {speakerSuccsess}
-  </Text>
-  <TouchableOpacity style={styles.button} onPress={onPressspeakerSuccsess}>
-  <Text style={styles.buttonText}>+</Text>
-  </TouchableOpacity>
-    </View>
+      <View style={styles.imageContainer}>
+        <Image
+          source={require("/Users/alaapjoshi/Developer/Robotics/strat/RoboWatch/assets/LeftField.png")}
+          style={styles.image}
+        />
 
-      <TouchableOpacity style={{backgroundColor: '#4CAF50',paddingVertical: 12,paddingHorizontal: 16,borderRadius: 4,margintop: 90}} onPress={() => leave()}>
-  <Text style={{color: '#FFFFFF',fontSize: 16,fontWeight: 'bold',textAlign: 'center',}}>Navigate to Final</Text>
-  </TouchableOpacity>
+        {/* Render multiple overlays for each coordinate */}
+        {overlayCoordinates.map((coordinate, index) => (
+          <View
+            key={index}
+            style={[
+              styles.overlay,
+              { left: coordinate.x, top: coordinate.y },
+              coordinate.outcome === "success"
+                ? { backgroundColor: "green" }
+                : coordinate.outcome === "failure"
+                ? { backgroundColor: "red" }
+                : null,
+            ]}
+          >
+            <Text style={styles.overlayText}>
+              {coordinate.outcome === "success"
+                ? "✅"
+                : coordinate.outcome === "failure"
+                ? "❌"
+                : "X"}
+            </Text>
+          </View>
+        ))}
+
+        {/* Grid Tap Gesture Handler */}
+        <TapGestureHandler onHandlerStateChange={handleTap}>
+          <View style={styles.grid} />
+        </TapGestureHandler>
+
+        {/* Back Button */}
+        {overlayCoordinates.length > 0 && (
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <Text style={styles.backButtonText}>Undo</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <View style={{ flexDirection: "row", paddingBottom: 40 }}>
+        <TouchableOpacity style={styles.backButton2} onPress={() => leave()}>
+          <Text style={{ color: "white" }}>Navigate to Final</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    width: 40,
-    height: 60,
-    backgroundColor: "red",
-    borderRadius: 4,
-    alignItems: "center",
-    justifyContent: "center",
+  // ... Your existing styles
+
+  imageContainer: {
+    position: "relative",
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH,
   },
-  buttonText: {
+  grid: {
+    position: "absolute",
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH,
+    backgroundColor: "transparent",
+  },
+  overlay: {
+    position: "absolute",
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red",
+  },
+  overlayText: {
     color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 14,
+  },
+  backButton: {
+    position: "absolute",
+    bottom: -80,
+    left: "50%",
+    transform: [{ translateX: -50 }],
+    backgroundColor: "blue",
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+    borderRadius: 5,
+  },
+  backButton2: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    marginVertical: 20,
+    alignSelf: "center",
+  },
+  backButtonText: {
+    color: "white",
+  },
+  image: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_WIDTH,
+    resizeMode: "cover",
+    transform: [{ rotate: "90deg" }],
   },
 });

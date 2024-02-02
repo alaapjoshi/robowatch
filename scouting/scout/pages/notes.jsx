@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TapGestureHandler } from "react-native-gesture-handler";
 import Checkbox  from 'expo-checkbox';
 import Slider from '@react-native-community/slider';
 
