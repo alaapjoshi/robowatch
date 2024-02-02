@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function Setup({ navigation }) {
+  const [studentID, setStudentID] = useState("");
   const [match, setMatch] = useState("");
   const [team, setTeam] = useState("");
   const [alliance, setAlliance] = useState("");
@@ -56,12 +57,32 @@ export default function Setup({ navigation }) {
   return (
     <ScrollView>
       <View style={{ backgroundColor: "white", flex: 1 }}>
-        <Text style={{ color: "black", textAlign: "center", fontSize: 30 }}>
-          Scouter App
-        </Text>
+       
+
+        <View style={styles.text}>
+          <Text style={styles.text}>
+           Student ID
+          </Text>
+          <TouchableWithoutFeedback
+            onPress={Keyboard.dismiss}
+            accessible={false}
+          >
+            <View style={{ flex: 1 }}>
+              <TextInput
+                style={styles.input}
+                onChangeText={setStudentID}
+                value={studentID}
+                placeholder="e.g. 3"
+                keyboardType="numeric"
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+
+
 
         <View style={{ marginTop: 30 }}>
-          <Text style={{ color: "black", textAlign: "center", fontSize: 30 }}>
+          <Text style={styles.text}>
             Match Number
           </Text>
           <TouchableWithoutFeedback
@@ -80,7 +101,7 @@ export default function Setup({ navigation }) {
           </TouchableWithoutFeedback>
         </View>
         <View style={{ marginTop: 60 }}>
-          <Text style={{ color: "black", textAlign: "center", fontSize: 30 }}>
+          <Text style={styles.text}>
             Team Number
           </Text>
           <TouchableWithoutFeedback
@@ -99,7 +120,7 @@ export default function Setup({ navigation }) {
           </TouchableWithoutFeedback>
         </View>
         <View style={{ alignItems: "center", marginTop: 60 }}>
-          <Text style={{ fontSize: 30 }}>Alliance</Text>
+          <Text style={styles.text}>Alliance</Text>
           <SegmentedButtons
             value={alliance}
             onValueChange={setAlliance}
@@ -116,7 +137,7 @@ export default function Setup({ navigation }) {
           />
         </View>
         <View style={{ flex: 1, alignItems: "center", marginTop: 30 }}>
-          <Text style={{ fontSize: 30, padding: 10 }}>Position</Text>
+          <Text style={styles.text}>Position</Text>
           <SegmentedButtons
             value={pos}
             onValueChange={setPos}
@@ -135,6 +156,10 @@ export default function Setup({ navigation }) {
               },
             ]}
           />
+        </View>
+          
+        <View style={{marginBottom: 15}}>
+            
         </View>
         <TouchableOpacity style={styles.button} onPress={() => send()}>
           <Text style={styles.text}>Navigate to Auto</Text>
@@ -156,16 +181,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#ff0000",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 4,
     margintop: 90,
   },
   text: {
-    color: "#FFFFFF",
-    fontSize: 16,
+    color: "#000000",
+    fontSize: 26,
     fontWeight: "bold",
     textAlign: "center",
+     fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 3,
   },
 });

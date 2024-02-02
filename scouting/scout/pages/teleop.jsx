@@ -88,7 +88,7 @@ export default function Teleop({ navigation }) {
           onValueChange={setCoopertition}
           color={coopertition ? '#4630EB' : undefined}
         />
-        <Text style={{fontSize: "20"}}> Coopertition </Text>
+        <Text style={{fontSize: 20}}> Coopertition </Text>
 
         </View>
         </View>
@@ -107,7 +107,7 @@ export default function Teleop({ navigation }) {
           onValueChange={setAmp}
           color={Amp ? '#4630EB' : undefined}
         />
-        <Text style={{fontSize: "20"}}> Amplified </Text>
+        <Text style={{fontSize: 20}}> Amplified </Text>
 
         </View>
         </View>
