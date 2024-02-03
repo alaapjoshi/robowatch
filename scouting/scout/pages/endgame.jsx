@@ -11,21 +11,35 @@ import { RadioButton } from 'react-native-paper';
 
 export default function Endgame( { navigation } ) {
 
-
-  const [attempted, setattempted] = useState(false);
-  const [docked, setdocked] = useState(false);
-  const [checked, setChecked] = useState('left');
-
-
-  const leave = async async => {
+  const [parked, setparked] = useState(false);
+  const [Harmony, setharmony] = useState(false);
+  const [spotlight, setspotlight] = useState(false);
+  const [trap, settrap] = useState(false);
+  const [climb, setClimb] = useState(false);
+  const leave = async () => {
     navigation.navigate("Notes")
     try {
-      await AsyncStorage.setItem("attempted", String(attempted));
+      await AsyncStorage.setItem("Parked", str(parked));
     } catch (e) {
       console.log("umm...");
     }
     try {
-      await AsyncStorage.setItem("docked", String(docked));
+      await AsyncStorage.setItem("Harmony", str(Harmony));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("Spotlight", str(spotlight));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("trap", str(trap));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("climb", str(climb));
     } catch (e) {
       console.log("umm...");
     }
@@ -45,9 +59,9 @@ export default function Endgame( { navigation } ) {
         <Text style={{fontSize: 20, marginBottom: 5}}> Parked </Text>
         <Checkbox
           style={{width: 20, height: 20}}
-          value={attempted}
-          onValueChange={setattempted}
-          color={attempted ? '#4630EB' : undefined}
+          value={parked}
+          onValueChange={setparked}
+          color={parked ? '#4630EB' : undefined}
         />
         </View>        
       
@@ -62,9 +76,9 @@ export default function Endgame( { navigation } ) {
         <Text style={{fontSize: 20, marginBottom: 5}}> Harmony </Text>
         <Checkbox
           style={{width: 20, height: 20}}
-          value={docked}
-          onValueChange={setdocked}
-          color={docked ? '#4630EB' : undefined}
+          value={Harmony}
+          onValueChange={setharmony}
+          color={Harmony ? '#4630EB' : undefined}
         />
         </View>        
       
@@ -83,9 +97,9 @@ export default function Endgame( { navigation } ) {
         <Text style={{fontSize: 20, marginBottom: 5}}> Spotlight </Text>
         <Checkbox
           style={{width: 20, height: 20}}
-          value={attempted}
-          onValueChange={setattempted}
-          color={attempted ? '#4630EB' : undefined}
+          value={spotlight}
+          onValueChange={setspotlight}
+          color={spotlight ? '#4630EB' : undefined}
         />
         </View>        
       
@@ -100,9 +114,9 @@ export default function Endgame( { navigation } ) {
         <Text style={{fontSize: 20, marginBottom: 5}}> Trap </Text>
         <Checkbox
           style={{width: 20, height: 20}}
-          value={docked}
-          onValueChange={setdocked}
-          color={docked ? '#4630EB' : undefined}
+          value={trap}
+          onValueChange={settrap}
+          color={trap ? '#4630EB' : undefined}
         />
         </View>     
       
@@ -117,9 +131,9 @@ export default function Endgame( { navigation } ) {
         <Text style={{fontSize: 20, marginBottom: 5}}> Climb </Text>
         <Checkbox
           style={{width: 20, height: 20}}
-          value={docked}
-          onValueChange={setdocked}
-          color={docked ? '#4630EB' : undefined}
+          value={climb}
+          onValueChange={setClimb}
+          color={climb ? '#4630EB' : undefined}
         />
         </View>     
         </View>

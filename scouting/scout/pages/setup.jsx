@@ -19,19 +19,40 @@ export default function Setup({ navigation }) {
   const [team, setTeam] = useState("");
   const [alliance, setAlliance] = useState("");
   const [pos, setPos] = useState("");
-  useEffect(async () => {
-    const Match_Number = await AsyncStorage.getItem('Match_Number');
-    setMatch(Match_Number);
-    const Team_Number = await AsyncStorage.getItem('Team_Number');
-    setTeam(Team_Number);
-    const Alliance = await AsyncStorage.getItem('Alliance');
-    setAlliance(Alliance);
-    const Position = await AsyncStorage.getItem('Position');
-    setPos(Position);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const Student_ID = await AsyncStorage.getItem('Student_ID');
+        setStudentID(Student_ID);
+  
+        const Match_Number = await AsyncStorage.getItem('Match_Number');
+        setMatch(Match_Number);
+  
+        const Team_Number = await AsyncStorage.getItem('Team_Number');
+        setTeam(Team_Number);
+  
+        const Alliance = await AsyncStorage.getItem('Alliance');
+        setAlliance(Alliance);
+  
+        const Position = await AsyncStorage.getItem('Position');
+        setPos(Position);
+      } catch (error) {
+        // Handle errors if necessary
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
   }, []);
+  
 
   const send = async () => {
     navigation.navigate("Auto");
+    try {
+      await AsyncStorage.setItem("Student_ID", studentID);
+    } catch (e) {
+      console.log("umm...");
+    }
     try {
       await AsyncStorage.setItem("Match_Number", match);
     } catch (e) {

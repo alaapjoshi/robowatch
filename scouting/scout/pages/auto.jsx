@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import {React, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,20 +6,41 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  Alert,
   ScrollView,
-} from "react-native";
-import { TapGestureHandler } from "react-native-gesture-handler";
-import Checkbox from "expo-checkbox";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
+} from 'react-native';
+import { TapGestureHandler } from 'react-native-gesture-handler';
+import Checkbox from 'expo-checkbox';
+import { Alert, Portal, Dialog, Button, Provider as PaperProvider } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function Auto({ navigation }) {
   const [overlayCoordinates, setOverlayCoordinates] = useState([]);
-  const [left, setLeft] = useState(true);
-  const [relocated, setRelocated] = useState(true);
+  const [left, setLeft] = useState(false);
+  const [relocated, setRelocated] = useState(false);
   const [tapEnabled, setTapEnabled] = useState(true);
+  const [selectedOutcome, setSelectedOutcome] = useState(null);
+  const [deviceSelectionVisible, setDeviceSelectionVisible] = useState(false);
+  const [tappedCoordinates, setTappedCoordinates] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const updatedCoordinates = await AsyncStorage.getItem('Teleop_Grid');
+        if (updatedCoordinates == null) {
+          setOverlayCoordinates([])
+        }
+        else {
+          setOverlayCoordinates(JSON.parse(updatedCoordinates));
+        }
+      } catch (error) {
+        // Handle errors if necessary
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
   const handleTap = (event) => {
     if (!tapEnabled) {
       return;
@@ -33,142 +54,162 @@ export default function Auto({ navigation }) {
       setTapEnabled(true);
     }, 500);
 
-    // Show alert when tapping on the grid
-    showAlert({ x, y });
+    // Store tapped coordinates
+    setTappedCoordinates({ x, y });
+
+    // Show device selection alert when tapping on the grid
+    setDeviceSelectionVisible(true);
   };
 
-  const showAlert = ({ x, y }) => {
-    Alert.alert(
-      "Choose an outcome",
-      "",
-      [
-        {
-          text: "Success",
-          onPress: () => handleOutcome("success", x, y),
-        },
-        {
-          text: "Failure",
-          onPress: () => handleOutcome("failure", x, y),
-        },
-        {
-          text: "Back",
-          style: "cancel",
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
-  const handleOutcome = (outcome, x, y) => {
+  const handleOutcome = (outcome) => {
+    const { x, y } = tappedCoordinates;
     const newCoordinates = [...overlayCoordinates, { x, y, outcome }];
     setOverlayCoordinates(newCoordinates);
+    setDeviceSelectionVisible(false);
+    setSelectedOutcome(null);
+    console.log({ x, y, outcome });
+
   };
 
   const handleBack = () => {
     const updatedCoordinates = [...overlayCoordinates];
     updatedCoordinates.pop(); // Remove the last coordinate
     setOverlayCoordinates(updatedCoordinates);
-    console.log("Undo button clicked. Updated coordinates:", updatedCoordinates);
+    console.log('Undo button clicked. Updated coordinates:', updatedCoordinates);
   };
-  
 
-  const leave = () => {
-    navigation.navigate("Teleop");
+  const leave = async () => {
+    navigation.navigate('Teleop');
+    try {
+      await AsyncStorage.setItem("Auto_Grid", JSON.stringify(overlayCoordinates));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("LeftAllianceauto", str(left));
+    } catch (e) {
+      console.log("umm...");
+    }
+    try {
+      await AsyncStorage.setItem("Relocatedauto", str(relocated));
+    } catch (e) {
+      console.log("umm...");
+    }
+  };
+
+  const submitSelection = () => {
+    // Access the tapped coordinates here
+    const { x, y } = tappedCoordinates;
+    // Do something with the coordinates
+    console.log('Submitted:', { selectedOutcome, x, y });
   };
 
   return (
-    <ScrollView>
-      <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-        <View
-          style={{
-            backgroundColor: "red",
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-            flexDirection: "row",
-          }}
-        >
-          <Checkbox
-            style={{ width: 20, height: 20, marginHorizontal: 10 }}
-            value={left}
-            onValueChange={setLeft}
-            color={left ? "#4630EB" : undefined}
-          />
-          <Text style={{ fontSize: 20 }}>Left Alliance Zone</Text>
-        </View>
-        <View
-          style={{
-            backgroundColor: "red",
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-            flexDirection: "row",
-          }}
-        >
-          <Checkbox
-            style={{ width: 20, height: 20, marginHorizontal: 10 }}
-            value={relocated}
-            onValueChange={setRelocated}
-            color={relocated ? "#4630EB" : undefined}
-          />
-          <Text style={{ fontSize: 20 }}>Relocated</Text>
-        </View>
-      </View>
-
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("./LeftField.png")}
-          style={styles.image}
-        />
-
-        {/* Render multiple overlays for each coordinate */}
-        {overlayCoordinates.map((coordinate, index) => (
+    <PaperProvider>
+      <ScrollView>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
           <View
-            key={index}
-            style={[
-              styles.overlay,
-              { left: coordinate.x, top: coordinate.y },
-              coordinate.outcome === "success"
-                ? { backgroundColor: "green" }
-                : coordinate.outcome === "failure"
-                ? { backgroundColor: "red" }
-                : null,
-            ]}
+            style={{
+              backgroundColor: 'red',
+              padding: 20,
+              borderRadius: 20,
+              marginTop: 40,
+              flexDirection: 'row',
+            }}
           >
-            <Text style={styles.overlayText}>
-              {coordinate.outcome === "success"
-                ? "✅"
-                : coordinate.outcome === "failure"
-                ? "❌"
-                : "X"}
-            </Text>
+            <Checkbox
+              style={{ width: 20, height: 20, marginHorizontal: 10 }}
+              value={left}
+              onValueChange={setLeft}
+              color={left ? '#4630EB' : undefined}
+            />
+            <Text style={{ fontSize: 20 }}>Left Alliance Zone</Text>
           </View>
-        ))}
-
-        {/* Grid Tap Gesture Handler */}
-        <TapGestureHandler onHandlerStateChange={handleTap}>
-          <View style={styles.grid} />
-        </TapGestureHandler>
-
-        {/* Back Button */}
-        <View style={{ flexDirection: "row", marginTop: 20, justifyContent: 'center'}}/>
-
+          <View
+            style={{
+              backgroundColor: 'red',
+              padding: 20,
+              borderRadius: 20,
+              marginTop: 40,
+              flexDirection: 'row',
+            }}
+          >
+            <Checkbox
+              style={{ width: 20, height: 20, marginHorizontal: 10 }}
+              value={relocated}
+              onValueChange={setRelocated}
+              color={relocated ? '#4630EB' : undefined}
+            />
+            <Text style={{ fontSize: 20 }}>Relocated</Text>
           </View>
+        </View>
 
-          <View style={{ flexDirection: "row", alignContent: 'center',justifyContent: 'center',
- }}>
-        <TouchableOpacity style={styles.backButton3} onPress={() => handleBack()}>
-          <Text style={{ color: "white" }}>Undo</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.imageContainer}>
+          <Image source={require('./LeftField.png')} style={styles.image} />
 
-      <View style={{ flexDirection: "row", alignContent: 'center',justifyContent: 'center',
- }}>
-        <TouchableOpacity style={styles.backButton2} onPress={() => leave()}>
-          <Text style={{ color: "white" }}>Navigate to Final</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          {/* Render multiple overlays for each coordinate */}
+          {overlayCoordinates.map((coordinate, index) => (
+            <View
+              key={index}
+              style={[
+                styles.overlay,
+                { left: coordinate.x, top: coordinate.y },
+                coordinate.outcome === 'success'
+                  ? { backgroundColor: 'green' }
+                  : coordinate.outcome === 'failure'
+                  ? { backgroundColor: 'red' }
+                  : null,
+              ]}
+            >
+              <Text style={styles.overlayText}>
+                {coordinate.outcome === 'success' ? '✅' : coordinate.outcome === 'failure' ? '❌' : 'X'}
+              </Text>
+            </View>
+          ))}
+
+          {/* Grid Tap Gesture Handler */}
+          <TapGestureHandler onHandlerStateChange={handleTap}>
+            <View style={styles.grid} />
+          </TapGestureHandler>
+
+          {/* Back Button */}
+          <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'center' }} />
+        </View>
+
+        <Portal>
+          <Dialog visible={deviceSelectionVisible} onDismiss={() => setDeviceSelectionVisible(false)}>
+            <Dialog.Title>Select Outcome</Dialog.Title>
+            <Dialog.Content>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10 }}>
+                <Button onPress={() => handleOutcome('success')} mode="contained">
+                  Success
+                </Button>
+                <Button onPress={() => handleOutcome('failure')} mode="contained">
+                  Failure
+                </Button>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
+                <Button onPress={() => setDeviceSelectionVisible(false)} mode="outlined">
+                  Back
+                </Button>
+              </View>
+            </Dialog.Content>
+          </Dialog>
+        </Portal>
+
+        <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity style={styles.backButton3} onPress={() => handleBack()}>
+            <Text style={{ color: 'white' }}>Undo</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity style={styles.backButton2} onPress={() => leave()}>
+            <Text style={{ color: 'white' }}>Navigate to Teleop</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </PaperProvider>
   );
 }
 
@@ -176,63 +217,49 @@ const styles = StyleSheet.create({
   // ... Your existing styles
 
   imageContainer: {
-    position: "relative",
+    position: 'relative',
     width: SCREEN_WIDTH,
     height: SCREEN_WIDTH,
   },
   grid: {
-    position: "absolute",
+    position: 'absolute',
     width: SCREEN_WIDTH,
     height: SCREEN_WIDTH,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
   overlay: {
-    position: "absolute",
+    position: 'absolute',
     width: 20,
     height: 20,
     borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "red",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'red',
   },
   overlayText: {
-    color: "white",
+    color: 'white',
     fontSize: 14,
   },
-  backButton: {
-    position: "absolute",
-    left: "50%",
-    transform: [{ translateX: -50 }],
-    backgroundColor: "blue",
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    borderRadius: 5,
-    zIndex: 3, // Set a higher zIndex
-  },
-  
   backButton2: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: '#4CAF50',
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 4,
     marginVertical: 20,
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   backButton3: {
-    backgroundColor: "#0000FF",
+    backgroundColor: '#0000FF',
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 4,
     marginVertical: 20,
-    alignSelf: "center",
-  },
-  backButtonText: {
-    color: "white",
+    alignSelf: 'center',
   },
   image: {
     width: SCREEN_WIDTH,
     height: SCREEN_WIDTH,
-    resizeMode: "cover",
-    transform: [{ rotate: "90deg" }],
+    resizeMode: 'cover',
+    transform: [{ rotate: '90deg' }],
   },
 });
