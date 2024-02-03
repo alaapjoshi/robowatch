@@ -68,7 +68,9 @@ export default function Auto({ navigation }) {
     const updatedCoordinates = [...overlayCoordinates];
     updatedCoordinates.pop(); // Remove the last coordinate
     setOverlayCoordinates(updatedCoordinates);
+    console.log("Undo button clicked. Updated coordinates:", updatedCoordinates);
   };
+  
 
   const leave = () => {
     navigation.navigate("Teleop");
@@ -115,7 +117,7 @@ export default function Auto({ navigation }) {
 
       <View style={styles.imageContainer}>
         <Image
-          source={require("/Users/alaapjoshi/Developer/Robotics/strat/RoboWatch/assets/LeftField.png")}
+          source={require("./LeftField.png")}
           style={styles.image}
         />
 
@@ -149,14 +151,19 @@ export default function Auto({ navigation }) {
         </TapGestureHandler>
 
         {/* Back Button */}
-        {overlayCoordinates.length > 0 && (
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <Text style={styles.backButtonText}>Undo</Text>
-          </TouchableOpacity>
-        )}
+        <View style={{ flexDirection: "row", marginTop: 20, justifyContent: 'center'}}/>
+
+          </View>
+
+          <View style={{ flexDirection: "row", alignContent: 'center',justifyContent: 'center',
+ }}>
+        <TouchableOpacity style={styles.backButton3} onPress={() => handleBack()}>
+          <Text style={{ color: "white" }}>Undo</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={{ flexDirection: "row", paddingBottom: 40 }}>
+      <View style={{ flexDirection: "row", alignContent: 'center',justifyContent: 'center',
+ }}>
         <TouchableOpacity style={styles.backButton2} onPress={() => leave()}>
           <Text style={{ color: "white" }}>Navigate to Final</Text>
         </TouchableOpacity>
@@ -194,16 +201,25 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: "absolute",
-    bottom: -80,
     left: "50%",
     transform: [{ translateX: -50 }],
     backgroundColor: "blue",
     paddingHorizontal: 30,
     paddingVertical: 20,
     borderRadius: 5,
+    zIndex: 3, // Set a higher zIndex
   },
+  
   backButton2: {
     backgroundColor: "#4CAF50",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    marginVertical: 20,
+    alignSelf: "center",
+  },
+  backButton3: {
+    backgroundColor: "#0000FF",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 4,
