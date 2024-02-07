@@ -83,8 +83,8 @@ function Data({ navigation }) {
     },
     {
       id: '3',
-      label: 'Mechnum',
-      value: 'Mechnum'
+      label: 'Mecanum',
+      value: 'Mecanum'
   },
   {
     id: '4',
@@ -252,8 +252,8 @@ const [Feeding, setFeeding] = useState();
         </Text>
         <RadioGroup 
             radioButtons={radioButtons2} 
-            onPress={setDriveTrain}
-            selectedId={DriveTrain}
+            onPress={setFeeding}
+            selectedId={Feeding}
         />
 
       </View>

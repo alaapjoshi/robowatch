@@ -22,6 +22,7 @@ export default function Auto({ navigation }) {
   const [selectedOutcome, setSelectedOutcome] = useState(null);
   const [deviceSelectionVisible, setDeviceSelectionVisible] = useState(false);
   const [tappedCoordinates, setTappedCoordinates] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,11 +64,21 @@ export default function Auto({ navigation }) {
 
   const handleOutcome = (outcome) => {
     const { x, y } = tappedCoordinates;
-    const newCoordinates = [...overlayCoordinates, { x, y, outcome }];
-    setOverlayCoordinates(newCoordinates);
-    setDeviceSelectionVisible(false);
-    setSelectedOutcome(null);
-    console.log({ x, y, outcome });
+    if (selectedOutcome == null) {
+      setDeviceSelectionVisible(false);
+      setSelectedOutcome(null);
+      setSelectedDevice(null);
+    }
+    else {
+      const newCoordinates = [...overlayCoordinates, { x, y, outcome }];
+      console.log({ x, y, selectedOutcome, selectedDevice });
+      setOverlayCoordinates(newCoordinates);
+      setDeviceSelectionVisible(false);
+      setSelectedOutcome(null);
+      setSelectedDevice(null);
+
+    }
+
 
   };
 
@@ -140,7 +151,7 @@ export default function Auto({ navigation }) {
               onValueChange={setRelocated}
               color={relocated ? '#4630EB' : undefined}
             />
-            <Text style={{ fontSize: 20 }}>Relocated</Text>
+            <Text style={{ fontSize: 20 }}> Reload</Text>
           </View>
         </View>
 
@@ -180,17 +191,37 @@ export default function Auto({ navigation }) {
           <Dialog visible={deviceSelectionVisible} onDismiss={() => setDeviceSelectionVisible(false)}>
             <Dialog.Title>Select Outcome</Dialog.Title>
             <Dialog.Content>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10 }}>
-                <Button onPress={() => handleOutcome('success')} mode="contained">
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <Button
+                  onPress={() => setSelectedDevice('Amp')}
+                  mode={selectedDevice === 'Amp' ? 'contained' : 'outlined'}
+                >
+                Amp
+                </Button>
+                <Button
+                  onPress={() => setSelectedDevice('Speaker')}
+                  mode={selectedDevice === 'Speaker' ? 'contained' : 'outlined'}
+                >
+                  Speaker
+                </Button>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 10 }}>
+                <Button
+                  onPress={() => setSelectedOutcome('Success')}
+                  mode={selectedOutcome === 'Success' ? 'contained' : 'outlined'}
+                >
                   Success
                 </Button>
-                <Button onPress={() => handleOutcome('failure')} mode="contained">
+                <Button
+                  onPress={() => setSelectedOutcome('Failure')}
+                  mode={selectedOutcome === 'Failure' ? 'contained' : 'outlined'}
+                >
                   Failure
                 </Button>
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 10 }}>
-                <Button onPress={() => setDeviceSelectionVisible(false)} mode="outlined">
-                  Back
+              <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
+                <Button onPress={() => handleOutcome()} mode="contained">
+                  Submit
                 </Button>
               </View>
             </Dialog.Content>

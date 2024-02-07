@@ -27,7 +27,7 @@
     "expo-firebase": "^0.0.0-alpha.0",
     "expo-google-app-auth": "~8.3.0",
     "expo-random": "~13.6.0",
-    "expo-updates": "~0.24.9",
+    "expo-updates": "~0.24.10",
     "expo-web-browser": "~12.8.2",
     "firebase": "^9.20.0",
     "react": "18.2.0",

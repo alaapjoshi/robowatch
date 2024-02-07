@@ -21,6 +21,7 @@ export default function Auto({ navigation }) {
   const [relocated, setRelocated] = useState(false);
   const [tapEnabled, setTapEnabled] = useState(true);
   const [selectedDevice, setSelectedDevice] = useState(null);
+  const [selectedpickup, setselectedpickup] = useState(null);
   const [selectedOutcome, setSelectedOutcome] = useState(null);
   const [outcomeDialogVisible, setOutcomeDialogVisible] = useState(false);
   const [tappedCoordinates, setTappedCoordinates] = useState(null);
@@ -28,7 +29,7 @@ export default function Auto({ navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
+        const updatedCoordinates = await AsyncStorage.getItem('Teleop_Grid');
         if (updatedCoordinates == null) {
           setOverlayCoordinates([])
         }
@@ -69,14 +70,27 @@ export default function Auto({ navigation }) {
 
   const handleOutcome = () => {
     const { x, y } = tappedCoordinates;
-    const newCoordinates = [...overlayCoordinates, { x, y, outcome: selectedOutcome, device: selectedDevice }];
-    console.log({ x, y, outcome: selectedOutcome, device: selectedDevice })
-    setOverlayCoordinates(newCoordinates);
-    setOutcomeDialogVisible(false);
+    if (selectedDevice == null) {
+      setOutcomeDialogVisible(false);
+      console.log({ x, y, outcome: selectedOutcome, device: selectedDevice, pickup: selectedpickup })
+      // Reset choices after submission
+      setSelectedDevice(null);
+      setselectedpickup(null);
+      setSelectedOutcome(null);
+      setOutcomeDialogVisible(false);
+    }
+    else {
+      const newCoordinates = [...overlayCoordinates, { x, y, outcome: selectedOutcome, device: selectedDevice, pickup: selectedpickup }];
+      console.log({ x, y, outcome: selectedOutcome, device: selectedDevice, pickup: selectedpickup })
+      setOverlayCoordinates(newCoordinates);
+      setOutcomeDialogVisible(false);
+      // Reset choices after submission
+      setSelectedDevice(null);
+      setselectedpickup(null);
+      setSelectedOutcome(null);
 
-    // Reset choices after submission
-    setSelectedDevice(null);
-    setSelectedOutcome(null);
+    }
+
   };
 
   const handleBack = () => {
@@ -132,25 +146,9 @@ export default function Auto({ navigation }) {
               onValueChange={setLeft}
               color={left ? '#4630EB' : undefined}
             />
-            <Text style={{ fontSize: 15 }}>Left Alliance Zone</Text>
+            <Text style={{ fontSize: 15 }}>Coopertition Bonus</Text>
           </View>
-          <View
-            style={{
-              backgroundColor: 'red',
-              padding: 20,
-              borderRadius: 20,
-              marginTop: 40,
-              flexDirection: 'row',
-            }}
-          >
-            <Checkbox
-              style={{ width: 20, height: 20, marginHorizontal: 10 }}
-              value={relocated}
-              onValueChange={setRelocated}
-              color={relocated ? '#4630EB' : undefined}
-            />
-            <Text style={{ fontSize: 15 }}>Relocated</Text>
-          </View>
+
         </View>
 
         <View style={styles.imageContainer}>
@@ -218,6 +216,20 @@ export default function Auto({ navigation }) {
                   mode={selectedOutcome === 'Failure' ? 'contained' : 'outlined'}
                 >
                   Failure
+                </Button>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 10 }}>
+                <Button
+                  onPress={() => setselectedpickup('Source')}
+                  mode={selectedpickup === 'Source' ? 'contained' : 'outlined'}
+                >
+                  Source
+                </Button>
+                <Button
+                  onPress={() => setselectedpickup('Ground')}
+                  mode={selectedpickup === 'Ground' ? 'contained' : 'outlined'}
+                >
+                  Ground
                 </Button>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
