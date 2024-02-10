@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import QRCode from "react-native-qrcode-svg";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, QueryLimitConstraint } from "firebase/firestore";
+import { getFirestore, collection, addDoc, QueryLimitConstraint, aggregateQuerySnapshotEqual } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfmW98iWLhhNtFrjy-3niS_OWPhrQTb5U",
@@ -31,105 +31,66 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default function Final() {
-  const [qe, setQe] = useState("DATA DID NOT LOAD PROPERLY");
+  const [qe, setQe] = useState("Blank");
 
   useEffect(() => {
-    console.log("test")
-    const checkStorage = async () => {
+    const fetchData = async () => {
       try {
+        const Student_ID = await AsyncStorage.getItem('Student_ID');
         const Match_Number = await AsyncStorage.getItem('Match_Number');
         const Team_Number = await AsyncStorage.getItem('Team_Number');
         const Alliance = await AsyncStorage.getItem('Alliance');
         const Position = await AsyncStorage.getItem('Position');
-
-        const autodock = await AsyncStorage.getItem('autodock');
-        const autobottomCone = await AsyncStorage.getItem('autobottomCone');
-        const automidcone = await AsyncStorage.getItem('automidcone');
-        const autohighcone = await AsyncStorage.getItem('autohighcone');
-        const autobottomcube = await AsyncStorage.getItem('autobottomcube');
-        const automidcube = await AsyncStorage.getItem('automidcube');
-        const autohighcube = await AsyncStorage.getItem('autohighcube');
-
-
-
-        const teleopbottomCone = await AsyncStorage.getItem('teleopbottomCone');
-        const teleopmidcone = await AsyncStorage.getItem('teleopmidcone');
-        const teleophighcone = await AsyncStorage.getItem('teleophighcone');
-        const teleopbottomcube = await AsyncStorage.getItem('teleopbottomcube');
-        const teleopmidcube = await AsyncStorage.getItem('teleopmidcube');
-        const teleophighcube = await AsyncStorage.getItem('teleophighcube');
-
-
-
-        const floorcone = await AsyncStorage.getItem('floorcone');
-        const floorcube = await AsyncStorage.getItem('floorcube');
-        const stationcone = await AsyncStorage.getItem('stationcone');
-        const stationcube = await AsyncStorage.getItem('stationcube');
-
-        const attempted = await AsyncStorage.getItem('attempted');
-        const docked = await AsyncStorage.getItem('docked');
-        const engaged = await AsyncStorage.getItem('engaged');
-        const soloclimb = await AsyncStorage.getItem('soloclimb');
-        const gaveassistance = await AsyncStorage.getItem('gaveassistance');
-        const recievedassistance = await AsyncStorage.getItem('recievedassistance');
-        const parked = await AsyncStorage.getItem('parked');
-        const Slider1 = await AsyncStorage.getItem('Slider1');
-
-
-        const fullcycler = await AsyncStorage.getItem('fullcycler');
-        const halfcycler = await AsyncStorage.getItem('halfcycler');
-        const feeder = await AsyncStorage.getItem('feeder');
-        const defense = await AsyncStorage.getItem('defense');
-        const topheavy = await AsyncStorage.getItem('topheavy');
+        //Auto
+        const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
+        const left_alliance_auto = await AsyncStorage.getItem('LeftAllianceauto');
+        const reload_auto = await AsyncStorage.getItem('ReloadAuto');
+        //Teleop
+        const Teleop_Grid = await AsyncStorage.getItem('Teleop_Grid');
+        const coopertitionbonus = await AsyncStorage.getItem('coopertitionbonus');
+        //Endgame
+        const Parked = await AsyncStorage.getItem('Parked');
+        const Harmony = await AsyncStorage.getItem('Harmony');
+        const Spotlight = await AsyncStorage.getItem('coopertitionbonus');
+        const trap = await AsyncStorage.getItem('trap');
+        const climb = await AsyncStorage.getItem('climb');
+        const win = await AsyncStorage.getItem('win');
+        const lose = await AsyncStorage.getItem('lose');
+        const tie = await AsyncStorage.getItem('tie');
         const notes = await AsyncStorage.getItem('notes');
-        const Aggression = await AsyncStorage.getItem('Aggression');
-        const qe2 = [{
+        const stabilitySlider = await AsyncStorage.getItem('stabilitySlider');
+        const agressionSlider = await AsyncStorage.getItem('agressionSlider');
+        const qe2 = {
+          Student_ID: Student_ID,
           Match_Number: Match_Number,
           Team_Number: Team_Number,
           Alliance: Alliance,
           Position: Position,
-          autodock: autodock,
-          autobottomCone: autobottomCone,
-          automidcone: automidcone,
-          autohighcone: autohighcone,
-          autobottomcube: autobottomcube,
-          automidcube: automidcube,
-          autohighcube: autohighcube,
-          teleopbottomCone: teleopbottomCone,
-          teleopmidcone: teleopmidcone,
-          teleophighcone: teleophighcone,
-          teleopbottomcube: teleopbottomcube,
-          teleopmidcube: teleopmidcube,
-          teleophighcube: teleophighcube,
-          floorcone: floorcone,
-          floorcube: floorcube,
-          stationcone: stationcone,
-          stationcube: stationcube,
-          attempted: attempted,
-          docked: docked,
-          engaged: engaged,
-          soloclimb: soloclimb,
-          gaveassistance: gaveassistance,
-          recievedassistance: recievedassistance,
-          parked: parked,
-          Slider1: Slider1,
-          fullcycler: fullcycler,
-          halfcycler: halfcycler,
-          feeder: feeder,
-          defense: defense,
-          topheavy: topheavy,
-          notes: notes.toString(),
-          Aggression: Aggression
-        }];
+          updatedCoordinates: updatedCoordinates,
+          left_alliance_auto: left_alliance_auto,
+          Reload_Auto: reload_auto,
+          Teleop_Grid: Teleop_Grid,
+          coopertitionbonus: coopertitionbonus,
+          Parked: Parked,
+          Harmony: Harmony,
+          Spotlight: Spotlight,
+          trap: trap,
+          climb: climb,
+          win: win,
+          lose: lose,
+          tie: tie,
+          notes: str(notes),
+          stabilitySlider: stabilitySlider,
+          agressionSlider: agressionSlider
+        }
+  
         setQe(JSON.stringify(qe2));
       } catch (e) {
         // handle error
       }
-      
     };
-    checkStorage();
+    fetchData();
   }, []);
-
   const cleardata = async () => {
     console.log("asd")
     /*
@@ -191,91 +152,60 @@ export default function Final() {
 
 }
   const sendDataToFirestore = async () => {
+
+    //Setup
+    const Student_ID = await AsyncStorage.getItem('Student_ID');
     const Match_Number = await AsyncStorage.getItem('Match_Number');
     const Team_Number = await AsyncStorage.getItem('Team_Number');
     const Alliance = await AsyncStorage.getItem('Alliance');
     const Position = await AsyncStorage.getItem('Position');
-
-    const autodock = await AsyncStorage.getItem('autodock');
-    const autobottomCone = await AsyncStorage.getItem('autobottomCone');
-    const automidcone = await AsyncStorage.getItem('automidcone');
-    const autohighcone = await AsyncStorage.getItem('autohighcone');
-    const autobottomcube = await AsyncStorage.getItem('autobottomcube');
-    const automidcube = await AsyncStorage.getItem('automidcube');
-    const autohighcube = await AsyncStorage.getItem('autohighcube');
-    const teleopbottomCone = await AsyncStorage.getItem('teleopbottomCone');
-    const teleopmidcone = await AsyncStorage.getItem('teleopmidcone');
-    const teleophighcone = await AsyncStorage.getItem('teleophighcone');
-
-
-    const teleopbottomcube = await AsyncStorage.getItem('teleopbottomcube');
-    const teleopmidcube = await AsyncStorage.getItem('teleopmidcube');
-    const teleophighcube = await AsyncStorage.getItem('teleophighcube');
-
-
-
-    const floorcone = await AsyncStorage.getItem('floorcone');
-    const floorcube = await AsyncStorage.getItem('floorcube');
-    const stationcone = await AsyncStorage.getItem('stationcone');
-    const stationcube = await AsyncStorage.getItem('stationcube');
-
-    const attempted = await AsyncStorage.getItem('attempted');
-    const docked = await AsyncStorage.getItem('docked');
-    const engaged = await AsyncStorage.getItem('engaged');
-    const soloclimb = await AsyncStorage.getItem('soloclimb');
-    const gaveassistance = await AsyncStorage.getItem('gaveassistance');
-    const recievedassistance = await AsyncStorage.getItem('recievedassistance');
-    const parked = await AsyncStorage.getItem('parked');
-    const Slider1 = await AsyncStorage.getItem('Slider1');
-
-
-    const fullcycler = await AsyncStorage.getItem('fullcycler');
-    const halfcycler = await AsyncStorage.getItem('halfcycler');
-    const feeder = await AsyncStorage.getItem('feeder');
-    const defense = await AsyncStorage.getItem('defense');
-    const topheavy = await AsyncStorage.getItem('topheavy');
+    //Auto
+    const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
+    const left_alliance_auto = await AsyncStorage.getItem('LeftAllianceauto');
+    const reload_auto = await AsyncStorage.getItem('ReloadAuto');
+    //Teleop
+    const Teleop_Grid = await AsyncStorage.getItem('Teleop_Grid');
+    const coopertitionbonus = await AsyncStorage.getItem('coopertitionbonus');
+    //Endgame
+    const Parked = await AsyncStorage.getItem('Parked');
+    const Harmony = await AsyncStorage.getItem('Harmony');
+    const Spotlight = await AsyncStorage.getItem('coopertitionbonus');
+    const trap = await AsyncStorage.getItem('trap');
+    const climb = await AsyncStorage.getItem('climb');
+    const win = await AsyncStorage.getItem('win');
+    const lose = await AsyncStorage.getItem('lose');
+    const tie = await AsyncStorage.getItem('tie');
     const notes = await AsyncStorage.getItem('notes');
-    const Aggression = await AsyncStorage.getItem('Aggression');
+    const stabilitySlider = await AsyncStorage.getItem('stabilitySlider');
+    const agressionSlider = await AsyncStorage.getItem('agressionSlider');
+
+
     try {
 
       // Add the data to the collection
       const docRef = await addDoc(collection(db, "scouting"), {
+        Student_ID: Student_ID,
         Match_Number: Match_Number,
-          Team_Number: Team_Number,
-          Alliance: Alliance,
-          Position: Position,
-          autodock: autodock,
-          autobottomCone: autobottomCone,
-          automidcone: automidcone,
-          autohighcone: autohighcone,
-          autobottomcube: autobottomcube,
-          automidcube: automidcube,
-          autohighcube: autohighcube,
-          teleopbottomCone: teleopbottomCone,
-          teleopmidcone: teleopmidcone,
-          teleophighcone: teleophighcone,
-          teleopbottomcube: teleopbottomcube,
-          teleopmidcube: teleopmidcube,
-          teleophighcube: teleophighcube,
-          floorcone: floorcone,
-          floorcube: floorcube,
-          stationcone: stationcone,
-          stationcube: stationcube,
-          attempted: attempted,
-          docked: docked,
-          engaged: engaged,
-          soloclimb: soloclimb,
-          gaveassistance: gaveassistance,
-          recievedassistance: recievedassistance,
-          parked: parked,
-          Slider1: Slider1,
-          fullcycler: fullcycler,
-          halfcycler: halfcycler,
-          feeder: feeder,
-          defense: defense,
-          topheavy: topheavy,
-          notes: notes.toString(),
-          Aggression: Aggression,
+        Team_Number: Team_Number,
+        Alliance: Alliance,
+        Position: Position,
+        updatedCoordinates: updatedCoordinates,
+        left_alliance_auto: left_alliance_auto,
+        Reload_Auto: reload_auto,
+        Teleop_Grid: Teleop_Grid,
+        coopertitionbonus: coopertitionbonus,
+        Parked: Parked,
+        Harmony: Harmony,
+        Spotlight: Spotlight,
+        trap: trap,
+        climb: climb,
+        win: win,
+        lose: lose,
+        tie: tie,
+        notes: str(notes),
+        stabilitySlider: stabilitySlider,
+        agressionSlider: agressionSlider
+
       });
       Alert.alert('Data sent succsessfully!');
 

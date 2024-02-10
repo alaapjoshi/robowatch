@@ -9,12 +9,12 @@ import Slider from '@react-native-community/slider';
 
 
 export default function Notes( { navigation } ) {
-  const [fullcycler, setfullcycler] = useState(false);
-  const [halfcycler, sethalfcycler] = useState(false);
-  const [feeder, setfeeder] = useState(false);
-  const [defense, setdefense] = useState(false);
-  const [topheavy, settopheavy] = useState(false);
-  const [Slider1, setSlider] = useState(0);
+
+  const [stabilitySlider, setStabilitySlider] = useState(0);
+  const [agressionSlider, setAgrressionSlider] = useState(0);
+  const [win, setwin] = useState(false);
+  const [lose, setlose] = useState(false);
+  const [tie, settie] = useState(false);
   const [notes, setNotes] = useState('');
 
 
@@ -22,27 +22,17 @@ export default function Notes( { navigation } ) {
   const leave = async async => {
     navigation.navigate("Final")
     try {
-      await AsyncStorage.setItem("fullcycler", String(fullcycler));
+      await AsyncStorage.setItem("Win", String(win));
     } catch (e) {
       console.log("umm...");
     }
     try {
-      await AsyncStorage.setItem("halfcycler", String(halfcycler));
+      await AsyncStorage.setItem("Lose", String(lose));
     } catch (e) {
       console.log("umm...");
     }
     try {
-      await AsyncStorage.setItem("feeder", String(feeder));
-    } catch (e) {
-      console.log("umm...");
-    }
-    try {
-      await AsyncStorage.setItem("defense", String(defense));
-    } catch (e) {
-      console.log("umm...");
-    }
-    try {
-      await AsyncStorage.setItem("topheavy", String(topheavy));
+      await AsyncStorage.setItem("tie", String(tie));
     } catch (e) {
       console.log("umm...");
     }
@@ -55,7 +45,13 @@ export default function Notes( { navigation } ) {
 
 
     try {
-      await AsyncStorage.setItem("Aggression", String(Slider1));
+      await AsyncStorage.setItem("stabilitySlider", String(stabilitySlider));
+    } catch (e) {
+      console.log("umm...");
+    }
+
+    try {
+      await AsyncStorage.setItem("agressionSlider", String(agressionSlider));
     } catch (e) {
       console.log("umm...");
     }
@@ -71,14 +67,14 @@ export default function Notes( { navigation } ) {
             </Text>
 
     <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
-      {Slider1}
+      {stabilitySlider}
     </Text>
           <Slider
   style={{width: 350, height: 40, }}
   minimumValue={0}
   maximumValue={5}
-  value={Slider1}
-  onValueChange={setSlider}
+  value={stabilitySlider}
+  onValueChange={setStabilitySlider}
   step={1}
 />
 <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
@@ -86,95 +82,56 @@ export default function Notes( { navigation } ) {
             </Text>
 
     <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
-      {Slider1}
+      {agressionSlider}
     </Text>
           <Slider
   style={{width: 350, height: 40, }}
   minimumValue={0}
   maximumValue={5}
-  value={Slider1}
-  onValueChange={setSlider}
+  value={agressionSlider}
+  onValueChange={setAgrressionSlider}
   step={1}
 />
 
       <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 30}}>
         <View>
             
-        <Text style={{marginBottom: 30, fontSize: 20}}> Full Cycler </Text>
+        <Text style={{marginBottom: 30, fontSize: 20}}> Win </Text>
       <Checkbox
-        value={fullcycler}
-        onValueChange={setfullcycler}
+        value={win}
+        onValueChange={setwin}
         style={styles.checkbox}
       />
         </View>
 
         <View>
             
-            <Text style={{marginBottom: 30, fontSize: 20}}> Half Cycler </Text>
+            <Text style={{marginBottom: 30, fontSize: 20}}> Lose </Text>
           <Checkbox
-            value={halfcycler}
-            onValueChange={sethalfcycler}
+            value={lose}
+            onValueChange={setlose}
             style={styles.checkbox}
           />
             </View>
 
             <View>
             
-            <Text style={{marginBottom: 30, fontSize: 20}}> Feeder </Text>
+            <Text style={{marginBottom: 30, fontSize: 20}}> Tie </Text>
           <Checkbox
-            value={feeder}
-            onValueChange={setfeeder}
+            value={tie}
+            onValueChange={settie}
             style={styles.checkbox}
           />
             </View>
 
-
-        <View>
-        <Text style={{marginBottom: 30, fontSize: 20}}> Defense  </Text>
-      <Checkbox
-        value={defense}
-        onValueChange={setdefense}
-        style={styles.checkbox}
-      />
-        </View>
         
-        </View>
 
 
-
-        <View style={{marginBottom: 30, alignItems: 'center'}}>
-
-
-
-
-
-        <View style={{marginTop: 20}}>
-        <Text style={{marginBottom: 30, fontSize: 20}}> Top Heavy? </Text>
-        <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                <Checkbox
-        value={topheavy}
-        onValueChange={settopheavy}
-        style={styles.checkbox}
-      />
-            </View>
-        </View>
         </View>
         <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
           Additional Notes:
         </Text>
-        <View style={{padding: 30}}>
- 
-        <TextInput
-        style={{borderWidth: 1,borderColor: '#000',borderRadius: 4,padding: 8,marginBottom: 16,}}
-        placeholder="Enter your additional notes..."
-        multiline
-        numberOfLines={6}
-        onChangeText={(text) => setNotes(text)}
-        value={notes}
-      />
-
-         
-</View>
+  
 
 
 

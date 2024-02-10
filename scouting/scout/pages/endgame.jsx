@@ -4,7 +4,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import Checkbox  from 'expo-checkbox';
-import { RadioButton } from 'react-native-paper';
 
 
 
@@ -49,6 +48,7 @@ export default function Endgame( { navigation } ) {
     <ScrollView>
 
       <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 30}}>
+      <TouchableOpacity onPress={() => setparked(!parked)}>
         <View style={{
             backgroundColor: "red",
             padding: 20,
@@ -56,16 +56,20 @@ export default function Endgame( { navigation } ) {
             marginTop: 40,
       }}> 
         <View style={{flexDirection: "row",alignItems: 'center'}}>
-        <Text style={{fontSize: 20, marginBottom: 5}}> Parked </Text>
         <Checkbox
           style={{width: 20, height: 20}}
           value={parked}
           onValueChange={setparked}
           color={parked ? '#4630EB' : undefined}
         />
-        </View>        
-      
+        <Text style={{fontSize: 20, marginBottom: 5}}> Parked </Text>
+
+        </View>  
         </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setharmony(!Harmony)}>
+
         <View style={{
             backgroundColor: "red",
             padding: 20,
@@ -73,20 +77,25 @@ export default function Endgame( { navigation } ) {
             marginTop: 40,
       }}> 
         <View style={{flexDirection: "row",alignItems: 'center'}}>
-        <Text style={{fontSize: 20, marginBottom: 5}}> Harmony </Text>
         <Checkbox
           style={{width: 20, height: 20}}
           value={Harmony}
           onValueChange={setharmony}
           color={Harmony ? '#4630EB' : undefined}
         />
+        <Text style={{fontSize: 20, marginBottom: 5}}> Harmony </Text>
+
         </View>        
       
         </View>
-        
+        </TouchableOpacity>
+
         </View>
+        
 
         <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 30}}>
+        <TouchableOpacity onPress={() => setspotlight(!spotlight)}>
+
         <View style={{
             backgroundColor: "red",
             padding: 20,
@@ -94,16 +103,20 @@ export default function Endgame( { navigation } ) {
             marginTop: 40,
       }}> 
         <View style={{flexDirection: "row",alignItems: 'center'}}>
-        <Text style={{fontSize: 20, marginBottom: 5}}> Spotlight </Text>
         <Checkbox
           style={{width: 20, height: 20}}
           value={spotlight}
           onValueChange={setspotlight}
           color={spotlight ? '#4630EB' : undefined}
         />
+        <Text style={{fontSize: 20, marginBottom: 5}}> Spotlight </Text>
+
         </View>        
       
         </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => settrap(!trap)}>
+
         <View style={{
             backgroundColor: "red",
             padding: 20,
@@ -111,16 +124,20 @@ export default function Endgame( { navigation } ) {
             marginTop: 40,
       }}> 
         <View style={{flexDirection: "row",alignItems: 'center'}}>
-        <Text style={{fontSize: 20, marginBottom: 5}}> Trap </Text>
         <Checkbox
           style={{width: 20, height: 20}}
           value={trap}
           onValueChange={settrap}
           color={trap ? '#4630EB' : undefined}
         />
+        <Text style={{fontSize: 20, marginBottom: 5}}> Trap </Text>
+
         </View>     
       
         </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setClimb(!climb)}>
         <View style={{
             backgroundColor: "red",
             padding: 20,
@@ -128,15 +145,18 @@ export default function Endgame( { navigation } ) {
             marginTop: 40,
       }}> 
         <View style={{flexDirection: "row",alignItems: 'center'}}>
-        <Text style={{fontSize: 20, marginBottom: 5}}> Climb </Text>
         <Checkbox
           style={{width: 20, height: 20}}
           value={climb}
           onValueChange={setClimb}
           color={climb ? '#4630EB' : undefined}
         />
+        <Text style={{fontSize: 20, marginBottom: 5}}> Climb </Text>
+
         </View>     
         </View>
+        </TouchableOpacity>
+
       </View>
 
 

@@ -15,9 +15,9 @@ import { Alert, Portal, Dialog, Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-export default function Auto({ navigation }) {
+export default function Teleop({ navigation }) {
   const [overlayCoordinates, setOverlayCoordinates] = useState([]);
-  const [left, setLeft] = useState(false);
+  const [cooperttion, setcoopertition] = useState(false);
   const [relocated, setRelocated] = useState(false);
   const [tapEnabled, setTapEnabled] = useState(true);
   const [selectedDevice, setSelectedDevice] = useState(null);
@@ -109,7 +109,7 @@ export default function Auto({ navigation }) {
     }
 
     try {
-      await AsyncStorage.setItem("LeftAlliancetele", str(left));
+      await AsyncStorage.setItem("coopertitionbonus", str(cooperttion));
     } catch (e) {
       console.log("umm...");
     }
@@ -131,6 +131,8 @@ export default function Auto({ navigation }) {
     <PaperProvider>
       <ScrollView>
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10 }}>
+        <TouchableOpacity onPress={() => setcoopertition(!cooperttion)}>
+
           <View
             style={{
               backgroundColor: 'red',
@@ -142,12 +144,14 @@ export default function Auto({ navigation }) {
           >
             <Checkbox
               style={{ width: 20, height: 20, marginHorizontal: 10 }}
-              value={left}
-              onValueChange={setLeft}
-              color={left ? '#4630EB' : undefined}
+              value={cooperttion}
+              onValueChange={setcoopertition}
+              color={cooperttion ? '#4630EB' : undefined}
             />
             <Text style={{ fontSize: 15 }}>Coopertition Bonus</Text>
           </View>
+          </TouchableOpacity>
+
 
         </View>
 
@@ -159,23 +163,22 @@ export default function Auto({ navigation }) {
 
           {/* Render multiple overlays for each coordinate */}
           {overlayCoordinates.map((coordinate, index) => (
-  <View
-    key={index}
-    style={[
-      styles.overlay,
-      { left: coordinate.x, top: coordinate.y },
-      coordinate.outcome === 'Success'
-        ? { backgroundColor: 'green' }
-        : coordinate.outcome === 'Failure'
-        ? { backgroundColor: 'red' }
-        : null,
-    ]}
-  >
-    <Text style={[styles.overlayText, { color: coordinate.outcome === 'success' ? 'green' : 'white' }]}>
-      {coordinate.outcome === 'success' ? '✅' : coordinate.outcome === 'failure' ? '❌' : 'X'}
-    </Text>
-  </View>
-))}
+            <View
+              key={index}
+              style={[
+                styles.overlay,
+                { left: coordinate.x, top: coordinate.y },
+                coordinate.outcome === 'Success'
+                  ? { backgroundColor: 'green' }
+                  : coordinate.outcome === 'Failure'
+                  ? { backgroundColor: 'red' }
+                  : null,
+              ]}
+            >
+              <Text style={styles.overlayText}>
+              {coordinate.outcome === 'Success' ? '✅' : coordinate.outcome === 'failure' ? '❌' : 'X'}
+              </Text>
+            </View>))}
 
           {/* Grid Tap Gesture Handler */}
           <TapGestureHandler onHandlerStateChange={handleTap}>

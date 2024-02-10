@@ -17,7 +17,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 export default function Auto({ navigation }) {
   const [overlayCoordinates, setOverlayCoordinates] = useState([]);
   const [left, setLeft] = useState(false);
-  const [relocated, setRelocated] = useState(false);
+  const [reload, setReload] = useState(false);
   const [tapEnabled, setTapEnabled] = useState(true);
   const [selectedOutcome, setSelectedOutcome] = useState(null);
   const [deviceSelectionVisible, setDeviceSelectionVisible] = useState(false);
@@ -27,7 +27,7 @@ export default function Auto({ navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const updatedCoordinates = await AsyncStorage.getItem('Teleop_Grid');
+        const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
         if (updatedCoordinates == null) {
           setOverlayCoordinates([])
         }
@@ -66,17 +66,15 @@ export default function Auto({ navigation }) {
     const { x, y } = tappedCoordinates;
     if (selectedOutcome == null) {
       setDeviceSelectionVisible(false);
-      setSelectedOutcome(null);
       setSelectedDevice(null);
+      setSelectedOutcome(null)
     }
     else {
-      const newCoordinates = [...overlayCoordinates, { x, y, outcome }];
-      console.log({ x, y, selectedOutcome, selectedDevice });
+      const newCoordinates = [...overlayCoordinates, { x, y, selectedOutcome, selectedDevice }];
+      console.log(newCoordinates);
       setOverlayCoordinates(newCoordinates);
       setDeviceSelectionVisible(false);
-      setSelectedOutcome(null);
       setSelectedDevice(null);
-
     }
 
 
@@ -102,7 +100,7 @@ export default function Auto({ navigation }) {
       console.log("umm...");
     }
     try {
-      await AsyncStorage.setItem("Relocatedauto", str(relocated));
+      await AsyncStorage.setItem("ReloadAuto", str(reload));
     } catch (e) {
       console.log("umm...");
     }
@@ -119,6 +117,7 @@ export default function Auto({ navigation }) {
     <PaperProvider>
       <ScrollView>
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+        <TouchableOpacity onPress={() => setLeft(!left)}>
           <View
             style={{
               backgroundColor: 'red',
@@ -136,6 +135,8 @@ export default function Auto({ navigation }) {
             />
             <Text style={{ fontSize: 20 }}>Left Alliance Zone</Text>
           </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setReload(!reload)}>
           <View
             style={{
               backgroundColor: 'red',
@@ -147,13 +148,16 @@ export default function Auto({ navigation }) {
           >
             <Checkbox
               style={{ width: 20, height: 20, marginHorizontal: 10 }}
-              value={relocated}
-              onValueChange={setRelocated}
-              color={relocated ? '#4630EB' : undefined}
+              value={reload}
+              onValueChange={setReload}
+              color={reload ? '#4630EB' : undefined}
             />
             <Text style={{ fontSize: 20 }}> Reload</Text>
           </View>
+          </TouchableOpacity>
+
         </View>
+
 
         <View style={styles.imageContainer}>
           <Image source={require('./LeftField.png')} style={styles.image} />
@@ -165,18 +169,21 @@ export default function Auto({ navigation }) {
               style={[
                 styles.overlay,
                 { left: coordinate.x, top: coordinate.y },
-                coordinate.outcome === 'success'
+                coordinate.selectedOutcome === 'Success'
                   ? { backgroundColor: 'green' }
-                  : coordinate.outcome === 'failure'
+                  : coordinate.selectedOutcome === 'Failure'
                   ? { backgroundColor: 'red' }
                   : null,
               ]}
             >
               <Text style={styles.overlayText}>
-                {coordinate.outcome === 'success' ? '✅' : coordinate.outcome === 'failure' ? '❌' : 'X'}
+              {coordinate.selectedOutcome === 'Success' ? '✅' : coordinate.selectedOutcome === 'failure' ? '❌' : 'X'}
               </Text>
             </View>
-          ))}
+          )
+          )
+
+        }
 
           {/* Grid Tap Gesture Handler */}
           <TapGestureHandler onHandlerStateChange={handleTap}>
