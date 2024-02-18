@@ -54,9 +54,6 @@ export default function Final() {
         const Spotlight = await AsyncStorage.getItem('coopertitionbonus');
         const trap = await AsyncStorage.getItem('trap');
         const climb = await AsyncStorage.getItem('climb');
-        const win = await AsyncStorage.getItem('win');
-        const lose = await AsyncStorage.getItem('lose');
-        const tie = await AsyncStorage.getItem('tie');
         const notes = await AsyncStorage.getItem('notes');
         const stabilitySlider = await AsyncStorage.getItem('stabilitySlider');
         const agressionSlider = await AsyncStorage.getItem('agressionSlider');
@@ -76,10 +73,6 @@ export default function Final() {
           Spotlight: Spotlight,
           trap: trap,
           climb: climb,
-          win: win,
-          lose: lose,
-          tie: tie,
-          notes: str(notes),
           stabilitySlider: stabilitySlider,
           agressionSlider: agressionSlider
         }
@@ -148,6 +141,13 @@ export default function Final() {
   }
   */
   await AsyncStorage.clear();
+  AsyncStorage.clear();
+clearAllData = () => {
+  $reactNative.AsyncStorage.getAllKeys()
+      .then(keys => $reactNative.AsyncStorage.multiRemove(keys))
+      .then(() => alert('success'));
+}
+
   Alert.alert('Data Cleared!');
 
 }
@@ -176,12 +176,31 @@ export default function Final() {
     const lose = await AsyncStorage.getItem('lose');
     const tie = await AsyncStorage.getItem('tie');
     const notes = await AsyncStorage.getItem('notes');
+    const notes2 = str(notes)
     const stabilitySlider = await AsyncStorage.getItem('stabilitySlider');
     const agressionSlider = await AsyncStorage.getItem('agressionSlider');
 
 
     try {
-
+      const qe2 = {
+        Student_ID: Student_ID,
+        Match_Number: Match_Number,
+        Team_Number: Team_Number,
+        Alliance: Alliance,
+        Position: Position,
+        updatedCoordinates: updatedCoordinates,
+        left_alliance_auto: left_alliance_auto,
+        Reload_Auto: reload_auto,
+        Teleop_Grid: Teleop_Grid,
+        coopertitionbonus: coopertitionbonus,
+        Parked: Parked,
+        Harmony: Harmony,
+        Spotlight: Spotlight,
+        trap: trap,
+        climb: climb,
+        stabilitySlider: stabilitySlider,
+        agressionSlider: agressionSlider
+      }
       // Add the data to the collection
       const docRef = await addDoc(collection(db, "scouting"), {
         Student_ID: Student_ID,
@@ -199,18 +218,14 @@ export default function Final() {
         Spotlight: Spotlight,
         trap: trap,
         climb: climb,
-        win: win,
-        lose: lose,
-        tie: tie,
-        notes: str(notes),
         stabilitySlider: stabilitySlider,
         agressionSlider: agressionSlider
-
       });
-      Alert.alert('Data sent succsessfully!');
+      const json_string = JSON.stringify(qe2, null, 2);
+      Alert.alert(json_string);
 
     } catch (error) {
-      Alert.alert('Error Sending data, uhhh ask someone in strategy');
+      Alert.alert('Error Sending data');
       console.error('Error sending data:', error);
     }
   };

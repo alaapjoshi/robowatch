@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const Stack = createStackNavigator();
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 //Scouting App
 import Setup from "./pages/setup";
@@ -16,7 +17,9 @@ import Notes from "./pages/notes";
 export default function Scouting() {
   return (
     <NavigationContainer independent={true} initialRouteName="Setup">
-      <Stack.Navigator>
+      <Stack.Navigator   screenOptions={{
+    headerShown: false
+  }}>
         <Stack.Screen
           name="Setup"
           component={Setup}

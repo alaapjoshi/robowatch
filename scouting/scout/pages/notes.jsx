@@ -61,7 +61,7 @@ export default function Notes( { navigation } ) {
 
   return (
     <ScrollView>
-    <View>
+    <View style={{marginHorizontal: 20}}>
             <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
                 Stability
             </Text>
@@ -92,47 +92,6 @@ export default function Notes( { navigation } ) {
   onValueChange={setAgrressionSlider}
   step={1}
 />
-
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 30}}>
-        <View>
-            
-        <Text style={{marginBottom: 30, fontSize: 20}}> Win </Text>
-      <Checkbox
-        value={win}
-        onValueChange={setwin}
-        style={styles.checkbox}
-      />
-        </View>
-
-        <View>
-            
-            <Text style={{marginBottom: 30, fontSize: 20}}> Lose </Text>
-          <Checkbox
-            value={lose}
-            onValueChange={setlose}
-            style={styles.checkbox}
-          />
-            </View>
-
-            <View>
-            
-            <Text style={{marginBottom: 30, fontSize: 20}}> Tie </Text>
-          <Checkbox
-            value={tie}
-            onValueChange={settie}
-            style={styles.checkbox}
-          />
-            </View>
-
-        
-
-
-        </View>
-        <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
-          Additional Notes:
-        </Text>
-  
-
 
 
       
