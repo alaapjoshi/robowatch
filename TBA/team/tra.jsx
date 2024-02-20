@@ -81,7 +81,7 @@ function MyStack({ navigation }) {
               color: colorAccent,
             }}
           >
-            RoboSense
+            Team Data
           </Text>
         </View>
         <View style={styles.inputContainer}>
@@ -112,16 +112,7 @@ function MyStack({ navigation }) {
             Go to Matches
           </Text>
         </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: "bold",
-            textAlign: "center",
-            color: colorAccent,
-          }}
-        >
-          Presented by Team75
-        </Text>
+
       </View>
     </>
   );
@@ -164,7 +155,6 @@ function New({ route, navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
       })
       .catch((error) => console.error(error));
   }, []);

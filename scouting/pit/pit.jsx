@@ -116,6 +116,31 @@ const [Feeding, setFeeding] = useState();
       <Text style={{fontSize: 30, textAlign: 'center', paddingTop: 20}}>
         Pit Scouting
       </Text>
+      <View style={{
+            backgroundColor: colorAccent,
+            padding: 20,
+            borderRadius: 20,
+            marginTop: 40,
+          }}> 
+        
+        <Text>
+          Team Number
+        </Text>
+
+        <TextInput
+          style={{
+            height: 40,
+            borderColor: 'black',
+            marginTop: 5,
+            paddingLeft: 5,
+            marginHorizontal: 30,
+            paddingHorizontal: 30, 
+            borderBottomWidth: 1, 
+          }}
+          keyboardType="numeric"
+        />
+
+      </View>
       <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
       <View style={{
             backgroundColor: colorAccent,
@@ -293,22 +318,7 @@ const [Feeding, setFeeding] = useState();
           }}
           onPress={() =>
             navigation.navigate("qr", {
-              TeamNumber: number,
-              cubeplacelow: cubeslow,
-              cubeplacemid: cubesmid,
-              cubeplacehigh: cubeshigh,
-              coneplacelow: coneslow,
-              coneplacemid: conesmid,
-              coneplacehigh: coneshigh,
-              pickupcubesG: pickuplowcubes,
-              pickupcubesS: pickupstationcubes,
-              pickupconesG: pickuplowcones,
-              pickupconesS: pickupstationcones,
-              autobalance: autobalanceyes,
-              pieces: pieces,
-              autoaligngamepiece: autoalign,
-              autoalignapril: autoaligngame,
-              autosub: autosub,
+
             })
           }
         >
@@ -325,22 +335,7 @@ function Qr({ route }) {
       async function addData() {
         try {
           const docRef = await addDoc(collection(db, "pit"), {
-            TeamNumber: TeamNumber,
-            cubeplacelow: cubeplacelow,
-            cubeplacemid: cubeplacemid,
-            cubeplacehigh: cubeplacehigh,
-            coneplacelow: coneplacelow,
-            coneplacemid: coneplacemid,
-            coneplacehigh: coneplacehigh,
-            pickupcubesG: pickupcubesG,
-            pickupcubesS: pickupcubesS,
-            pickupconesG: pickupconesG,
-            pickupconesS: pickupconesS,
-            autobalance: autobalance,
-            pieces: pieces,
-            autoaligngamepiece: autoaligngamepiece,
-            autoalignapril: autoalignapril,
-            autosub: autosub,
+            
           });
         } catch (e) {
           console.error("Error adding document: ", e);

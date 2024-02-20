@@ -75,7 +75,7 @@ export default function Analysis() {
           color: colorAccent,
         }}
       >
-        Not Built yet...
+        POV: Me when the
       </Text>
     );
   } else {
@@ -90,7 +90,7 @@ export default function Analysis() {
             backgroundColor: "#080808",
           }}
         >
-          Not Built yet...
+        pov: me when the
         </Text>
       </View>
     );

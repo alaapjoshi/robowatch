@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "RoboWatch",
-    "slug": "RoboWatch",
+    "slug": "robowatch2024",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,14 +29,15 @@
     },
     "extra": {
       "eas": {
-        "projectId": "a06fb547-4345-42a2-8f8e-5fa259af2e22"
+        "projectId": "fd017653-7473-45e0-a9c3-7a1f63f07569"
       }
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/a06fb547-4345-42a2-8f8e-5fa259af2e22"
-    }
+      "url": "https://u.expo.dev/fd017653-7473-45e0-a9c3-7a1f63f07569"
+    },
+    "owner": "aj2426"
   }
 }

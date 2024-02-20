@@ -153,25 +153,7 @@ function Set({ navigation }) {
                 onChangeText={saveTextInputValue}
               />
             </View>
-            <Text style={styles.settingLabel}>Color / Accent</Text>
-            <View style={styles.colorPicker} color={colorAccent}>
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#ff0303" }]}
-                onPress={() => storeColor("#ff0303")}
-              />
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#FFA500" }]}
-                onPress={() => storeColor("#FFA500")}
-              />
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#00BFFF" }]}
-                onPress={() => storeColor("#00BFFF")}
-              />
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#FF69B4" }]}
-                onPress={() => storeColor("#FF69B4")}
-              />
-            </View>
+
           </View>
 
           <View
@@ -245,7 +227,6 @@ function Set({ navigation }) {
           }}
           onPress={() => null}
         >
-          <Text style={styles.text}> Made by AJ</Text>
         </TouchableOpacity>
       </ScrollView>
     );
@@ -313,34 +294,7 @@ function Set({ navigation }) {
                 onChangeText={saveTextInputValue}
               />
             </View>
-            <Text
-              style={{
-                fontSize: 18,
-                textAlign: "center",
-                fontWeight: "bold",
-                color: "#FFFFFF",
-              }}
-            >
-              Color / Accent
-            </Text>
-            <View style={styles.colorPicker} color={colorAccent}>
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#ff0303" }]}
-                onPress={() => storeColor("#ff0303")}
-              />
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#FFA500" }]}
-                onPress={() => storeColor("#FFA500")}
-              />
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#00BFFF" }]}
-                onPress={() => storeColor("#00BFFF")}
-              />
-              <TouchableOpacity
-                style={[styles.colorOption, { backgroundColor: "#FF69B4" }]}
-                onPress={() => storeColor("#FF69B4")}
-              />
-            </View>
+
           </View>
 
           <View
@@ -365,6 +319,7 @@ function Set({ navigation }) {
               onValueChange={handleNotificationsToggle}
             />
           </View>
+          {/*
           <Text
             style={{
               fontSize: 18,
@@ -393,6 +348,7 @@ function Set({ navigation }) {
               value={isEnabled}
             />
           </View>
+          */}
 
           <TouchableOpacity
             style={{
@@ -411,22 +367,7 @@ function Set({ navigation }) {
           </Text>
           <Text style={styles.settingLabel}>
             (Swipe out the app and open it again)
-          </Text>
-          <TouchableOpacity
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 10,
-              height: 30,
-              borderRadius: 10,
-              backgroundColor: "#F8F8F8",
-            }}
-            onPress={() => navigation.navigate("Dev")}>
-            <Text style={{ color: "black", fontWeight: "bold" }}>
-              {" "}
-              Dev Settings
-            </Text>
-          </TouchableOpacity>
+          </Text> 
       </View>
               </ScrollView>
 
