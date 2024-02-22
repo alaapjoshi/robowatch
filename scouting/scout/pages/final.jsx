@@ -44,7 +44,10 @@ export default function Final() {
         //Auto
         const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
         const left_alliance_auto = await AsyncStorage.getItem('LeftAllianceauto');
+        console.log(left_alliance_auto)
+
         const reload_auto = await AsyncStorage.getItem('ReloadAuto');
+        console.log(reload_auto)
         //Teleop
         const Teleop_Grid = await AsyncStorage.getItem('Teleop_Grid');
         const coopertitionbonus = await AsyncStorage.getItem('coopertitionbonus');
@@ -86,72 +89,42 @@ export default function Final() {
   }, []);
   const cleardata = async () => {
     console.log("asd")
-    /*
     try {
 
-    await AsyncStorage.setItem('Match_Number', "");
-    await AsyncStorage.setItem('Team_Number', "");
-    await AsyncStorage.setItem('Alliance', "");
-    await AsyncStorage.setItem('Position', "");
+    await AsyncStorage.setItem('Student_ID', null);
+    await AsyncStorage.setItem('Match_Number', null);
+    await AsyncStorage.setItem('Team_Number',null);
+    await AsyncStorage.setItem('Alliance', null);
+    await AsyncStorage.setItem('Position', null);
 
-    await AsyncStorage.setItem('autodock');
-    await AsyncStorage.setItem('autobottomCone', 0);
-    await AsyncStorage.setItem('automidcone', 0);
-   await AsyncStorage.setItem('autohighcone', 0);
-    await AsyncStorage.setItem('autobottomcube', 0);
-    await AsyncStorage.setItem('automidcube', 0);
-    await AsyncStorage.setItem('autohighcube', 0);
-    await AsyncStorage.setItem('teleopbottomCone', 0);
-    await AsyncStorage.setItem('teleopmidcone', 0);
-    await AsyncStorage.setItem('teleophighcone', 0);
+    await AsyncStorage.setItem('Auto_Grid', null);
+    await AsyncStorage.setItem('LeftAllianceauto', null);
+    await AsyncStorage.setItem('ReloadAuto', null);
 
 
-    await AsyncStorage.setItem('teleopbottomcube', 0);
-    await AsyncStorage.setItem('teleopmidcube', 0);
-    await AsyncStorage.setItem('teleophighcube', 0);
+    await AsyncStorage.setItem('Teleop_Grid', null);
+    await AsyncStorage.setItem('coopertitionbonus', null);
+    //Endgame
 
+    await AsyncStorage.setItem('Parked', null);
+    await AsyncStorage.setItem('Harmony', null);
+    await AsyncStorage.setItem('coopertitionbonus', null);
+    await AsyncStorage.setItem('trap', null);
+    await AsyncStorage.setItem('climb', null);
+    await AsyncStorage.setItem('notes', null);
 
-
-    await AsyncStorage.setItem('floorcone', 0);
-    await AsyncStorage.setItem('floorcube', 0);
-    await AsyncStorage.setItem('stationcone', 0);
-    await AsyncStorage.setItem('stationcube', 0);
-
-    await AsyncStorage.setItem('attempted', false);
-    await AsyncStorage.setItem('docked', false);
-    await AsyncStorage.setItem('engaged', false);
-    await AsyncStorage.setItem('soloclimb', false);
-    await AsyncStorage.setItem('gaveassistance', false);
-    await AsyncStorage.setItem('recievedassistance', false);
-    await AsyncStorage.setItem('parked', false);
-    await AsyncStorage.setItem('Slider1', 0);
-
-
-    await AsyncStorage.setItem('fullcycler', false);
-    await AsyncStorage.setItem('halfcycler', false);
-    await AsyncStorage.setItem('feeder', false);
-    await AsyncStorage.setItem('defense', false);
-    await AsyncStorage.setItem('topheavy', false);
-    await AsyncStorage.setItem('notes', "");
-    await AsyncStorage.setItem('Aggression', 0);
-
-
+    await AsyncStorage.setItem('stabilitySlider', null);
+    await AsyncStorage.setItem('agressionSlider', null);
   }
   catch (e) {
   }
-  */
-  await AsyncStorage.clear();
-  AsyncStorage.clear();
-clearAllData = () => {
-  $reactNative.AsyncStorage.getAllKeys()
-      .then(keys => $reactNative.AsyncStorage.multiRemove(keys))
-      .then(() => alert('success'));
-}
+
 
   Alert.alert('Data Cleared!');
 
 }
   const sendDataToFirestore = async () => {
+    Alert.alert("Data sent")
 
     //Setup
     const Student_ID = await AsyncStorage.getItem('Student_ID');
@@ -232,12 +205,15 @@ clearAllData = () => {
 
   return (
     <View style={{alignContent: 'center', flex: 1, alignItems: 'center', paddingTop: 30}}>
+              <View style={{backgroundColor: 'red'}}>
+              <Text style={{fontSize: 30, textAlign: 'center'}}> QR</Text>
+            </View>
   <QRCode
       value={qe}
       size={400}
     />
           <TouchableOpacity style={{padding: 15, borderColor: 'blue', }}onPress={sendDataToFirestore}>
-        <Text style={{color: 'blue', fontSize: 30}}>Send Data to Firestore (Click)</Text>
+        <Text style={{color: 'blue', fontSize: 30}}>Send Data to Firestore</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={{padding: 15, borderColor: 'blue', }}onPress={cleardata}>

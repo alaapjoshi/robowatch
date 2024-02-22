@@ -82,6 +82,9 @@ export default function Setup({ navigation }) {
       <ScrollView>
         <View style={{ backgroundColor: "white", flex: 1 }}>
           <View style={styles.text}>
+            <View style={{backgroundColor: 'red'}}>
+              <Text style={{fontSize: 30, textAlign: 'center'}}> Setup</Text>
+            </View>
             <Text style={styles.text}>Student ID</Text>
             <TouchableWithoutFeedback
               onPress={Keyboard.dismiss}

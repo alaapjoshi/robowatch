@@ -46,7 +46,9 @@ export default function Endgame( { navigation } ) {
 
   return (
     <ScrollView>
-
+        <View style={{backgroundColor: 'red', marginBottom: -20}}>
+              <Text style={{fontSize: 30, textAlign: 'center'}}> Endgame</Text>
+            </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 30}}>
       <TouchableOpacity onPress={() => setparked(!parked)}>
         <View style={{

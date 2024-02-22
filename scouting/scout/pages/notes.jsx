@@ -61,6 +61,9 @@ export default function Notes( { navigation } ) {
 
   return (
     <ScrollView>
+              <View style={{backgroundColor: 'red', }}>
+              <Text style={{fontSize: 30, textAlign: 'center'}}> Notes</Text>
+            </View>
     <View style={{marginHorizontal: 20}}>
             <Text style={{marginBottom: 10, textAlign: 'center', marginTop: 5, fontSize: 30}}>
                 Stability

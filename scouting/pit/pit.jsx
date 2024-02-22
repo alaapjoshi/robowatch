@@ -335,7 +335,22 @@ function Qr({ route }) {
       async function addData() {
         try {
           const docRef = await addDoc(collection(db, "pit"), {
-            
+            TeamNumber: TeamNumber,
+            cubeplacelow: cubeplacelow,
+            cubeplacemid: cubeplacemid,
+            cubeplacehigh: cubeplacehigh,
+            coneplacelow: coneplacelow,
+            coneplacemid: coneplacemid,
+            coneplacehigh: coneplacehigh,
+            pickupcubesG: pickupcubesG,
+            pickupcubesS: pickupcubesS,
+            pickupconesG: pickupconesG,
+            pickupconesS: pickupconesS,
+            autobalance: autobalance,
+            pieces: pieces,
+            autoaligngamepiece: autoaligngamepiece,
+            autoalignapril: autoalignapril,
+            autosub: autosub,
           });
         } catch (e) {
           console.error("Error adding document: ", e);

@@ -89,6 +89,9 @@ export default function Auto({ navigation }) {
 
   const leave = async () => {
     navigation.navigate('Teleop');
+console.log(reload)
+console.log(left)
+
     try {
       await AsyncStorage.setItem("Auto_Grid", JSON.stringify(overlayCoordinates));
     } catch (e) {
@@ -116,8 +119,13 @@ export default function Auto({ navigation }) {
   return (
     <PaperProvider>
       <ScrollView>
+      <View style={{backgroundColor: 'red', marginBottom: -20}}>
+              <Text style={{fontSize: 30, textAlign: 'center'}}> Auto</Text>
+            </View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+          
         <TouchableOpacity onPress={() => setLeft(!left)}>
+          
           <View
             style={{
               backgroundColor: 'red',
@@ -127,6 +135,7 @@ export default function Auto({ navigation }) {
               flexDirection: 'row',
             }}
           >
+
             <Checkbox
               style={{ width: 20, height: 20, marginHorizontal: 10 }}
               value={left}

@@ -146,6 +146,9 @@ export default function Teleop({ navigation }) {
     >
       <PaperProvider>
         <ScrollView>
+        <View style={{backgroundColor: 'red', marginBottom: -20}}>
+              <Text style={{fontSize: 30, textAlign: 'center'}}> Teleop</Text>
+            </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: 10 }}>
           <TouchableOpacity onPress={() => setcoopertition(!cooperttion)}>
 
