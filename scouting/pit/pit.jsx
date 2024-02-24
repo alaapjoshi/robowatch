@@ -1,3 +1,4 @@
+
 import { React, useState, useEffect, useMemo } from "react";
 import {
   StyleSheet,
@@ -8,15 +9,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Dimensions,
+  Alert,
 } from "react-native";
-import Checkbox from "expo-checkbox";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import QRCode from "react-native-qrcode-svg";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { initializeApp } from "firebase/app";
-import RadioGroup from 'react-native-radio-buttons-group';
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCfmW98iWLhhNtFrjy-3niS_OWPhrQTb5U",
   authDomain: "robowatch-4c113.firebaseapp.com",
@@ -26,6 +22,16 @@ const firebaseConfig = {
   appId: "1:416751963314:web:eaae18d08b2da367298dab",
   measurementId: "G-HNHKV87TTL",
 };
+import Checkbox from "expo-checkbox";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import QRCode from "react-native-qrcode-svg";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { initializeApp } from "firebase/app";
+import RadioGroup from 'react-native-radio-buttons-group';
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import Slider from "@react-native-community/slider"; // Import Slider component
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -49,358 +55,233 @@ export default function Pit() {
     </NavigationContainer>
   );
 }
+
 function Data({ navigation }) {
-  const [colorAccent, setColorAccent] = useState("#ff0303");
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem("color");
-        if (value !== null) {
-          setColorAccent(value.replace(/['"]+/g, ""));
-        }
-      } catch (e) {
-        console.log("umm...");
-      }
+  const [team, setTeam] = useState(""); // State for team number
+  const [height, setHeight] = useState(""); // State for height
+  const [dimensions, setDimensions] = useState(""); // State for dimensions
+  const [driveTrain, setDriveTrain] = useState(""); // State for drive train
+  const [source, setSource] = useState(false); // State for source
+  const [ground, setGround] = useState(false); // State for ground
+  const [focusSpeakers, setFocusSpeakers] = useState(false); // State for focus speakers
+  const [humanAccuracy, setHumanAccuracy] = useState(0); // State for human accuracy slider value
+  const [feeding, setFeeding] = useState(""); // State for robot feeding
+  const [additionalNotes, setAdditionalNotes] = useState(""); // State for additional notes
+
+  const onHumanAccuracyChange = (value) => {
+    setHumanAccuracy(value);
+  };
+
+  const send = async () => {
+    const token = await AsyncStorage.getItem("token");
+    const currentTimeUTC = new Date().toUTCString(); // Get current UTC time
+
+    const data = {
+      Team_Number: team,
+      Height: height,
+      Dimensions: dimensions,
+      DriveTrain: driveTrain,
+      Source: source,
+      Ground: ground,
+      FocusSpeakers: focusSpeakers,
+      HumanAccuracy: humanAccuracy,
+      Feeding: feeding,
+      AdditionalNotes: additionalNotes,
+      UTCdatetime: currentTimeUTC,
+      event_code: "NJFLA"
     };
-
-    getData();
-  }, [colorAccent]);
-  const [source, setSource] = useState(false);
-  const [ground, setGround] = useState(false);
-  const [amp, setAmp] = useState(false);
-  const [speaker, setSpeaker] = useState(false);
-
-  const radioButtons = useMemo(() => ([
-    {
-        id: '1', // acts as primary key, should be unique and non-empty string
-        label: 'Swerve',
-        value: 'Swerve'
-    },
-    {
-        id: '2',
-        label: 'Tank',
-        value: 'Tank'
-    },
-    {
-      id: '3',
-      label: 'Mecanum',
-      value: 'Mecanum'
-  },
-  {
-    id: '4',
-    label: 'Other',
-    value: 'Other'
-}
-]), []);
-
-const [DriveTrain, setDriveTrain] = useState();
-
-const radioButtons2 = useMemo(() => ([
-  {
-      id: '1', // acts as primary key, should be unique and non-empty string
-      label: 'Human Payer',
-      value: 'humanPlayer'
-  },
-  {
-      id: '2',
-      label: 'Anyone Can Feed',
-      value: 'Anyone'
+    const response = await Promise.race([
+    fetch("http://10.75.128.119:5002/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }),
+    new Promise((resolve, reject) => {
+      setTimeout(() => reject(new Error("Timeout")), 3000);
+    })
+  ]);
+  response()
+  Alert.alert("Data Sent")
   }
-]), []);
-
-const [Feeding, setFeeding] = useState();
-
 
   return (
     <ScrollView>
       <Text style={{fontSize: 30, textAlign: 'center', paddingTop: 20}}>
         Pit Scouting
       </Text>
-      <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-          }}> 
-        
-        <Text>
-          Team Number
-        </Text>
-
+      {/* UI elements */}
+      {/* Team Number */}
+      <View style={styles.inputContainer}> 
+        <Text>Team Number</Text>
         <TextInput
-          style={{
-            height: 40,
-            borderColor: 'black',
-            marginTop: 5,
-            paddingLeft: 5,
-            marginHorizontal: 30,
-            paddingHorizontal: 30, 
-            borderBottomWidth: 1, 
-          }}
+          style={styles.input}
           keyboardType="numeric"
+          onChangeText={setTeam}
+          value={team}
         />
-
       </View>
-      <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-      <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-          }}> 
-        
-        <Text>
-          Height (in)
-        </Text>
-
+      {/* Height */}
+      <View style={styles.inputContainer}> 
+        <Text>Height (in)</Text>
         <TextInput
-          style={{
-            height: 40,
-            borderColor: 'black',
-            marginTop: 5,
-            paddingLeft: 5,
-            borderBottomWidth: 1, 
-          }}
+          style={styles.input}
           keyboardType="numeric"
+          onChangeText={setHeight}
+          value={height}
         />
-
       </View>
-      <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-          }}> 
-        
-        <Text>
-        Dimensions with border (in)
-        </Text>
-
+      {/* Dimensions */}
+      <View style={styles.inputContainer}> 
+        <Text>Dimensions (in*in)</Text>
         <TextInput
-          style={{
-            height: 40,
-            borderColor: 'black',
-            marginTop: 5,
-            paddingLeft: 5,
-            borderBottomWidth: 1, 
-          }}
+          style={styles.input}
           keyboardType="numeric"
+          onChangeText={setDimensions}
+          value={dimensions}
         />
-
       </View>
-      </View>
-      <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-      <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-          }}> 
-        
-        <Text>
-          Drivetrain
-        </Text>
+      {/* Drive Train */}
+      <View style={styles.inputContainer}> 
+        <Text>Drive Train</Text>
         <RadioGroup 
-            radioButtons={radioButtons} 
-            onPress={setDriveTrain}
-            selectedId={DriveTrain}
+            radioButtons={[
+              { label: 'Swerve', value: 'Swerve' },
+              { label: 'Tank', value: 'Tank' },
+              { label: 'Mecanum', value: 'Mecanum' },
+              { label: 'Other', value: 'Other' }
+            ]} 
+            onPress={(value) => setDriveTrain(value)}
+            selectedId={driveTrain}
         />
-
       </View>
-      <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-      }}> 
-        
-        <Text style={{fontSize: "30", marginBottom: 20}}>
-        Pickup
-        </Text>
-        <View style={{flexDirection: "row",alignItems: 'center',}}>
+      {/* Pickup */}
+      <View style={styles.inputContainer}> 
+        <Text style={{fontSize: 30}}>Pickup</Text>
+        <Text style={{fontSize: 20}}>Source</Text>
         <Checkbox
-          style={{width: 30, height: 30}}
+          style={styles.checkbox}
           value={source}
           onValueChange={setSource}
-          color={source ? '#4630EB' : undefined}
+          color={'#4630EB'}
         />
-        <Text style={{fontSize: "30"}}> Source </Text>
+                <Text style={{fontSize: 20}}>Ground</Text>
 
-        </View>
-
-        <View style={{flexDirection: "row",alignItems: 'center', marginTop: 10}}>
         <Checkbox
-          style={{width: 30, height: 30}}
+          style={styles.checkbox}
           value={ground}
           onValueChange={setGround}
-          color={ground ? '#4630EB' : undefined}
+          color={'#4630EB'}
         />
-        <Text style={{fontSize: "30"}}> Ground </Text>
-
-                </View>
-
-        
       </View>
+      {/* Focus Speakers */}
+      <View style={styles.inputContainer}> 
+      <Text style={{fontSize: 30}}>Focus Speakers</Text>
+        <Checkbox
+          style={styles.checkbox}
+          value={focusSpeakers}
+          onValueChange={setFocusSpeakers}
+          color={'#4630EB'}
+        />
+        <Text>Source</Text>
       </View>
-
-
-          <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-          }}> 
-            <Text style={{fontSize: 30,textAlign: 'center'}}> Shooting Location</Text>
-
-          </View>
-
-
-
-
-
-
-
-
-
-
-
-      <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-      <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-          }}> 
-        
-        <Text style={{fontSize: "20"}}>
-          Robot Feeding
-        </Text>
+      {/* Human Accuracy */}
+      <View style={styles.inputContainer}> 
+        <Text>Human Accuracy: {humanAccuracy}</Text>
+        <Slider
+          style={{ width: 350, alignSelf: "center" }}
+          minimumValue={0}
+          maximumValue={10}
+          step={1}
+          value={humanAccuracy}
+          onValueChange={onHumanAccuracyChange}
+        />
+      </View>
+      {/* Shooting Location */}
+      <View style={styles.inputContainer}> 
+        <Text style={{fontSize: 30,textAlign: 'center'}}> Shooting Location</Text>
+      </View>
+      {/* Robot Feeding */}
+      <View style={styles.inputContainer}> 
+        <Text>Robot Feeding</Text>
         <RadioGroup 
-            radioButtons={radioButtons2} 
-            onPress={setFeeding}
-            selectedId={Feeding}
+            radioButtons={[
+              { label: 'Human Payer', value: 'humanPlayer' },
+              { label: 'Anyone Can Feed', value: 'Anyone' }
+            ]} 
+            onPress={(value) => setFeeding(value)}
+            selectedId={feeding}
         />
-
       </View>
-      <View style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 20,
-            marginTop: 40,
-          }}> 
-        
-        <Text style={{fontSize: "20", marginBottom: 20}}>
-        Additional Notes
-        </Text>
+      {/* Additional Notes */}
+      <View style={styles.inputContainer}> 
+        <Text>Additional Notes</Text>
         <TextInput
-          style={{
-            height: 40,
-            borderColor: 'black',
-            marginTop: 5,
-            paddingLeft: 5,
-            borderBottomWidth: 1, 
-          }}
+          style={styles.input}
+          onChangeText={setAdditionalNotes}
+          value={additionalNotes}
         />
-
-
-        
-
       </View>
-      </View>
-
-      
-        <TouchableOpacity
-          style={{
-            backgroundColor: colorAccent,
-            padding: 20,
-            borderRadius: 10,
-            marginTop: 40,
-          }}
-          onPress={() =>
-            navigation.navigate("qr", {
-
-            })
-          }
-        >
-          <Text style={{ fontSize: 18, color: "#FFFFFF" }}>
-            Send to server + QR
-          </Text>
-        </TouchableOpacity>
+      {/* Send to server button */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={send}
+      >
+        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>Send to server + QR</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  inputContainer: {
+    backgroundColor: '#ff0303',
+    padding: 20,
+    borderRadius: 20,
+    marginTop: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: 'black',
+    marginTop: 5,
+    paddingLeft: 5,
+    marginHorizontal: 30,
+    paddingHorizontal: 30, 
+    borderBottomWidth: 1, 
+  },
+  checkbox: {
+    width: 50,
+    height: 50,
+    marginBottom: 20,
+    
+  },
+  button: {
+    backgroundColor: '#ff0303',
+    padding: 20,
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: 'center'
+  }
+});
+
 function Qr({ route }) {
   useEffect(() => {
-    if (TeamNumber != "") {
-      async function addData() {
-        try {
-          const docRef = await addDoc(collection(db, "pit"), {
-            TeamNumber: TeamNumber,
-            cubeplacelow: cubeplacelow,
-            cubeplacemid: cubeplacemid,
-            cubeplacehigh: cubeplacehigh,
-            coneplacelow: coneplacelow,
-            coneplacemid: coneplacemid,
-            coneplacehigh: coneplacehigh,
-            pickupcubesG: pickupcubesG,
-            pickupcubesS: pickupcubesS,
-            pickupconesG: pickupconesG,
-            pickupconesS: pickupconesS,
-            autobalance: autobalance,
-            pieces: pieces,
-            autoaligngamepiece: autoaligngamepiece,
-            autoalignapril: autoalignapril,
-            autosub: autosub,
-          });
-        } catch (e) {
-          console.error("Error adding document: ", e);
-        }
-      }
-      addData();
-    }
+    // Your code here
   }, []);
 
   const {
-    TeamNumber,
-    cubeplacelow,
-    cubeplacemid,
-    cubeplacehigh,
-    coneplacelow,
-    coneplacemid,
-    coneplacehigh,
-    pickupcubesG,
-    pickupcubesS,
-    pickupconesG,
-    pickupconesS,
-    autobalance,
-    pieces,
-    autoaligngamepiece,
-    autoalignapril,
-    autosub,
+
   } = route.params;
   const qr = [
     {
-      TeamNumber: TeamNumber,
-      cubeplacelow: cubeplacelow,
-      cubeplacemid: cubeplacemid,
-      cubeplacehigh: cubeplacehigh,
-      coneplacelow: coneplacelow,
-      coneplacemid: coneplacemid,
-      coneplacehigh: coneplacehigh,
-      pickupcubesG: pickupcubesG,
-      pickupcubesS: pickupcubesS,
-      pickupconesG: pickupconesG,
-      pickupconesS: pickupconesS,
-      autobalance: autobalance,
-      pieces: pieces,
-      autoaligngamepiece: autoaligngamepiece,
-      autoalignapril: autoalignapril,
-      autosub: autosub,
+
     },
   ];
   const real = JSON.stringify(qr);
   const [colorAccent, setColorAccent] = useState("#ff0303");
-  this.forceUpdate;
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -428,29 +309,3 @@ function Qr({ route }) {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  center: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkbox: {
-    width: 50,
-    height: 50,
-    fontSize: 20,
-    color: "#ff0303",
-    marginHorizontal: 50,
-    flexDirection: "row",
-  },
-  subLogoText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#ff0303",
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-});

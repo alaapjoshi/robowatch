@@ -44,10 +44,8 @@ export default function Final() {
         //Auto
         const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
         const left_alliance_auto = await AsyncStorage.getItem('LeftAllianceauto');
-        console.log(left_alliance_auto)
 
         const reload_auto = await AsyncStorage.getItem('ReloadAuto');
-        console.log(reload_auto)
         //Teleop
         const Teleop_Grid = await AsyncStorage.getItem('Teleop_Grid');
         const coopertitionbonus = await AsyncStorage.getItem('coopertitionbonus');
@@ -88,7 +86,7 @@ export default function Final() {
     fetchData();
   }, []);
   const cleardata = async () => {
-    console.log("asd")
+    console.log("Cleared Data")
     try {
 
     await AsyncStorage.setItem('Student_ID', null);
@@ -124,8 +122,6 @@ export default function Final() {
 
 }
   const sendDataToFirestore = async () => {
-    Alert.alert("Data sent")
-
     //Setup
     const Student_ID = await AsyncStorage.getItem('Student_ID');
     const Match_Number = await AsyncStorage.getItem('Match_Number');
@@ -147,24 +143,19 @@ export default function Final() {
     const climb = await AsyncStorage.getItem('climb');
     const win = await AsyncStorage.getItem('win');
     const lose = await AsyncStorage.getItem('lose');
-    const tie = await AsyncStorage.getItem('tie');
     const notes = await AsyncStorage.getItem('notes');
-    const notes2 = str(notes)
     const stabilitySlider = await AsyncStorage.getItem('stabilitySlider');
     const agressionSlider = await AsyncStorage.getItem('agressionSlider');
-
-
-    try {
-      const qe2 = {
+      const api = {
         Student_ID: Student_ID,
         Match_Number: Match_Number,
         Team_Number: Team_Number,
         Alliance: Alliance,
         Position: Position,
-        updatedCoordinates: updatedCoordinates,
+        updatedCoordinates: JSON.parse(updatedCoordinates),
         left_alliance_auto: left_alliance_auto,
         Reload_Auto: reload_auto,
-        Teleop_Grid: Teleop_Grid,
+        Teleop_Field: JSON.parse(Teleop_Grid),
         coopertitionbonus: coopertitionbonus,
         Parked: Parked,
         Harmony: Harmony,
@@ -174,6 +165,32 @@ export default function Final() {
         stabilitySlider: stabilitySlider,
         agressionSlider: agressionSlider
       }
+      try {
+
+      const token = await AsyncStorage.getItem("token");
+      const response = await Promise.race([
+        fetch("http://10.75.128.119:5002/", {
+          method: "POST", 
+          headers: {
+            Authorization: `Bearer ${token}`, // Assuming your API expects a Bearer token
+            "Content-Type": "application/json", // Specify content type for POST request
+          },
+          body: JSON.stringify(api), // Send username and password in the request body
+        }),
+        new Promise((resolve, reject) => {
+          // Timeout after 3 seconds
+          setTimeout(() => reject(new Error("Timeout")), 3000);
+          console.log("Timeout")
+        })
+      ]);
+      response()
+      
+      // Handle response...
+    } catch {
+      Alert.alert("Could not send data")
+    }
+
+
       // Add the data to the collection
       const docRef = await addDoc(collection(db, "scouting"), {
         Student_ID: Student_ID,
@@ -181,10 +198,10 @@ export default function Final() {
         Team_Number: Team_Number,
         Alliance: Alliance,
         Position: Position,
-        updatedCoordinates: updatedCoordinates,
+        updatedCoordinates: JSON.parse(updatedCoordinates),
         left_alliance_auto: left_alliance_auto,
         Reload_Auto: reload_auto,
-        Teleop_Grid: Teleop_Grid,
+        Teleop_Field: JSON.parse(Teleop_Grid),
         coopertitionbonus: coopertitionbonus,
         Parked: Parked,
         Harmony: Harmony,
@@ -194,14 +211,8 @@ export default function Final() {
         stabilitySlider: stabilitySlider,
         agressionSlider: agressionSlider
       });
-      const json_string = JSON.stringify(qe2, null, 2);
-      Alert.alert(json_string);
 
-    } catch (error) {
-      Alert.alert('Error Sending data');
-      console.error('Error sending data:', error);
-    }
-  };
+    };
 
   return (
     <View style={{alignContent: 'center', flex: 1, alignItems: 'center', paddingTop: 30}}>

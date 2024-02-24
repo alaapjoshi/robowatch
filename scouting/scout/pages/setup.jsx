@@ -21,6 +21,16 @@ export default function Setup({ navigation }) {
   const [pos, setPos] = useState("");
 
   useEffect(() => {
+    const saveTimestamp = async () => {
+      const timestamp = new Date().toUTCString(); // Create UTC timestamp
+      try {
+        await AsyncStorage.setItem("matchScoutingTimestamp", timestamp); // Save timestamp in AsyncStorage
+        console.log("Timestamp saved:", timestamp);
+      } catch (error) {
+        console.error("Error saving timestamp:", error);
+      }
+    };
+    saveTimestamp()
     const fetchData = async () => {
       try {
         const Student_ID = await AsyncStorage.getItem("Student_ID");

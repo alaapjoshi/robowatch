@@ -1,11 +1,5 @@
-import { React, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-  FlatList,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, TextInput, TouchableOpacity, View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,21 +9,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import Read from "./pit/viewpit";
 import Viewscout from "./scout/viewscout";
-const firebaseConfig = {
-  apiKey: "AIzaSyCfmW98iWLhhNtFrjy-3niS_OWPhrQTb5U",
-  authDomain: "robowatch-4c113.firebaseapp.com",
-  projectId: "robowatch-4c113",
-  storageBucket: "robowatch-4c113.appspot.com",
-  messagingSenderId: "416751963314",
-  appId: "1:416751963314:web:eaae18d08b2da367298dab",
-  measurementId: "G-HNHKV87TTL",
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 export default function Navigatescout({ navigation }) {
-  const [dark, setdark] = useState([]);
-  
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer independent={true}>
@@ -48,96 +29,120 @@ export default function Navigatescout({ navigation }) {
   );
 }
 
-function Move({ navigation }) {
+const Move = ({ navigation }) => {
   const [colorAccent, setColorAccent] = useState("#ff0303");
-  const [dark, setdark] = useState([]);
 
-  this.forceUpdate;
   useEffect(() => {
-    const getData = async () => {
+    const fetchData = async () => {
+      let timer; // Variable to hold setTimeout reference
+
       try {
-        const value = await AsyncStorage.getItem("color");
-        if (value !== null) {
-          setColorAccent(value.replace(/['"]+/g, ""));
+        // Retrieve credentials from AsyncStorage
+        const credentials = await AsyncStorage.getItem("credentials");
+        const { username, password } = JSON.parse(credentials) || {};
+        const token = await AsyncStorage.getItem("token");
+        console.log("sDSAD")
+        const response = await Promise.race([ // Using Promise.race to race between fetch request and setTimeout
+          fetch("http://10.75.128.119:5002/who_am_i", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`, // Assuming your API expects a Bearer token
+            },
+          }),
+          new Promise((_, reject) => { // Rejects after 3 seconds
+            timer = setTimeout(() => {
+              reject(new Error('Timeout'));
+            }, 3000);
+          })
+        ]);
+
+        clearTimeout(timer); // Clear the timer since we received a response
+
+        if (response.status === 422 || response.status === 401) {
+          // Prompt alert to sign in and update credentials
+          Alert.alert(
+            "Session Expired",
+            "Please sign in again",
+            [
+              {
+                text: "OK",
+                onPress: async () => {
+                  // Update credentials in AsyncStorage
+                  const newCredentials = await getCredentialsFromInput();
+                  if (newCredentials) {
+                    await AsyncStorage.setItem(
+                      "credentials",
+                      JSON.stringify(newCredentials)
+                    );
+
+                    // Make another request with the new credentials if needed
+                    fetchData2();
+                  }
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        } else {
+          // Continue with your logic
+          console.log("Request successful");
         }
-        const value2 = await AsyncStorage.getItem("light");
-          if (value2 !== null) {
-            setdark(value2);
-          }
-      } catch (e) {
-        console.log("umm...");
+      } catch (error) {
+        console.error("Error:", error);
+        if (error.message === 'Timeout') {
+          Alert.alert("Server is not responding"); // Show alert if request times out
+        }
       }
     };
-    getData();
-  }, [colorAccent]);
 
-  if (dark == "true") {
-    console.log("asd")
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor : "#222222"}}>
-      <Text
-        style={{
-          fontSize: 40,
-          fontWeight: "bold",
-          color: colorAccent,
-          marginBottom: 40,
-        }}
-      >
-        Select Scouting Type:
-      </Text>
-      <TouchableOpacity
-        style={{
-          backgroundColor: colorAccent,
-          padding: 20,
-          borderRadius: 10,
-          marginBottom: 40,
-        }}
-        onPress={() => navigation.navigate("Scout")}
-      >
-        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>Match Scouting</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          backgroundColor: colorAccent,
-          padding: 20,
-          borderRadius: 10,
-          marginBottom: 40,
-        }}
-        onPress={() => navigation.navigate("Viewscout")}
-      >
-        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>View Scout Data</Text>
-      </TouchableOpacity>
+    // Call fetchData function
+    fetchData();
+  }, []);
 
-      <TouchableOpacity
-        style={{
-          backgroundColor: colorAccent,
-          padding: 20,
-          borderRadius: 10,
-          marginBottom: 40,
-        }}
-        onPress={() => navigation.navigate("Pit")}
-      >
-        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>Pit Scouting</Text>
-      </TouchableOpacity>
+  const getCredentialsFromInput = () => {
+    return new Promise((resolve) => {
+      let username = "";
+      let password = "";
+      Alert.prompt(
+        "Sign In",
+        "Please enter your username and password",
+        [
+          {
+            text: "Cancel",
+            onPress: () => resolve(null),
+            style: "cancel",
+          },
+          {
+            text: "OK",
+            onPress: async (text) => {
+              const response2 = await fetch("http://10.75.128.119:5002/login", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ "username": text.login, "password": text.password }),
+              });
+              const result2 = await response2.json();
+              console.log(result2.access_token)
+              while (result2.access_token == undefined) {
+                console.log("asdsa")
+                Alert.alert("Password wrong, swipe out and come back in")
+              }
+              await AsyncStorage.setItem("token", result2.access_token);
 
-      <TouchableOpacity
-        style={{
-          backgroundColor: colorAccent,
-          padding: 20,
-          borderRadius: 10,
-          marginBottom: 40,
-        }}
-        onPress={() => navigation.navigate("read")}
-      >
-        <Text style={{ fontSize: 18, color: "#FFFFFF" }}>View Pit Data</Text>
-      </TouchableOpacity>
-    </View>
+              response2()
+              resolve({ username, password });
+            },
+          },
+        ],
+        "login-password"
 
-    )
-  }
-  else {
+      );
+    });
+  };
+
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={styles.container}>
       <Text
         style={{
           fontSize: 40,
@@ -195,52 +200,14 @@ function Move({ navigation }) {
         <Text style={{ fontSize: 18, color: "#FFFFFF" }}>View Pit Data</Text>
       </TouchableOpacity>
     </View>
-
   );
-    }
-}
-const styles = StyleSheet.create({
-  container: {
-    flex: 4,
-    marginTop: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    fontSize: 30,
-    height: 150,
-  },
-  button: {
-    backgroundColor: "#ff0303",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 10,
-    width: "50%",
-    paddingBottom: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 25,
-    fontWeight: "bold",
-    color: "#ffffff",
-  },
+};
+
+
+const styles = {
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  list: {
-    width: "100%",
-    paddingHorizontal: 16,
-  },
-  item: {
-    marginVertical: 8,
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
-  },
-  itemText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-});
+};

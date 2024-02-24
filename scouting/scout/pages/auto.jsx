@@ -77,7 +77,6 @@ export default function Auto({ navigation }) {
       setSelectedDevice(null);
     }
 
-
   };
 
   const handleBack = () => {
