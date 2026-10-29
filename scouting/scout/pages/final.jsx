@@ -1,4 +1,4 @@
-import { React, useState, useMemo, useEffect } from "react";
+import { React, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import QRCode from "react-native-qrcode-svg";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, QueryLimitConstraint, aggregateQuerySnapshotEqual } from "firebase/firestore";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { useFocusEffect } from "@react-navigation/native";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCfmW98iWLhhNtFrjy-3niS_OWPhrQTb5U",
@@ -30,189 +31,106 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Every AsyncStorage key the match scouting pages write to.
+const MATCH_KEYS = [
+  "Student_ID", "Match_Number", "Team_Number", "Alliance", "Position",
+  "Auto_Grid", "LeftAllianceauto", "ReloadAuto",
+  "Teleop_Grid", "coopertitionbonus", "Relocatedtele",
+  "Parked", "Harmony", "Spotlight", "trap", "climb",
+  "Win", "Lose", "tie", "notes", "stabilitySlider", "agressionSlider",
+];
+
+// Reads the answers saved by each page and builds one match record.
+const readRecord = async () => {
+  const values = Object.fromEntries(await AsyncStorage.multiGet(MATCH_KEYS));
+  return {
+    Student_ID: values.Student_ID,
+    Match_Number: values.Match_Number,
+    Team_Number: values.Team_Number,
+    Alliance: values.Alliance,
+    Position: values.Position,
+    updatedCoordinates: JSON.parse(values.Auto_Grid ?? "[]"),
+    left_alliance_auto: values.LeftAllianceauto,
+    Reload_Auto: values.ReloadAuto,
+    Teleop_Field: JSON.parse(values.Teleop_Grid ?? "[]"),
+    coopertitionbonus: values.coopertitionbonus,
+    Parked: values.Parked,
+    Harmony: values.Harmony,
+    Spotlight: values.Spotlight,
+    trap: values.trap,
+    climb: values.climb,
+    win: values.Win,
+    lose: values.Lose,
+    tie: values.tie,
+    notes: values.notes,
+    stabilitySlider: values.stabilitySlider,
+    agressionSlider: values.agressionSlider,
+  };
+};
+
 export default function Final() {
   const [qe, setQe] = useState("Blank");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const Student_ID = await AsyncStorage.getItem('Student_ID');
-        const Match_Number = await AsyncStorage.getItem('Match_Number');
-        const Team_Number = await AsyncStorage.getItem('Team_Number');
-        const Alliance = await AsyncStorage.getItem('Alliance');
-        const Position = await AsyncStorage.getItem('Position');
-        //Auto
-        const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
-        const left_alliance_auto = await AsyncStorage.getItem('LeftAllianceauto');
-
-        const reload_auto = await AsyncStorage.getItem('ReloadAuto');
-        //Teleop
-        const Teleop_Grid = await AsyncStorage.getItem('Teleop_Grid');
-        const coopertitionbonus = await AsyncStorage.getItem('coopertitionbonus');
-        //Endgame
-        const Parked = await AsyncStorage.getItem('Parked');
-        const Harmony = await AsyncStorage.getItem('Harmony');
-        const Spotlight = await AsyncStorage.getItem('coopertitionbonus');
-        const trap = await AsyncStorage.getItem('trap');
-        const climb = await AsyncStorage.getItem('climb');
-        const notes = await AsyncStorage.getItem('notes');
-        const stabilitySlider = await AsyncStorage.getItem('stabilitySlider');
-        const agressionSlider = await AsyncStorage.getItem('agressionSlider');
-        const qe2 = {
-          Student_ID: Student_ID,
-          Match_Number: Match_Number,
-          Team_Number: Team_Number,
-          Alliance: Alliance,
-          Position: Position,
-          updatedCoordinates: updatedCoordinates,
-          left_alliance_auto: left_alliance_auto,
-          Reload_Auto: reload_auto,
-          Teleop_Grid: Teleop_Grid,
-          coopertitionbonus: coopertitionbonus,
-          Parked: Parked,
-          Harmony: Harmony,
-          Spotlight: Spotlight,
-          trap: trap,
-          climb: climb,
-          stabilitySlider: stabilitySlider,
-          agressionSlider: agressionSlider
-        }
-  
-        setQe(JSON.stringify(qe2));
-      } catch (e) {
-        // handle error
-      }
-    };
-    fetchData();
+  const refreshQr = useCallback(() => {
+    readRecord()
+      .then((record) => setQe(JSON.stringify(record)))
+      .catch((e) => console.error("Failed to build match record for QR code:", e));
   }, []);
+
+  // Rebuild the QR code every time this tab is opened, so it reflects the latest answers.
+  useFocusEffect(refreshQr);
+
   const cleardata = async () => {
-    console.log("Cleared Data")
     try {
+      await AsyncStorage.multiRemove(MATCH_KEYS);
+      refreshQr();
+      Alert.alert("Data Cleared!");
+    } catch (e) {
+      console.error("Failed to clear match data from device storage:", e);
+      Alert.alert("Could not clear data");
+    }
+  };
 
-    await AsyncStorage.setItem('Student_ID', null);
-    await AsyncStorage.setItem('Match_Number', null);
-    await AsyncStorage.setItem('Team_Number',null);
-    await AsyncStorage.setItem('Alliance', null);
-    await AsyncStorage.setItem('Position', null);
-
-    await AsyncStorage.setItem('Auto_Grid', null);
-    await AsyncStorage.setItem('LeftAllianceauto', null);
-    await AsyncStorage.setItem('ReloadAuto', null);
-
-
-    await AsyncStorage.setItem('Teleop_Grid', null);
-    await AsyncStorage.setItem('coopertitionbonus', null);
-    //Endgame
-
-    await AsyncStorage.setItem('Parked', null);
-    await AsyncStorage.setItem('Harmony', null);
-    await AsyncStorage.setItem('coopertitionbonus', null);
-    await AsyncStorage.setItem('trap', null);
-    await AsyncStorage.setItem('climb', null);
-    await AsyncStorage.setItem('notes', null);
-
-    await AsyncStorage.setItem('stabilitySlider', null);
-    await AsyncStorage.setItem('agressionSlider', null);
-  }
-  catch (e) {
-  }
-
-
-  Alert.alert('Data Cleared!');
-
-}
   const sendDataToFirestore = async () => {
-    //Setup
-    const Student_ID = await AsyncStorage.getItem('Student_ID');
-    const Match_Number = await AsyncStorage.getItem('Match_Number');
-    const Team_Number = await AsyncStorage.getItem('Team_Number');
-    const Alliance = await AsyncStorage.getItem('Alliance');
-    const Position = await AsyncStorage.getItem('Position');
-    //Auto
-    const updatedCoordinates = await AsyncStorage.getItem('Auto_Grid');
-    const left_alliance_auto = await AsyncStorage.getItem('LeftAllianceauto');
-    const reload_auto = await AsyncStorage.getItem('ReloadAuto');
-    //Teleop
-    const Teleop_Grid = await AsyncStorage.getItem('Teleop_Grid');
-    const coopertitionbonus = await AsyncStorage.getItem('coopertitionbonus');
-    //Endgame
-    const Parked = await AsyncStorage.getItem('Parked');
-    const Harmony = await AsyncStorage.getItem('Harmony');
-    const Spotlight = await AsyncStorage.getItem('coopertitionbonus');
-    const trap = await AsyncStorage.getItem('trap');
-    const climb = await AsyncStorage.getItem('climb');
-    const win = await AsyncStorage.getItem('win');
-    const lose = await AsyncStorage.getItem('lose');
-    const notes = await AsyncStorage.getItem('notes');
-    const stabilitySlider = await AsyncStorage.getItem('stabilitySlider');
-    const agressionSlider = await AsyncStorage.getItem('agressionSlider');
-      const api = {
-        Student_ID: Student_ID,
-        Match_Number: Match_Number,
-        Team_Number: Team_Number,
-        Alliance: Alliance,
-        Position: Position,
-        updatedCoordinates: JSON.parse(updatedCoordinates),
-        left_alliance_auto: left_alliance_auto,
-        Reload_Auto: reload_auto,
-        Teleop_Field: JSON.parse(Teleop_Grid),
-        coopertitionbonus: coopertitionbonus,
-        Parked: Parked,
-        Harmony: Harmony,
-        Spotlight: Spotlight,
-        trap: trap,
-        climb: climb,
-        stabilitySlider: stabilitySlider,
-        agressionSlider: agressionSlider
-      }
-      try {
+    const record = await readRecord();
+    const failures = [];
 
+    try {
       const token = await AsyncStorage.getItem("token");
       const response = await Promise.race([
         fetch("http://10.75.128.119:5002/", {
-          method: "POST", 
+          method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`, // Assuming your API expects a Bearer token
-            "Content-Type": "application/json", // Specify content type for POST request
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(api), // Send username and password in the request body
+          body: JSON.stringify(record),
         }),
         new Promise((resolve, reject) => {
-          // Timeout after 3 seconds
           setTimeout(() => reject(new Error("Timeout")), 3000);
-          console.log("Timeout")
-        })
+        }),
       ]);
-      response()
-      
-      // Handle response...
-    } catch {
-      Alert.alert("Could not send data")
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+    } catch (e) {
+      console.error("Failed to send match record to team server:", e);
+      failures.push("team server");
     }
 
+    try {
+      await addDoc(collection(db, "scouting"), record);
+    } catch (e) {
+      console.error("Failed to save match record to Firestore:", e);
+      failures.push("Firestore");
+    }
 
-      // Add the data to the collection
-      const docRef = await addDoc(collection(db, "scouting"), {
-        Student_ID: Student_ID,
-        Match_Number: Match_Number,
-        Team_Number: Team_Number,
-        Alliance: Alliance,
-        Position: Position,
-        updatedCoordinates: JSON.parse(updatedCoordinates),
-        left_alliance_auto: left_alliance_auto,
-        Reload_Auto: reload_auto,
-        Teleop_Field: JSON.parse(Teleop_Grid),
-        coopertitionbonus: coopertitionbonus,
-        Parked: Parked,
-        Harmony: Harmony,
-        Spotlight: Spotlight,
-        trap: trap,
-        climb: climb,
-        stabilitySlider: stabilitySlider,
-        agressionSlider: agressionSlider
-      });
-
-    };
+    if (failures.length === 0) {
+      Alert.alert("Data Sent");
+    } else {
+      Alert.alert("Could not send data", `Failed: ${failures.join(", ")}`);
+    }
+  };
 
   return (
     <View style={{alignContent: 'center', flex: 1, alignItems: 'center', paddingTop: 30}}>

@@ -26,6 +26,7 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 import Navigate from "./TBA/navigate";
+import { TBA_API_KEY } from "./config";
 const Stack = createStackNavigator();
 function MyStack() {
   return (
@@ -71,8 +72,7 @@ var dict = new Object();
 
 function New({ route, navigation }) {
   const { team } = route.params;
-  const teamKey =
-    "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR";
+  const teamKey = TBA_API_KEY;
   const endpoint =
     "https://www.thebluealliance.com/api/v3/team/" + team + "/events";
   const endpoint2 = "https://www.thebluealliance.com/api/v3/team/" + team;
@@ -269,7 +269,7 @@ function HomeScreen({ navigation }) {
           const response = await fetch(
             "https://www.thebluealliance.com/api/v3/status",
             {
-              headers: { "X-TBA-Auth-Key": "YOUR_API_KEY" },
+              headers: { "X-TBA-Auth-Key": TBA_API_KEY },
             }
           );
           const json = await response.json();

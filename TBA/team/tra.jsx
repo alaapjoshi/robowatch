@@ -22,6 +22,7 @@ import {
   View,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import { TBA_API_KEY } from "../../config";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 const windowWidth = Dimensions.get("window").width;
@@ -37,8 +38,8 @@ export default function Tra() {
         component={MyStack}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="New" component={New} />
-      <Stack.Screen name="Graph" component={Graph} />
+      <Stack.Screen name="New" component={New} options={{ title: "Team Profile" }} />
+      <Stack.Screen name="Graph" component={Graph} options={{ title: "Event Results" }} />
     </Stack.Navigator>
   );
 }
@@ -54,7 +55,7 @@ function MyStack({ navigation }) {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 
@@ -129,7 +130,7 @@ function New({ route, navigation }) {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 
@@ -149,8 +150,7 @@ function New({ route, navigation }) {
   useEffect(() => {
     fetch("https://www.thebluealliance.com/api/v3/team/frc75/media/2022", {
       headers: {
-        "X-TBA-Auth-Key":
-          "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+        "X-TBA-Auth-Key": TBA_API_KEY,
       },
     })
       .then((response) => response.json())
@@ -162,8 +162,7 @@ function New({ route, navigation }) {
   useEffect(() => {
     fetch(endpoint2, {
       headers: {
-        "X-TBA-Auth-Key":
-          "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+        "X-TBA-Auth-Key": TBA_API_KEY,
       },
     })
       .then((response) => response.json())
@@ -183,8 +182,7 @@ function New({ route, navigation }) {
       .catch((error) => console.error(error));
     fetch(endpoint, {
       headers: {
-        "X-TBA-Auth-Key":
-          "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+        "X-TBA-Auth-Key": TBA_API_KEY,
       },
     })
       .then((response) => response.json())
@@ -302,7 +300,7 @@ function New({ route, navigation }) {
           >
             Sponsors:
           </Text>
-          <Text style={{ color: colorAccent, fontSize: 16 }}>
+          <Text style={{ color: colorAccent, fontSize: 16, flexShrink: 1 }}>
             {myObject3.sponsers}
           </Text>
         </View>
@@ -333,7 +331,7 @@ function Graph({ route }) {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 
@@ -373,8 +371,7 @@ function Graph({ route }) {
         "/matches",
       {
         headers: {
-          "X-TBA-Auth-Key":
-            "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+          "X-TBA-Auth-Key": TBA_API_KEY,
         },
       }
     )

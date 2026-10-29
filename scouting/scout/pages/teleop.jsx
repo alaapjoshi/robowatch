@@ -73,7 +73,6 @@ export default function Teleop({ navigation }) {
     const { x, y } = tappedCoordinates;
     if (selectedDevice == null) {
       setOutcomeDialogVisible(false);
-      console.log({ x, y, outcome: selectedOutcome, device: selectedDevice, pickup: selectedpickup });
       // Reset choices after submission
       setSelectedDevice(null);
       setselectedpickup(null);
@@ -81,7 +80,6 @@ export default function Teleop({ navigation }) {
       setOutcomeDialogVisible(false);
     } else {
       const newCoordinates = [...overlayCoordinates, { x, y, outcome: selectedOutcome, device: selectedDevice, pickup: selectedpickup }];
-      console.log({ x, y, outcome: selectedOutcome, device: selectedDevice, pickup: selectedpickup });
       setOverlayCoordinates(newCoordinates);
       setOutcomeDialogVisible(false);
       // Reset choices after submission
@@ -95,7 +93,6 @@ export default function Teleop({ navigation }) {
     const updatedCoordinates = [...overlayCoordinates];
     updatedCoordinates.pop(); // Remove the last coordinate
     setOverlayCoordinates(updatedCoordinates);
-    console.log('Undo button clicked. Updated coordinates:', updatedCoordinates);
   };
 
   const leave = async () => {
@@ -103,18 +100,18 @@ export default function Teleop({ navigation }) {
     try {
       await AsyncStorage.setItem("Teleop_Grid", JSON.stringify(overlayCoordinates));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Teleop_Grid' to device storage:", e);
     }
 
     try {
       await AsyncStorage.setItem("coopertitionbonus", cooperttion.toString());
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'coopertitionbonus' to device storage:", e);
     }
     try {
       await AsyncStorage.setItem("Relocatedtele", relocated.toString());
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Relocatedtele' to device storage:", e);
     }
   };
 
@@ -195,7 +192,7 @@ export default function Teleop({ navigation }) {
                 ]}
               >
                 <Text style={styles.overlayText}>
-                {coordinate.outcome === 'Success' ? '✅' : coordinate.outcome === 'failure' ? '❌' : 'X'}
+                {coordinate.outcome === 'Success' ? '✅' : coordinate.outcome === 'Failure' ? '❌' : 'X'}
                 </Text>
               </View>))}
 

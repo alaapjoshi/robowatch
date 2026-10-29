@@ -39,7 +39,7 @@ export default function App() {
           )
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'login' from device storage:", e);
       }
     };
     getData();
@@ -52,7 +52,7 @@ export default function App() {
       try {
         await AsyncStorage.setItem("login", "true");
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to save 'login' to device storage:", e);
       }
     };
     storeColor()
@@ -66,7 +66,7 @@ export default function App() {
           setsingined(true)
           }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'login' from device storage:", e);
       }
     };
     getData();

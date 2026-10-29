@@ -41,7 +41,6 @@ const Move = ({ navigation }) => {
         const credentials = await AsyncStorage.getItem("credentials");
         const { username, password } = JSON.parse(credentials) || {};
         const token = await AsyncStorage.getItem("token");
-        console.log("sDSAD")
         const response = await Promise.race([ // Using Promise.race to race between fetch request and setTimeout
           fetch("http://10.75.128.119:5002/who_am_i", {
             method: "GET",
@@ -75,8 +74,8 @@ const Move = ({ navigation }) => {
                       JSON.stringify(newCredentials)
                     );
 
-                    // Make another request with the new credentials if needed
-                    fetchData2();
+                    // Re-check the session with the new token
+                    fetchData();
                   }
                 },
               },
@@ -85,10 +84,9 @@ const Move = ({ navigation }) => {
           );
         } else {
           // Continue with your logic
-          console.log("Request successful");
         }
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Session check with team server failed:", error);
         if (error.message === 'Timeout') {
           Alert.alert("Server is not responding"); // Show alert if request times out
         }
@@ -101,8 +99,6 @@ const Move = ({ navigation }) => {
 
   const getCredentialsFromInput = () => {
     return new Promise((resolve) => {
-      let username = "";
-      let password = "";
       Alert.prompt(
         "Sign In",
         "Please enter your username and password",
@@ -115,23 +111,28 @@ const Move = ({ navigation }) => {
           {
             text: "OK",
             onPress: async (text) => {
-              const response2 = await fetch("http://10.75.128.119:5002/login", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ "username": text.login, "password": text.password }),
-              });
-              const result2 = await response2.json();
-              console.log(result2.access_token)
-              while (result2.access_token == undefined) {
-                console.log("asdsa")
-                Alert.alert("Password wrong, swipe out and come back in")
+              try {
+                const response2 = await fetch("http://10.75.128.119:5002/login", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ "username": text.login, "password": text.password }),
+                });
+                const result2 = await response2.json();
+                if (!result2.access_token) {
+                  Alert.alert("Sign in failed", "Wrong username or password. Please try again.");
+                  resolve(null);
+                  return;
+                }
+                await AsyncStorage.setItem("token", result2.access_token);
+                // Only the username is kept; the password is never stored on the device.
+                resolve({ username: text.login });
+              } catch (e) {
+                console.error("Login request to team server failed:", e);
+                Alert.alert("Could not reach the server");
+                resolve(null);
               }
-              await AsyncStorage.setItem("token", result2.access_token);
-
-              response2()
-              resolve({ username, password });
             },
           },
         ],

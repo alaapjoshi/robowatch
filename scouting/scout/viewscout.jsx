@@ -26,7 +26,7 @@ export default function ViewScout() {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 
@@ -46,154 +46,45 @@ export default function ViewScout() {
     fetchPits();
   }, []);
 
-  const renderItem = ({ item }) => 
-    <View
-      style={{
-        marginVertical: 8,
-        flex: 1,
-        backgroundColor: "#fff",
-        padding: 20,
-      }}
-    >
+  // Auto shots are saved as { selectedOutcome }, teleop shots as { outcome }.
+  const countShots = (shots, outcomeKey) => {
+    const list = Array.isArray(shots) ? shots : [];
+    const made = list.filter((shot) => shot[outcomeKey] === "Success").length;
+    return `${made} made / ${list.length} attempted`;
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
       <Text style={{ fontSize: 30, color: colorAccent }}>
         Match Number: {item.Match_Number}
       </Text>
-      <Text style={styles.text}>
-        Team Number: {item.Team_Number}
-      </Text>
-      <Text style={styles.text}>
-        Alliance: {item.Alliance}
-      </Text>
+      <Text style={styles.text}>Team Number: {item.Team_Number}</Text>
+      <Text style={styles.text}>Alliance: {item.Alliance}</Text>
+      <Text style={styles.text}>Position: {item.Position}</Text>
+      <Text style={styles.text}>Scout: {item.Student_ID}</Text>
 
-      <Text style={styles.text}>
-        Position: {item.Position}
-      </Text>
+      <Text style={styles.heading}>Auto</Text>
+      <Text style={styles.text}>Shots: {countShots(item.updatedCoordinates, "selectedOutcome")}</Text>
+      <Text style={styles.text}>Left Alliance Zone: {item.left_alliance_auto}</Text>
+      <Text style={styles.text}>Reload: {item.Reload_Auto}</Text>
 
-      <Text style={styles.text}>
-        
+      <Text style={styles.heading}>Teleop</Text>
+      <Text style={styles.text}>Shots: {countShots(item.Teleop_Field, "outcome")}</Text>
+      <Text style={styles.text}>Coopertition Bonus: {item.coopertitionbonus}</Text>
 
-      </Text>
+      <Text style={styles.heading}>Endgame</Text>
+      <Text style={styles.text}>Parked: {item.Parked}</Text>
+      <Text style={styles.text}>Climb: {item.climb}</Text>
+      <Text style={styles.text}>Harmony: {item.Harmony}</Text>
+      <Text style={styles.text}>Trap: {item.trap}</Text>
+      <Text style={styles.text}>Spotlight: {item.Spotlight}</Text>
 
-      <Text style={styles.text}>
-        Docking Status: {item.autodock}
-      </Text>
-
-      <Text style={styles.text}>
-        Auto Bottom Cone: {item.autobottomCone}
-      </Text>
-      <Text style={styles.text}>
-      Auto Mid Cone: {item.automidcone}
-      </Text>
-      <Text style={styles.text}>
-      Auto High Cone: {item.autohighcone}
-      </Text>
-      <Text style={styles.text}>
-      Auto Bottom Cube: {item.autobottomcube}
-      </Text>
-      <Text style={styles.text}>
-      Auto Bottom Cube: {item.automidcube}
-      </Text>
-      <Text style={styles.text}>
-      Auto High Cube: {item.autohighcube}
-      </Text>
-
-      <Text style={styles.text}>
-
-
-      </Text>
-      <Text style={styles.text}>
-        Teleop Bottom Cone: {item.teleopbottomCone}
-      </Text>
-      <Text style={styles.text}>
-      Teleop Mid Cone: {item.teleopmidcone}
-      </Text>
-      <Text style={styles.text}>
-      Teleop High Cone: {item.teleophighcone}
-      </Text>
-      <Text style={styles.text}>
-      Teleop Bottom Cube: {item.teleopbottomcube}
-      </Text>
-      <Text style={styles.text}>
-      Teleop Bottom Cube: {item.teleopmidcube}
-      </Text>
-      <Text style={styles.text}>
-      Teleop High Cube: {item.teleophighcube}
-      </Text>
-
-      <Text style={styles.text}>
-      
-      
-
-      </Text>
-
-      <Text style={styles.text}>
-        Floorcone: {item.floorcone}
-      </Text>
-      <Text style={styles.text}>
-      Floorcube: {item.floorcube}
-      </Text>
-      <Text style={styles.text}>
-        Station Cone: {item.stationcone}
-      </Text>
-      <Text style={styles.text}>
-        Station Cube: {item.stationcube}
-      </Text>
-      <Text style={styles.text}>
-        Attempted: {item.attempted}
-      </Text>
-      <Text style={styles.text}>
-        Docked: {item.docked}
-      </Text>
-
-      <Text style={styles.text}>
-        Engaged: {item.engaged}
-      </Text>
-      <Text style={styles.text}>
-        Solo Climb: {item.soloclimb}
-      </Text>
-      <Text style={styles.text}>
-        Gave Assistance: {item.gaveassistance}
-      </Text>
-      <Text style={styles.text}>
-        Recieved Assistance: {item.recievedassistance}
-      </Text>
-      <Text style={styles.text}>
-        Parked: {item.parked}
-      </Text>
-      <Text style={styles.text}>
-        Climb Time: {item.Slider1}
-      </Text>
-
-      <Text style={styles.text}>
-
-
-      </Text>
-      
-
-      <Text style={styles.text}>
-        Full Cycler: {item.fullcycler}
-      </Text>
-      <Text style={styles.text}>
-        Half Cycler: {item.halfcycler}
-      </Text>
-      <Text style={styles.text}>
-        Feeder: {item.feeder}
-      </Text>
-      <Text style={styles.text}>
-        Defense: {item.defense}
-      </Text>
-      <Text style={styles.text}>
-        Topheavy: {item.topheavy}
-      </Text>
-      <Text style={styles.text}>
-        Notes: {item.notes}
-      </Text>
-
-      <Text style={styles.text}>
-        Aggression: {item.Aggression}
-      </Text>
+      <Text style={styles.heading}>Notes</Text>
+      <Text style={styles.text}>Stability: {item.stabilitySlider}</Text>
+      <Text style={styles.text}>Aggression: {item.agressionSlider}</Text>
+      <Text style={styles.text}>{item.notes}</Text>
     </View>
-  ;
+  );
 
   return (
     <View style={styles.container}>
@@ -250,5 +141,13 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 12,
+  },
+  text: {
+    fontSize: 16,
   },
 });

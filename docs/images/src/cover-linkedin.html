@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="brand.css" />
+<style>
+  body { width: 1200px; height: 627px; }
+  .wrap { width: 1200px; height: 627px; padding: 72px; display: flex; gap: 48px; align-items: center; position: relative; }
+  .left { flex: 1; }
+  h1 { font-size: 72px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+  .pitch { color: var(--muted); font-size: 28px; line-height: 1.35; margin-top: 24px; max-width: 520px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; max-width: 540px; }
+  .author { position: absolute; right: 72px; bottom: 36px; color: var(--muted); font-size: 16px; font-weight: 500; }
+  .frame { width: 440px; padding: 20px; }
+  .bar { display: flex; gap: 8px; margin-bottom: 16px; }
+  .bar i { width: 12px; height: 12px; border-radius: 50%; background: var(--line); display: block; }
+  .field { position: relative; border-radius: 10px; overflow: hidden; }
+  .field img { width: 100%; display: block; }
+  .m { position: absolute; width: 20px; height: 20px; transform: translate(-50%, -50%); border: 3px solid var(--bg); }
+  .m.s { border-radius: 50%; }
+  .m.a { border-radius: 4px; }
+  .ok { background: var(--good); }
+  .no { background: var(--bad); }
+  .duo { display: flex; gap: 22px; align-items: flex-start; }
+  .phone { border-radius: 32px; padding: 7px; }
+  .phone img { border-radius: 25px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <h1>RoboWatch</h1>
+    <p class="pitch">A mobile scouting app that lets FRC robotics scouts record match and pit data from the stands.</p>
+    <div class="chips">
+      <span class="chip">React Native</span>
+      <span class="chip">Expo</span>
+      <span class="chip">Firebase</span>
+      <span class="chip">The Blue Alliance API</span>
+    </div>
+  </div>
+  <div class="duo">
+    <div class="phone" style="width:200px"><img src="screens/04-auto-map.png" alt="" /></div>
+    <div class="phone" style="width:200px;margin-top:48px"><img src="screens/08-team.png" alt="" /></div>
+  </div>
+  <div class="author">Alaap Joshi</div>
+</div>
+</body>
+</html>

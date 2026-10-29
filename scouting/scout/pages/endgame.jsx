@@ -18,29 +18,29 @@ export default function Endgame( { navigation } ) {
   const leave = async () => {
     navigation.navigate("Notes")
     try {
-      await AsyncStorage.setItem("Parked", str(parked));
+      await AsyncStorage.setItem("Parked", String(parked));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Parked' to device storage:", e);
     }
     try {
-      await AsyncStorage.setItem("Harmony", str(Harmony));
+      await AsyncStorage.setItem("Harmony", String(Harmony));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Harmony' to device storage:", e);
     }
     try {
-      await AsyncStorage.setItem("Spotlight", str(spotlight));
+      await AsyncStorage.setItem("Spotlight", String(spotlight));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Spotlight' to device storage:", e);
     }
     try {
-      await AsyncStorage.setItem("trap", str(trap));
+      await AsyncStorage.setItem("trap", String(trap));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'trap' to device storage:", e);
     }
     try {
-      await AsyncStorage.setItem("climb", str(climb));
+      await AsyncStorage.setItem("climb", String(climb));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'climb' to device storage:", e);
     }
   }
 

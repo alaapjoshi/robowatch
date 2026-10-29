@@ -10,7 +10,7 @@ export default function Dev({ navigation }) {
     try {
       await AsyncStorage.setItem("login", "");
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'login' to device storage:", e);
     }
   };
   function clearAllData() {

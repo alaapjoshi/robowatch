@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="brand.css" />
+<style>
+  .diagram { flex: 1; position: relative; }
+  .diagram svg.lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .node { position: absolute; padding: 24px 28px; width: 360px; }
+  .node h3 { font-size: 24px; font-weight: 700; }
+  .node p { color: var(--muted); font-size: 17px; margin-top: 6px; line-height: 1.4; }
+  .node.app { border-color: var(--accent); }
+  .tag { position: absolute; font-size: 15px; color: var(--accent); background: var(--bg); padding: 4px 10px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="gallery">
+  <div>
+    <div class="eyebrow">How it works</div>
+    <h1>Architecture</h1>
+  </div>
+  <div class="body">
+    <div class="diagram">
+      <svg class="lines" viewBox="0 0 1424 700" preserveAspectRatio="none">
+        <g stroke="#38bdf8" stroke-width="3" fill="none" stroke-linejoin="round">
+          <path d="M 360 340 H 530"/>
+          <path d="M 890 300 H 975 V 110 H 1060"/>
+          <path d="M 890 340 H 1060"/>
+          <path d="M 890 380 H 975 V 570 H 1060"/>
+          <path d="M 710 405 V 500"/>
+        </g>
+      </svg>
+      <div class="card node" style="left:0;top:270px"><h3>Scout</h3><p>Uses the app on a phone or tablet in the stands.</p></div>
+      <div class="card node app" style="left:530px;top:250px;height:180px"><h3>RoboWatch app</h3><p>React Native + Expo. Bottom tabs for Scouting, TBA, and Analysis.</p></div>
+      <div class="card node" style="left:530px;top:500px"><h3>AsyncStorage</h3><p>Holds each tab's answers on the device until Final.</p></div>
+      <div class="card node" style="left:1060px;top:40px"><h3>Cloud Firestore</h3><p>Collections <span class="mono">scouting</span> and <span class="mono">pit</span>.</p></div>
+      <div class="card node" style="left:1060px;top:270px"><h3>Team server</h3><p>Login, token check, and uploads (POST + Bearer token).</p></div>
+      <div class="card node" style="left:1060px;top:500px"><h3>The Blue Alliance API</h3><p>Team info, events, and matches (REST v3).</p></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

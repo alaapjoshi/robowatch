@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="brand.css" />
+<style>
+  .gallery { gap: 32px; }
+  .gallery h1 { font-size: 46px; }
+  .phone { width: 300px; }
+</style>
+</head>
+<body>
+<div class="gallery">
+  <div>
+    <div class="eyebrow">Auto and Teleop</div>
+    <h1>Tap the field to log every scoring attempt</h1>
+  </div>
+  <div class="body">
+    <div class="phones">
+      <div><div class="phone"><img src="screens/03-auto-dialog.png" alt="" /></div><div class="cap">Pick target and result</div></div>
+      <div><div class="phone"><img src="screens/04-auto-map.png" alt="" /></div><div class="cap">Logged shots on the map</div></div>
+    </div>
+    <div class="side">
+      <div class="card note"><h3>Tap a spot</h3><p>A gesture handler records the x/y of the tap on the 2024 field image.</p></div>
+      <div class="card note"><h3>Pick target and result</h3><p>Amp or Speaker, then Success or Failure. Undo removes the last shot.</p></div>
+      <div class="card note"><h3>Saved on the device</h3><p>Each page writes to AsyncStorage, so a closed app does not lose the match.</p></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,8 +1,0 @@
-Finish Adding dark mode support + fix bugs
-Fix analysis dark mode
-Add more stuff to settings
-Add analysis with predictions from tba
-Pull something from first api
-Pull something from somewhere else
-robowatch vs roborecon
-Start using https://reactnative.dev/docs/hermes Hermes cause JS bundle is too big

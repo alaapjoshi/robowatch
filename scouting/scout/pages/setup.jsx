@@ -25,7 +25,6 @@ export default function Setup({ navigation }) {
       const timestamp = new Date().toUTCString(); // Create UTC timestamp
       try {
         await AsyncStorage.setItem("matchScoutingTimestamp", timestamp); // Save timestamp in AsyncStorage
-        console.log("Timestamp saved:", timestamp);
       } catch (error) {
         console.error("Error saving timestamp:", error);
       }
@@ -72,13 +71,14 @@ export default function Setup({ navigation }) {
   const send = async () => {
     navigation.navigate("Auto");
     try {
-      await AsyncStorage.setItem("Student_ID", studentID);
-      await AsyncStorage.setItem("Match_Number", match);
-      await AsyncStorage.setItem("Team_Number", team);
-      await AsyncStorage.setItem("Alliance", alliance);
-      await AsyncStorage.setItem("Position", pos);
+      // Fields restored from storage can be null, and AsyncStorage rejects null values.
+      await AsyncStorage.setItem("Student_ID", studentID ?? "");
+      await AsyncStorage.setItem("Match_Number", match ?? "");
+      await AsyncStorage.setItem("Team_Number", team ?? "");
+      await AsyncStorage.setItem("Alliance", alliance ?? "");
+      await AsyncStorage.setItem("Position", pos ?? "");
     } catch (e) {
-      console.log("Error:", e);
+      console.error("Failed to save match setup to device storage:", e);
     }
   };
 

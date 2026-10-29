@@ -71,10 +71,10 @@ export default function Auto({ navigation }) {
     }
     else {
       const newCoordinates = [...overlayCoordinates, { x, y, selectedOutcome, selectedDevice }];
-      console.log(newCoordinates);
       setOverlayCoordinates(newCoordinates);
       setDeviceSelectionVisible(false);
       setSelectedDevice(null);
+      setSelectedOutcome(null);
     }
 
   };
@@ -83,28 +83,25 @@ export default function Auto({ navigation }) {
     const updatedCoordinates = [...overlayCoordinates];
     updatedCoordinates.pop(); // Remove the last coordinate
     setOverlayCoordinates(updatedCoordinates);
-    console.log('Undo button clicked. Updated coordinates:', updatedCoordinates);
   };
 
   const leave = async () => {
     navigation.navigate('Teleop');
-console.log(reload)
-console.log(left)
 
     try {
       await AsyncStorage.setItem("Auto_Grid", JSON.stringify(overlayCoordinates));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Auto_Grid' to device storage:", e);
     }
     try {
-      await AsyncStorage.setItem("LeftAllianceauto", str(left));
+      await AsyncStorage.setItem("LeftAllianceauto", String(left));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'LeftAllianceauto' to device storage:", e);
     }
     try {
-      await AsyncStorage.setItem("ReloadAuto", str(reload));
+      await AsyncStorage.setItem("ReloadAuto", String(reload));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'ReloadAuto' to device storage:", e);
     }
   };
 
@@ -185,7 +182,7 @@ console.log(left)
               ]}
             >
               <Text style={styles.overlayText}>
-              {coordinate.selectedOutcome === 'Success' ? '✅' : coordinate.selectedOutcome === 'failure' ? '❌' : 'X'}
+              {coordinate.selectedOutcome === 'Success' ? '✅' : coordinate.selectedOutcome === 'Failure' ? '❌' : 'X'}
               </Text>
             </View>
           )

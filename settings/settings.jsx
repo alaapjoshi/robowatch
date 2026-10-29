@@ -39,7 +39,7 @@ function Set({ navigation }) {
           setIsEnabled(Boolean(value));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'light' from device storage:", e);
       }
     };
     getData();
@@ -59,7 +59,7 @@ function Set({ navigation }) {
           setDistrictNumber(JSON.stringify(value));
         }
       } catch (e) {
-        console.log("bruh...");
+        console.error("Failed to load 'district' from device storage:", e);
       }
     };
     getData();
@@ -73,7 +73,7 @@ function Set({ navigation }) {
           setColorAccent(value);
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
     getData();
@@ -84,7 +84,7 @@ function Set({ navigation }) {
     try {
       await AsyncStorage.setItem("color", JSON.stringify(value));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'color' to device storage:", e);
     }
   };
 
@@ -97,7 +97,7 @@ function Set({ navigation }) {
     try {
       await AsyncStorage.setItem("district", value.toLowerCase());
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'district' to device storage:", e);
     }
   };
   const bruh = () => {
@@ -108,7 +108,7 @@ function Set({ navigation }) {
     try {
       await AsyncStorage.setItem("light", String(isEnabled));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'light' to device storage:", e);
     }
   };
   function saved() {

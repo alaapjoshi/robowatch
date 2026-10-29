@@ -19,41 +19,41 @@ export default function Notes( { navigation } ) {
 
 
 
-  const leave = async async => {
+  const leave = async () => {
     navigation.navigate("Final")
     try {
       await AsyncStorage.setItem("Win", String(win));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Win' to device storage:", e);
     }
     try {
       await AsyncStorage.setItem("Lose", String(lose));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'Lose' to device storage:", e);
     }
     try {
       await AsyncStorage.setItem("tie", String(tie));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'tie' to device storage:", e);
     }
     
     try {
       await AsyncStorage.setItem("notes", String(notes));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'notes' to device storage:", e);
     }
 
 
     try {
       await AsyncStorage.setItem("stabilitySlider", String(stabilitySlider));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'stabilitySlider' to device storage:", e);
     }
 
     try {
       await AsyncStorage.setItem("agressionSlider", String(agressionSlider));
     } catch (e) {
-      console.log("umm...");
+      console.error("Failed to save 'agressionSlider' to device storage:", e);
     }
 
 

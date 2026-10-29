@@ -26,7 +26,7 @@ export default function Read() {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 
@@ -56,49 +56,18 @@ export default function Read() {
       }}
     >
       <Text style={{ fontSize: 30, color: colorAccent }}>
-        Team Number: {item.TeamNumber}
+        Team Number: {item.Team_Number}
       </Text>
-      <Text style={styles.text}>
-        Cube Place Low: {item.cubeplacelow ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Cube Place Mid: {item.cubeplacemid ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Cube Place High: {item.cubeplacehigh ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Pickup Cubes Ground: {item.pickupcubesG ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Pickup Cubes Station: {item.pickupcubesS ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Cone Place Low: {item.coneplacelow ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Cone Place Mid: {item.coneplacemid ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Cone Place High: {item.coneplacehigh ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Pickup Cones Ground: {item.pickupconesG ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Pickup Cones Station: {item.pickupconesS ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Auto Balance: {item.autobalance ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>Auto Sub: {item.autosub ? "Yes" : "No"}</Text>
-      <Text style={styles.text}>
-        Auto Align Game Piece: {item.autoaligngamepiece ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>
-        Auto Align April: {item.autoalignapril ? "Yes" : "No"}
-      </Text>
-      <Text style={styles.text}>Auto Pieces: {item.pieces}</Text>
+      <Text style={styles.text}>Height: {item.Height}</Text>
+      <Text style={styles.text}>Dimensions: {item.Dimensions}</Text>
+      <Text style={styles.text}>Drive Train: {item.DriveTrain}</Text>
+      <Text style={styles.text}>Source Intake: {item.Source ? "Yes" : "No"}</Text>
+      <Text style={styles.text}>Ground Intake: {item.Ground ? "Yes" : "No"}</Text>
+      <Text style={styles.text}>Focus on Speaker: {item.FocusSpeakers ? "Yes" : "No"}</Text>
+      <Text style={styles.text}>Human Player Accuracy: {item.HumanAccuracy}</Text>
+      <Text style={styles.text}>Feeding: {item.Feeding}</Text>
+      <Text style={styles.text}>Notes: {item.AdditionalNotes}</Text>
+      <Text style={styles.text}>Sent: {item.UTCdatetime}</Text>
     </View>
   );
 

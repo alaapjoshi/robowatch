@@ -90,22 +90,44 @@ function Data({ navigation }) {
       UTCdatetime: currentTimeUTC,
       event_code: "NJFLA"
     };
-    const response = await Promise.race([
-    fetch("http://10.75.128.119:5002/", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }),
-    new Promise((resolve, reject) => {
-      setTimeout(() => reject(new Error("Timeout")), 3000);
-    })
-  ]);
-  response()
-  Alert.alert("Data Sent")
-  }
+    const failures = [];
+
+    try {
+      const response = await Promise.race([
+        fetch("http://10.75.128.119:5002/", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }),
+        new Promise((resolve, reject) => {
+          setTimeout(() => reject(new Error("Timeout")), 3000);
+        }),
+      ]);
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+    } catch (e) {
+      console.error("Failed to send pit data to team server:", e);
+      failures.push("team server");
+    }
+
+    // The View Pit Data screen reads from this collection.
+    try {
+      await addDoc(collection(db, "pit"), data);
+    } catch (e) {
+      console.error("Failed to save pit data to Firestore:", e);
+      failures.push("Firestore");
+    }
+
+    if (failures.length === 0) {
+      Alert.alert("Data Sent");
+    } else {
+      Alert.alert("Could not send data", `Failed: ${failures.join(", ")}`);
+    }
+  };
 
   return (
     <ScrollView>
@@ -148,10 +170,10 @@ function Data({ navigation }) {
         <Text>Drive Train</Text>
         <RadioGroup 
             radioButtons={[
-              { label: 'Swerve', value: 'Swerve' },
-              { label: 'Tank', value: 'Tank' },
-              { label: 'Mecanum', value: 'Mecanum' },
-              { label: 'Other', value: 'Other' }
+              { id: 'Swerve', label: 'Swerve', value: 'Swerve' },
+              { id: 'Tank', label: 'Tank', value: 'Tank' },
+              { id: 'Mecanum', label: 'Mecanum', value: 'Mecanum' },
+              { id: 'Other', label: 'Other', value: 'Other' }
             ]} 
             onPress={(value) => setDriveTrain(value)}
             selectedId={driveTrain}
@@ -208,8 +230,8 @@ function Data({ navigation }) {
         <Text>Robot Feeding</Text>
         <RadioGroup 
             radioButtons={[
-              { label: 'Human Payer', value: 'humanPlayer' },
-              { label: 'Anyone Can Feed', value: 'Anyone' }
+              { id: 'humanPlayer', label: 'Human Player', value: 'humanPlayer' },
+              { id: 'Anyone', label: 'Anyone Can Feed', value: 'Anyone' }
             ]} 
             onPress={(value) => setFeeding(value)}
             selectedId={feeding}
@@ -290,7 +312,7 @@ function Qr({ route }) {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 

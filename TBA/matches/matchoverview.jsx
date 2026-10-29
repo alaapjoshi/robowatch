@@ -11,6 +11,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { TBA_API_KEY } from "../../config";
 
 const Stack = createStackNavigator();
 
@@ -47,7 +48,7 @@ function Matches() {
           setdistrict(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'district' from device storage:", e);
       }
     };
     getData();
@@ -61,7 +62,7 @@ function Matches() {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 
@@ -75,8 +76,7 @@ function Matches() {
         "/events",
       {
         headers: {
-          "X-TBA-Auth-Key":
-            "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+          "X-TBA-Auth-Key": TBA_API_KEY,
         },
       }
     )
@@ -132,7 +132,7 @@ function Rank({ route }) {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
     getData();
@@ -142,8 +142,7 @@ function Rank({ route }) {
       "https://www.thebluealliance.com/api/v3/event/" + eventKey + "/rankings",
       {
         headers: {
-          "X-TBA-Auth-Key":
-            "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+          "X-TBA-Auth-Key": TBA_API_KEY,
         },
       }
     )
@@ -155,8 +154,7 @@ function Rank({ route }) {
               data.rankings[i - 1].team_key,
             {
               headers: {
-                "X-TBA-Auth-Key":
-                  "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+                "X-TBA-Auth-Key": TBA_API_KEY,
               },
             }
           )

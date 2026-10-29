@@ -5,6 +5,7 @@ import { React, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Matchover from "./matches/matchoverview";
 import Tra from "./team/tra";
+import { TBA_API_KEY } from "../config";
 const Stack = createStackNavigator();
 
 export default function Navigate() {
@@ -15,8 +16,8 @@ export default function Navigate() {
         component={Overview}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Matchover" component={Matchover} />
-      <Stack.Screen name="tra" component={Tra} />
+      <Stack.Screen name="Matchover" component={Matchover} options={{ title: "Match Data" }} />
+      <Stack.Screen name="tra" component={Tra} options={{ title: "Team Data" }} />
     </Stack.Navigator>
   );
 }
@@ -28,8 +29,7 @@ function Overview() {
   const endpoint = "https://www.thebluealliance.com/api/v3/status";
   fetch(endpoint, {
     headers: {
-      "X-TBA-Auth-Key":
-        "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+      "X-TBA-Auth-Key": TBA_API_KEY,
     },
   })
     .then((response) => {
@@ -48,7 +48,7 @@ function Overview() {
           setdark(value);
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'light' from device storage:", e);
       }
     };
     getData();
@@ -64,7 +64,7 @@ function Overview() {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 

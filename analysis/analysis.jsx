@@ -10,6 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { LogBox } from "react-native";
+import { TBA_API_KEY } from "../config";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -24,7 +25,7 @@ export default function Analysis() {
           setdark(value);
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'light' from device storage:", e);
       }
     };
     getData();
@@ -42,7 +43,7 @@ export default function Analysis() {
           setColorAccent(value.replace(/['"]+/g, ""));
         }
       } catch (e) {
-        console.log("umm...");
+        console.error("Failed to load 'color' from device storage:", e);
       }
     };
 
@@ -54,14 +55,12 @@ export default function Analysis() {
       "https://www.thebluealliance.com/api/v3/event/2023njski/predictions",
       {
         headers: {
-          "X-TBA-Auth-Key":
-            "pn7EQlAcawiyWsJ1HpxNgNzvkJg0ajReJ75lPhiCj6FF3G34PEa0bHRiqGzQhRoR",
+          "X-TBA-Auth-Key": TBA_API_KEY,
         },
       }
     )
       .then((response) => response.json())
       .then((data) => {
-        //console.log(JSON.stringify(data))
       })
       .catch((error) => console.error(error));
   }, []);
@@ -96,8 +95,3 @@ export default function Analysis() {
     );
   }
 }
-/*
-const styles = StyleSheet.create({
-  
-});
-*/

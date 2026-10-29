@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card-2: #273449;
+  --line: #334155;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.14);
+  --good: #4ade80;
+  --bad: #f87171;
+  --radius: 16px;
+  --shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.55);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+.mono { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; }
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+.chip {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 18px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+/* Gallery page: 1600x1000, title above content */
+.gallery {
+  width: 1600px;
+  height: 1000px;
+  padding: 72px 88px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.gallery .eyebrow {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.gallery h1 { font-size: 52px; font-weight: 800; letter-spacing: -0.02em; margin-top: 10px; }
+.gallery .sub { color: var(--muted); font-size: 24px; margin-top: 12px; max-width: 1200px; line-height: 1.4; }
+.gallery .body { flex: 1; display: flex; gap: 40px; min-height: 0; }
+
+/* Real app screenshot in a phone frame (screens are 1206x2622) */
+.phone {
+  background: #000;
+  border-radius: 44px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+  flex: none;
+}
+.phone img { display: block; width: 100%; border-radius: 34px; }
+.phones { display: flex; gap: 40px; align-items: flex-start; justify-content: center; }
+.side { flex: 1; display: flex; flex-direction: column; gap: 22px; justify-content: center; }
+.note { padding: 26px 30px; }
+.note h3 { font-size: 24px; font-weight: 700; }
+.note p { color: var(--muted); font-size: 19px; margin-top: 8px; line-height: 1.45; }
+.cap { color: var(--muted); font-size: 16px; text-align: center; margin-top: 14px; }
